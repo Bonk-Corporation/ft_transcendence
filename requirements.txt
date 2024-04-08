@@ -1,0 +1,5 @@
+asgiref==3.8.1
+backports.zoneinfo==0.2.1
+Django==4.2.11
+sqlparse==0.4.4
+typing_extensions==4.11.0
