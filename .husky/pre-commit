@@ -1,0 +1,8 @@
+if ! which prettier >/dev/null 2>&1; then
+	echo Please install Prettier to ensure your JS files are properly formatted >&2
+	exit 1
+fi
+
+./node_modules/lint-staged/bin/lint-staged.js
+
+# vim:set ft=sh:
