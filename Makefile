@@ -2,7 +2,8 @@ VIRTUALENV = virtualenv
 PYTHON = python3
 
 run:
-	$(PYTHON) backend/manage.py runserver
+	@. venv/bin/activate && \
+		$(PYTHON) backend/manage.py runserver;
 
 venv:
 	$(VIRTUALENV) $@
