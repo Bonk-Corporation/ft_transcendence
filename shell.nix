@@ -10,6 +10,7 @@ mkShell {
 
 		codespell
 		nodePackages.prettier
+		gdtoolkit
 		black
 	];
 
