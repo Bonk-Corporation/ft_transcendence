@@ -13,6 +13,8 @@ mkShell {
 		codespell
 		nodePackages.prettier
 		black
+
+		tmux
 	];
 
 	shellHook = ''
@@ -26,6 +28,14 @@ mkShell {
 
 		pip3 install -r requirements.txt --quiet
 
-		${if prod then "pnpm -C frontend build --reporter=silent" else ""}
+		${if prod then
+			"pnpm -C frontend build --reporter=silent"
+		  else
+			''
+				tmux new-session -d make
+				tmux split-window -h 'make fdev'
+				exec tmux attach
+			''
+		 }
 	'';
 }
