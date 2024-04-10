@@ -1,0 +1,7 @@
+[package]
+name = "pong"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tetra = "0.8.0"
