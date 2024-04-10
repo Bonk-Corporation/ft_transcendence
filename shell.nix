@@ -1,7 +1,5 @@
 with import <nixpkgs> {};
 
-{ prod ? false }:
-
 mkShell {
 	packages = [
 		python3
@@ -16,16 +14,11 @@ mkShell {
 	];
 
 	shellHook = ''
-		export PIP_DISABLE_PIP_VERSION_CHECK=1
+		pnpm install
 
-		pnpm install --reporter=silent
-		pnpm install -C frontend --reporter=silent
-
-		make venv >/dev/null
+		make venv
 		source venv/bin/activate
 
-		pip3 install -r requirements.txt --quiet
-
-		${if prod then "pnpm -C frontend build --reporter=silent" else ""}
+		pip3 install -r requirements.txt
 	'';
 }

@@ -24,17 +24,13 @@ SECRET_KEY = "django-insecure-cse^swp*#t9%=zipi6jh-h$don&c6^p6a7opmqgnk28f_fy*d7
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-DJANGO_VITE_DEV_MODE = DEBUG
 
-if not DEBUG:
-    ALLOWED_HOSTS = [
-        "localhost",  # to test production
-    ]
+ALLOWED_HOSTS = []
+
 
 # Application definition
 
 INSTALLED_APPS = [
-    "django_vite",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -58,7 +54,7 @@ ROOT_URLCONF = "bonk.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "../frontend/"],
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -119,14 +115,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "/static/"
-
-STATIC_ROOT = BASE_DIR / "../frontend/build/assets/"
-STATICFILES_DIRS = [
-    BASE_DIR / "../frontend/build/",
-]
-DJANGO_VITE_ASSETS_PATH = BASE_DIR / "../frontend/build/"
-DJANGO_VITE_MANIFEST_PATH = DJANGO_VITE_ASSETS_PATH / "manifest.json"
+STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
