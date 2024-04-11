@@ -16,10 +16,16 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path, include
 from django.views.generic import TemplateView
+import bonk.auth
+import bonk.api
+
+default = lambda url: re_path(".*", url)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", TemplateView.as_view(template_name="index.html")),
+    path("auth/", include(bonk.auth.urls)),
+    path("api/", include(bonk.api.urls)),
+    default(TemplateView.as_view(template_name="index.html")),
 ]

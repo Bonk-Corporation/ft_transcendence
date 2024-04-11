@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	{% load django_vite %}
+	{% load setting %}
 	<head>
 		{% vite_hmr_client %}
 		<meta charset="UTF-8" />
@@ -12,5 +13,10 @@
 	<body>
 		<div id="app"></div>
 		{% vite_asset "src/index.jsx" %}
+
+		{% settings %}
+			{% setting "CLIENT_ID" %}
+			{% setting "HOST" %}
+		{% endsettings %}
 	</body>
 </html>
