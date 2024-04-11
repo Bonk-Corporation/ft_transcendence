@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,9 +27,11 @@ SECRET_KEY = "django-insecure-cse^swp*#t9%=zipi6jh-h$don&c6^p6a7opmqgnk28f_fy*d7
 DEBUG = True
 DJANGO_VITE_DEV_MODE = DEBUG
 
+HOST = "localhost:8000"
 if not DEBUG:
     ALLOWED_HOSTS = [
         "localhost",  # to test production
+        HOST,
     ]
 
 # Application definition
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "bonk",
 ]
 
 MIDDLEWARE = [
@@ -84,6 +88,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = "bonk.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -103,6 +108,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    "bonk.auth.FtAuthBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -133,3 +142,10 @@ DJANGO_VITE_MANIFEST_PATH = DJANGO_VITE_ASSETS_PATH / "manifest.json"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# 42 API
+API_URL = "https://api.intra.42.fr"
+CLIENT_ID = os.environ.get("CLIENT_ID")
+CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
+REDIRECT_URI = f"http://{HOST}/auth/42"
