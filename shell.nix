@@ -30,7 +30,7 @@ mkShell {
 
 		${if prod then
 			''
-				pnpm -C frontend build --reporter=silent
+				pnpm -C frontend build
 				python3 backend/manage.py migrate bonk
 				python3 backend/manage.py migrate
 			''
