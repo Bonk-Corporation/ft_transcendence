@@ -1,5 +1,17 @@
 # ft_transcendence
 
+## General Requirements
+- Create an API app on 42 intra
+- Need ```/auth/42``` at the end of redirect URI on 42 intra
+- Copy backend/.env.example into a backend/.env file
+
+## Developpement Usage
+- ```nix-shell```
+- ```python backend/manage.py migrate```
+
+ ## Production Usage
+ - ```docker-compose up```
+
 ## Technologies
 - React
 - Tailwind
@@ -35,7 +47,6 @@ Commit messages should apply to the following norm:
 - ```~ | <commit>``` : Modified something
 - ```+ | <commit>``` : Added something
 
-### Code
+### Code Formatter
 - **Javascript**: Prettier
 - **Python**: Black
-
