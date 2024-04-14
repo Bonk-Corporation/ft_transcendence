@@ -20,8 +20,6 @@ mkShell {
 	];
 
 	shellHook = ''
-		export SHELL=zsh
-		export PS1="[1mBonk Corporation[0m %% "
 		export "PATH=venv/bin/:$PATH"
 		export PIP_DISABLE_PIP_VERSION_CHECK=1
 
