@@ -1,0 +1,10 @@
+localhost:8443
+
+handle_path /static/* {
+	root * /srv/static
+	file_server
+}
+
+handle {
+	reverse_proxy django-app:8000
+}
