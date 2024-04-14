@@ -1,0 +1,8 @@
+.vscode
+db.sqlite3
+.*.swp
+__pycache__
+node_modules
+venv
+.env
+.pnpm-store

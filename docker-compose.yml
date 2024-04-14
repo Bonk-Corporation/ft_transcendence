@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  django-app:
+    build: .
+    volumes:
+      - static:/app/frontend/build
+      - .:/app
+    ports:
+      - "8000:8000"
+  caddy:
+    build: caddy/
+    ports:
+      - "8443:8443"
+    depends_on:
+      - django-app
+    volumes:
+      - static:/srv/static
+
+volumes:
+  static:
