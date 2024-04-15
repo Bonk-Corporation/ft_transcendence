@@ -24,11 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-cse^swp*#t9%=zipi6jh-h$don&c6^p6a7opmqgnk28f_fy*d7"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False  # TODO: should be done by nix-shell in production
 DJANGO_VITE_DEV_MODE = DEBUG
 
 HOST = "localhost:8000"
 if not DEBUG:
+    HOST = "localhost:8443"
     ALLOWED_HOSTS = [
         "localhost",  # to test production
         HOST,
@@ -149,3 +150,5 @@ API_URL = "https://api.intra.42.fr"
 CLIENT_ID = os.environ.get("CLIENT_ID")
 CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
 REDIRECT_URI = f"http://{HOST}/auth/42"
+if not DEBUG:
+    REDIRECT_URI = f"https://{HOST}/auth/42"
