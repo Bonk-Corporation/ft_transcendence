@@ -1,4 +1,4 @@
-import './style.css';
+import '../../index.css';
 import { useState, useEffect } from 'preact/hooks';
 
 export function Home() {
