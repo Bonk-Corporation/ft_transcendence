@@ -14,7 +14,10 @@
 		"autoprefixer": "^10.4.19",
 		"eslint": "^8.57.0",
 		"eslint-config-preact": "^1.3.0",
+<<<<<<< HEAD
 		"postcss": "^8.4.38",
+=======
+>>>>>>> 923b2ee (+ | Add a navbar)
 		"tailwindcss": "^3.4.3",
 		"vite": "^4.3.2"
 	},
