@@ -6,7 +6,7 @@ import { Header } from './components/Header.jsx';
 import { Home } from './pages/Home/index.jsx';
 import { Login } from './pages/Auth/Login.jsx';
 import { NotFound } from './pages/_404.jsx';
-import './style.css';
+import './index.css';
 
 export function App() {
 	return (
