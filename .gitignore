@@ -6,3 +6,5 @@ node_modules
 venv
 .env
 .pnpm-store
+target
+pkg

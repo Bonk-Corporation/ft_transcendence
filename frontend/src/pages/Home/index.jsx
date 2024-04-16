@@ -13,7 +13,7 @@ export function Home() {
 
 	return (
 		<div class="home">
-			{ me ? <h1>{me.username} le goat</h1>
+			{ me ? <h1 class="font-bold">{me.username} le goat</h1>
 				 : <h1>Please log in!!!!!</h1>}
 		</div>
 	);
