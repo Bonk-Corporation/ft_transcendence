@@ -55,6 +55,8 @@ mkShell {
 			ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 			"$DB_NAME"
 
+		cargo install wasm-pack
+
 		yes | pnpm install --reporter=silent
 		yes | pnpm install -C frontend --reporter=silent
 
