@@ -2,6 +2,7 @@ import { useLocation } from 'preact-iso';
 import { NotLogCard } from './NotLogCard';
 import { LogCard } from './LogCard';
 
+
 export function Navbar(props) {
 	const { url } = useLocation();
 

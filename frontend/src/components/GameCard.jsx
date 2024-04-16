@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from './Card';
 
+
 export function GameCard({game}) {
     return (
         <Card color={`${game.win ? "[#00ff38]" : "[#FF0000]"}`} className='mb-5'>

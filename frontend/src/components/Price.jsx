@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 export function Price({price}) {
   return (
     <div className="flex bg-white px-1.5 py-0.5 rounded w-fit">
