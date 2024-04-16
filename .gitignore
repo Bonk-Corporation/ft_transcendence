@@ -9,3 +9,5 @@ venv
 .initial_migration_done
 .pg
 pg.log
+target
+pkg
