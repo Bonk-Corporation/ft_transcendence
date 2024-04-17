@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function LogCard() {
+export function ConnectedLogCard() {
   return (
     <div className="flex">
       <button className="font-medium m-2 border-2 border-white rounded-full px-4 py-1 hover:bg-white hover:text-black transition-all ease-in-out">
