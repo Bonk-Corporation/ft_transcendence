@@ -1,3 +1,5 @@
+import { Card } from '../../components/Card'
+
 const CLIENT_ID = document.querySelector("setting[name=CLIENT_ID]").textContent
 const HOST = document.querySelector("setting[name=HOST]").textContent
 document.querySelector("settings").remove()
@@ -8,5 +10,8 @@ export function Login() {
 
 	return <div>
 		<a href={url}>Log in with 42</a>
+		<Card>
+			<h1>test</h1>
+		</Card>
 	</div>
 }
