@@ -7,7 +7,7 @@ export function Navbar() {
 
 	return (
 		<header className="
-			w-full px-8 py-2 z-50
+			w-full px-8 py-4 z-50
 			flex justify-between items-center rounded-full
 			border-gradient nav font-semibold transition-all backdrop-blur-lg
 			">
@@ -21,13 +21,13 @@ export function Navbar() {
 			</svg>
 
 			<nav className="flex">
-				<a href="/tournament" className={`mx-10 text-xl text-shadow ${url == '/tournament' ? "text-white font-semibold" : "text-white/40 font-medium"} transition-all`}>
+				<a href="/tournament" className={`mx-10 text-xl text-shadow ${url == '/tournament' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
 					Tournament
 				</a>
-				<a href="/" className={`mx-10 text-xl text-shadow ${url == '/' || url == '/play' ? "text-white font-semibold" : "text-white/40 font-medium"} transition-all`}>
+				<a href="/" className={`mx-10 text-xl text-shadow ${url == '/' || url == '/play' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
 					Play
 				</a>
-				<a href="/shop" className={`mx-10 text-xl text-shadow ${url == '/shop' ? "text-white font-semibold" : "text-white/40 font-medium"} transition-all`}>
+				<a href="/shop" className={`mx-10 text-xl text-shadow ${url == '/shop' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
 					Shop
 				</a>
 			</nav>
