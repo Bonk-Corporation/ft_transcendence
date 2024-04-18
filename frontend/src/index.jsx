@@ -2,7 +2,7 @@ import 'vite/modulepreload-polyfill';
 import { render } from 'preact';
 import { LocationProvider, Router, Route } from 'preact-iso';
 
-import { Header } from './components/Header.jsx';
+import { Navbar } from './components/Navbar.jsx';
 import { Play } from './pages/Play/index.jsx';
 import { Tournament } from './pages/Tournament/index.jsx';
 import { Shop } from './pages/Shop/index.jsx';
@@ -30,8 +30,8 @@ export function App() {
 	return (
 		<div id="ambient" class="w-screen h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center">
 			<LocationProvider>
-				<Header />
-				<main class="z-50">
+				<Navbar />
+				<main class="z-50 flex-1 flex flex-col justify-center items-center">
 					<Router>
 						<Route path="/" component={Play} />
 						<Route path="/login" component={Login} />

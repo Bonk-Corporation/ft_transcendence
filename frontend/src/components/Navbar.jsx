@@ -1,7 +1,7 @@
 import { useLocation } from 'preact-iso';
 import { ConnectedLogCard } from './ConnectedLogCard';
 
-export function Header() {
+export function Navbar() {
 	const { url } = useLocation();
 	const logged = false;
 
