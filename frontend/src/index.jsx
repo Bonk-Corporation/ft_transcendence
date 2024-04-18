@@ -31,7 +31,7 @@ export function App() {
 		<div id="ambient" class="w-screen h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center">
 			<LocationProvider>
 				<Navbar />
-				<main class="z-50 flex-1 flex flex-col justify-center items-center">
+				<main class="w-screen z-50 flex-1 flex flex-col justify-center items-center px-10">
 					<Router>
 						<Route path="/" component={Play} />
 						<Route path="/login" component={Login} />
