@@ -1,8 +1,8 @@
 import React from 'react';
 
-export function Card({children}) {
+export function Card({className, children}) {
   return (
-    <div class="backdrop-blur-lg w-80 h-80 rounded-md before:rounded-md border-gradient">
+    <div className={`backdrop-blur-lg rounded-md before:rounded-md border-gradient ${className}`}>
       {children}
     </div>
   );
