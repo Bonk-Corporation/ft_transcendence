@@ -12,10 +12,15 @@ export function Play() {
 	});
 
 	return (
-		<div>
-			<h1>Play</h1>
-			{ me ? <h1>{me.username} le goat</h1>
-				 : <h1>Please log in!!!!!</h1>}
+		<div class="flex flex-col h-full items-center justify-self-center py-40">
+			<div class="w-screen max-w-[1000px] h-full flex">
+				<div class="w-1/2 rounded h-full bg-red-500 mx-4 hover:w-3/4 transition-all">
+
+				</div>
+				<div class="w-1/2 rounded h-full bg-blue-500 mx-4 hover:w-3/4 transition-all">
+
+				</div>
+			</div>
 		</div>
 	);
 }
