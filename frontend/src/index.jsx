@@ -3,7 +3,9 @@ import { render } from 'preact';
 import { LocationProvider, Router, Route } from 'preact-iso';
 
 import { Header } from './components/Header.jsx';
-import { Home } from './pages/Home/index.jsx';
+import { Play } from './pages/Play/index.jsx';
+import { Tournament } from './pages/Tournament/index.jsx';
+import { Shop } from './pages/Shop/index.jsx';
 import { Login } from './pages/Auth/Login.jsx';
 import { NotFound } from './pages/_404.jsx';
 import { BVAmbient } from './scripts/bvambient.js';
@@ -31,8 +33,11 @@ export function App() {
 				<Header />
 				<main class="z-50">
 					<Router>
-						<Route path="/" component={Home} />
+						<Route path="/" component={Play} />
 						<Route path="/login" component={Login} />
+						<Route path="/tournament" component={Tournament} />
+						<Route path="/play" component={Play} />
+						<Route path="/shop" component={Shop} />
 						{/*<Route path="/signup" component={Signup} />*/}
 						<Route default component={NotFound} />
 					</Router>

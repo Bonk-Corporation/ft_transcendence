@@ -21,13 +21,13 @@ export function Header() {
 			</svg>
 
 			<nav className="flex">
-				<a href="/" class={url == '/' && 'active'} className={`mx-10 text-xl text-shadow ${url == '/' ? "text-white font-semibold" : "text-white/40 font-medium"} transition-all`}>
+				<a href="/tournament" className={`mx-10 text-xl text-shadow ${url == '/tournament' ? "text-white font-semibold" : "text-white/40 font-medium"} transition-all`}>
 					Tournament
 				</a>
-				<a href="/404" class={url == '/404' && 'active'} className={`mx-10 text-xl text-shadow ${url == '/404' ? "text-white font-semibold" : "text-white/40 font-medium"} transition-all`}>
+				<a href="/" className={`mx-10 text-xl text-shadow ${url == '/' || url == '/play' ? "text-white font-semibold" : "text-white/40 font-medium"} transition-all`}>
 					Play
 				</a>
-				<a href="/login" class={url == '/login' && 'active'} className={`mx-10 text-xl text-shadow ${url == '/login' ? "text-white font-semibold" : "text-white/40 font-medium"} transition-all`}>
+				<a href="/shop" className={`mx-10 text-xl text-shadow ${url == '/shop' ? "text-white font-semibold" : "text-white/40 font-medium"} transition-all`}>
 					Shop
 				</a>
 			</nav>
