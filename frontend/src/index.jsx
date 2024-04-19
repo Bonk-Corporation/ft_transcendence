@@ -1,6 +1,6 @@
 import 'vite/modulepreload-polyfill';
 import { render } from 'preact';
-import { LocationProvider, Router, Route } from 'preact-iso';
+import { LocationProvider, Router, Route, useLocation } from 'preact-iso';
 
 import { Navbar } from './components/Navbar.jsx';
 import { Play } from './pages/Play/index.jsx';
@@ -27,11 +27,12 @@ export function App() {
 			  particle_background: "#331e4b",
 		});
 	});
+
 	return (
-		<div id="ambient" class="w-screen h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center">
+		<div id="ambient" className="w-screen h-full min-h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center overflow-hidden">
 			<LocationProvider>
 				<Navbar />
-				<main class="w-screen z-50 flex-1 flex flex-col justify-center items-center px-10">
+				<main className="w-screen z-50 flex-1 flex flex-col justify-center items-center px-10">
 					<Router>
 						<Route path="/" component={Play} />
 						<Route path="/login" component={Login} />
