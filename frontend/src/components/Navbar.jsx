@@ -1,13 +1,20 @@
 import { useLocation } from 'preact-iso';
-import { ConnectedLogCard } from './ConnectedLogCard';
+import { NotLogCard } from './NotLogCard';
+import { LogCard } from './LogCard';
 
 export function Navbar() {
 	const { url } = useLocation();
-	const logged = false;
+	const logged = true;
+
+	const profile = {
+		name: "DinoMalin",
+		level: 18,
+		avatar: "https://i.pinimg.com/236x/9d/58/d1/9d58d1fba36aa76996b5de3f3d233d22.jpg"
+	}
 
 	return (
 		<header className="
-			w-full px-8 py-4 z-50
+			w-full pl-8 pr-4 py-4 z-50
 			flex justify-between items-center rounded-full
 			border-gradient nav font-semibold transition-all backdrop-blur-lg
 			">
@@ -32,7 +39,7 @@ export function Navbar() {
 				</a>
 			</nav>
 			
-			{logged ? <div></div> : <ConnectedLogCard/>}
+			{logged ? <LogCard user={profile}/> : <NotLogCard/>}
 
 		</header>
 	);
