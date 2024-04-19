@@ -10,6 +10,7 @@ import { Login } from './pages/Auth/Login.jsx';
 import { NotFound } from './pages/_404.jsx';
 import { BVAmbient } from './scripts/bvambient.js';
 import './index.css';
+import { Profile } from './pages/Profile/index.jsx';
 
 export function App() {
 	document.addEventListener("DOMContentLoaded", function() {
@@ -39,6 +40,7 @@ export function App() {
 						<Route path="/tournament" component={Tournament} />
 						<Route path="/play" component={Play} />
 						<Route path="/shop" component={Shop} />
+						<Route path="/shop" component={Profile} />
 						{/*<Route path="/signup" component={Signup} />*/}
 						<Route default component={NotFound} />
 					</Router>
