@@ -25,8 +25,25 @@ body {
     }
 }
 
-.border-gradient {
+.angle-gradient {
 	background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+}
+
+.border-gradient-hover:hover:before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	padding: 2px;
+	background: linear-gradient(to bottom right, #F6EAFF, #DFD2F0, #CEBDE3, #D3B4FB);
+	-webkit-mask:
+	   linear-gradient(#fff 0 0) content-box,
+	   linear-gradient(#fff 0 0);
+			mask: 
+	   linear-gradient(#fff 0 0) content-box,
+	   linear-gradient(#fff 0 0);
+	-webkit-mask-composite: xor;
+			mask-composite: exclude;
+	pointer-events: none;
 }
 .border-gradient:before {
 	content: "";
