@@ -29,10 +29,18 @@ export function App() {
 		});
 	});
 
+	const profile = {
+		name: "DinoMalin",
+		email: "dinomalin@gmail.com",
+		level: 18,
+		levelPercentage: 78,
+		avatar: "https://i.pinimg.com/236x/9d/58/d1/9d58d1fba36aa76996b5de3f3d233d22.jpg"
+	}
+
 	return (
 		<div id="ambient" className="w-screen h-full min-h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center overflow-hidden">
 			<LocationProvider>
-				<Navbar />
+				<Navbar profile={profile} />
 				<main className="w-screen z-50 flex-1 flex flex-col justify-center items-center px-10">
 					<Router>
 						<Route path="/" component={Play} />
@@ -40,7 +48,7 @@ export function App() {
 						<Route path="/tournament" component={Tournament} />
 						<Route path="/play" component={Play} />
 						<Route path="/shop" component={Shop} />
-						<Route path="/shop" component={Profile} />
+						<Route path="/profile" component={() => <Profile profile={profile} />} />
 						{/*<Route path="/signup" component={Signup} />*/}
 						<Route default component={NotFound} />
 					</Router>
