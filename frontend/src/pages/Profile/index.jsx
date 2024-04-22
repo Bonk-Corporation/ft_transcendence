@@ -1,9 +1,10 @@
 import React from 'react';
+import { ProfileCard } from '../../components/ProfileCard';
 
-export function Profile() {
+export function Profile({profile}) {
   return (
     <div>
-      <h1>Profile</h1>
+      <ProfileCard profile={profile} />
     </div>
   );
 }
