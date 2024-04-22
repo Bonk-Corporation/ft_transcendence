@@ -2,15 +2,10 @@ import { useLocation } from 'preact-iso';
 import { NotLogCard } from './NotLogCard';
 import { LogCard } from './LogCard';
 
-export function Navbar() {
+export function Navbar(props) {
 	const { url } = useLocation();
 
 	const logged = true;
-	const profile = {
-		name: "DinoMalin",
-		level: 18,
-		avatar: "https://i.pinimg.com/236x/9d/58/d1/9d58d1fba36aa76996b5de3f3d233d22.jpg"
-	}
 
 	return (
 		<header className="
@@ -39,7 +34,7 @@ export function Navbar() {
 				</a>
 			</nav>
 			
-			{logged ? <LogCard user={profile}/> : <NotLogCard/>}
+			{logged ? <LogCard user={props.profile}/> : <NotLogCard/>}
 
 		</header>
 	);
