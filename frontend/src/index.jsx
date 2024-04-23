@@ -16,13 +16,13 @@ export function App() {
 	document.addEventListener("DOMContentLoaded", function() {
 		var demo1 = new BVAmbient({
 			  selector: "#ambient",
-			  fps: 60,
+			  fps: '60',
 			  max_transition_speed: 20000,
 			  min_transition_speed: 10000,
-			  particle_number: 100,
-			  particle_maxwidth: 30,
-			  particle_minwidth: 10,
-			  particle_radius: 50,
+			  particle_number: '100',
+			  particle_maxwidth: '30',
+			  particle_minwidth: '10',
+			  particle_radius: '50',
 			  particle_opacity: true,
 			  particle_colision_change: false,
 			  particle_background: "#331e4b",
@@ -34,7 +34,34 @@ export function App() {
 		email: "dinomalin@gmail.com",
 		level: 18,
 		levelPercentage: 78,
-		avatar: "https://i.pinimg.com/236x/9d/58/d1/9d58d1fba36aa76996b5de3f3d233d22.jpg"
+		avatar: "https://i.pinimg.com/236x/9d/58/d1/9d58d1fba36aa76996b5de3f3d233d22.jpg",
+		friends: [
+			{
+				name: "FeuilleMorte",
+				avatar: "https://i.ytimg.com/vi/lX7ofuGJl6Y/hqdefault.jpg",
+				level: 21
+			},
+			{
+				name: "Feur",
+				avatar: "https://www.itadori-shop.com/cdn/shop/articles/Satoru-Hollow-Purple-e1615636661895_1200x1200.jpg?v=1634757049",
+				level: 42
+			},
+			{
+				name: "FeuilleMorte",
+				avatar: "https://i.ytimg.com/vi/lX7ofuGJl6Y/hqdefault.jpg",
+				level: 21
+			},
+			{
+				name: "FeuilleMorte",
+				avatar: "https://i.ytimg.com/vi/lX7ofuGJl6Y/hqdefault.jpg",
+				level: 21
+			},
+			{
+				name: "FeuilleMorte",
+				avatar: "https://i.ytimg.com/vi/lX7ofuGJl6Y/hqdefault.jpg",
+				level: 21
+			}
+		]
 	}
 
 	return (

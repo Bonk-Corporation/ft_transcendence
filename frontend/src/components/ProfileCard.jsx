@@ -7,7 +7,7 @@ import { Level } from './Level';
 export function ProfileCard({profile}) {
   return (
     <div>
-        <Card className='flex flex-col items-center justify-center p-6'>
+        <Card className='flex flex-col items-center justify-center p-6 h-full'>
             <div className="flex items-center">
                 <div className={`rounded-full w-32 mr-4 aspect-square bg-[url(${profile.avatar})] bg-center bg-cover`} />
                 <div className="flex flex-col">
