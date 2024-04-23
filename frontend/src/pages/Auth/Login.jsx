@@ -16,8 +16,8 @@ export function Login() {
 			<div className="max-w-[600px] flex flex-col items-center justify-center">
 				<h1 className="text-2xl font-semibold">Log in</h1>
 				<form action="" method="POST" className="w-full flex flex-col items-center">
-					<Input className="my-1 w-full" placeholder="Username" />
-					<Input className="my-1 w-full" placeholder="Password" />
+					<Input className="my-1 w-full" placeholder="Username" type="text"/>
+					<Input className="my-1 w-full" placeholder="Password" type="password"/>
 				</form>
 				<CTA className="my-2">Log in</CTA>
 				<a className="underline" href={url}>Log in with 42</a>
