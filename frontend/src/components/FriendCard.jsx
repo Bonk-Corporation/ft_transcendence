@@ -9,7 +9,7 @@ export function FriendCard({profile}) {
 
                 <div className={`bg-[url(${profile.avatar})] bg-cover bg-center bg-no-repeat rounded-full w-20 aspect-square `} />
                 <div className="ml-4 mr-16 flex flex-col">
-                    <h1 className="my-1">{profile.name}</h1>
+                    <h1 className="font-semibold text-xl">{profile.name}</h1>
                     <h1 className="my-1">Level {profile.level}</h1>
                 </div>
             </div>
