@@ -4,6 +4,7 @@ import { Price } from './Price';
 import { Input } from './Input';
 import { CTA } from './CTA';
 
+
 export function Payment(props) {
   return (
     <div className="flex flex-col justify-center items-center">

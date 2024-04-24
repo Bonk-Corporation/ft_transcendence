@@ -31,7 +31,16 @@ devDependencies:
     version: 8.4.38
 =======
     version: 1.3.0(eslint@8.57.0)(typescript@5.4.4)
+<<<<<<< HEAD
 >>>>>>> 923b2ee (+ | Add a navbar)
+=======
+<<<<<<< HEAD
+=======
+  postcss:
+    specifier: ^8.4.38
+    version: 8.4.38
+>>>>>>> ca35117 (+ | Tried to get tailwind)
+>>>>>>> 726013f (+ | Tried to get tailwind and ended up using the CDN)
   tailwindcss:
     specifier: ^3.4.3
     version: 3.4.3
@@ -983,7 +992,13 @@ packages:
   /ast-metadata-inferer@0.8.0:
     resolution: {integrity: sha512-jOMKcHht9LxYIEQu+RVd22vtgrPaVCtDRQ/16IGmurdzxvYbDd5ynxjnyrzLnieG96eTcAyaoj/wN/4/1FyyeA==}
     dependencies:
+<<<<<<< HEAD
       '@mdn/browser-compat-data': 5.5.22
+=======
+      '@mdn/browser-compat-data': 5.5.20
+<<<<<<< HEAD
+=======
+>>>>>>> 726013f (+ | Tried to get tailwind and ended up using the CDN)
     dev: true
 
   /autoprefixer@10.4.19(postcss@8.4.38):
@@ -994,12 +1009,20 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.23.0
+<<<<<<< HEAD
       caniuse-lite: 1.0.30001610
+=======
+      caniuse-lite: 1.0.30001607
+>>>>>>> 726013f (+ | Tried to get tailwind and ended up using the CDN)
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
       postcss: 8.4.38
       postcss-value-parser: 4.2.0
+<<<<<<< HEAD
+=======
+>>>>>>> ca35117 (+ | Tried to get tailwind)
+>>>>>>> 726013f (+ | Tried to get tailwind and ended up using the CDN)
     dev: true
 
   /available-typed-arrays@1.0.7:
