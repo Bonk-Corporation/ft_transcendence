@@ -4,7 +4,7 @@ import { Card } from './Card';
 import { Payment } from './Payment';
 import { Price } from './Price';
 import { BallPresentation } from './BallPresentation';
-import '../style.css'
+
 
 export function ShopItem(props) {
   const [popUp, setPopUp] = useState(false);

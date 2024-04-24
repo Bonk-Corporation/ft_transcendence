@@ -1,7 +1,6 @@
 import {ShopItem} from '../../components/ShopItem';
 import { useState } from 'preact/hooks';
 import { PopUp } from '../../components/PopUp';
-import '../../style.css'
 
 const items = [
 {

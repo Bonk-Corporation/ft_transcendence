@@ -1,6 +1,4 @@
-import '../../index.css';
 import { useState, useEffect } from 'preact/hooks';
-import '../../style.css'
 
 export function Play() {
 	const [me, setMe] = useState(null);
@@ -21,6 +19,7 @@ export function Play() {
 				<div class="w-1/2 rounded h-full bg-blue-500 mx-4 hover:w-3/4 transition-all">
 
 				</div>
+
 			</div>
 		</div>
 	);
