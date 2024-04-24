@@ -2,6 +2,7 @@ import React from 'react';
 import { ProfileCard } from '../../components/ProfileCard';
 import { FriendCard } from '../../components/FriendCard';
 import { GameCard } from '../../components/GameCard';
+import '../../style.css'
 
 export function Profile({profile}) {
   return (

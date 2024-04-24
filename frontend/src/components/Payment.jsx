@@ -3,6 +3,7 @@ import { BallPresentation } from './BallPresentation';
 import { Price } from './Price';
 import { Input } from './Input';
 import { CTA } from './CTA';
+import '../style.css'
 
 export function Payment(props) {
   return (
