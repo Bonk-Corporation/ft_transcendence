@@ -61,6 +61,48 @@ export function App() {
 				avatar: "https://i.ytimg.com/vi/lX7ofuGJl6Y/hqdefault.jpg",
 				level: 21
 			}
+		],
+		gameHistory: [
+			{
+				game: 'Pong',
+				score: [4, 1],
+				win: true,
+			},
+			{
+				game: 'Bonk',
+				score: [1, 4],
+				win: false,
+			},
+			{
+				game: 'Bonk',
+				score: [1, 4],
+				win: true,
+			},
+			{
+				game: 'Pong',
+				score: [1, 4],
+				win: false,
+			},
+			{
+				game: 'Pong',
+				score: [4, 1],
+				win: true,
+			},
+			{
+				game: 'Bonk',
+				score: [1, 4],
+				win: false,
+			},
+			{
+				game: 'Bonk',
+				score: [1, 4],
+				win: true,
+			},
+			{
+				game: 'Pong',
+				score: [1, 4],
+				win: false,
+			},
 		]
 	}
 
