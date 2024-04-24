@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card } from './Card';
-import '../style.css'
 
 export function FriendCard({profile}) {
   return (

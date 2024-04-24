@@ -1,5 +1,5 @@
 import 'vite/modulepreload-polyfill';
-import './index.css';
+import './style.css';
 import { render } from 'preact';
 import { LocationProvider, Router, Route, useLocation } from 'preact-iso';
 

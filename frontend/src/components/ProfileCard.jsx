@@ -3,7 +3,7 @@ import { Card } from './Card';
 import { Input } from './Input';
 import { CTA } from './CTA';
 import { Level } from './Level';
-import '../style.css'
+
 
 export function ProfileCard({profile}) {
   return (

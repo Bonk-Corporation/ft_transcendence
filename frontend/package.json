@@ -2,7 +2,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "vite -l silent",
+		"dev": "vite",
 		"build": "vite build"
 	},
 	"dependencies": {

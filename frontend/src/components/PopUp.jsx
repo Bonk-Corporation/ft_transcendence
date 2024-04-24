@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card } from './Card';
-import '../style.css'
+
 
 export function PopUp({ active, setActive, children }) {
   return (

@@ -1,5 +1,4 @@
 import React from 'react';
-import '../style.css'
 
 export function Card({className = "", color = "white", children}) {
   return (
