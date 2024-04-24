@@ -1,8 +1,8 @@
 import React from 'react';
 
-export function Card({className = "", children}) {
+export function Card({className = "", color = "white", children}) {
   return (
-    <div className={`backdrop-blur-lg rounded-md before:rounded-md ${className} bg-gradient-to-br from-white/20 to-white/5  transition-all ease-in-out`}>
+    <div className={`backdrop-blur-lg rounded-md before:rounded-md ${className} bg-gradient-to-br from-${color}/20 to-${color}/5  transition-all ease-in-out`}>
       {children}
     </div>
   );
