@@ -20,6 +20,8 @@ mkShell {
 	];
 
 	shellHook = ''
+		export SHELL=zsh
+		export PS1="[1mBonk Corporation[0m %% "
 		export "PATH=venv/bin/:$PATH"
 		export PIP_DISABLE_PIP_VERSION_CHECK=1
 
@@ -48,9 +50,10 @@ mkShell {
 			''
 		  else
 			''
-				tmux new-session -d make
+				tmux new-session -d 'trap : INT; make || $SHELL'
 				tmux set -g mouse on # neat
-				tmux split-window -h 'make fdev'
+				tmux split-window -h 'trap : INT; make fdev || $SHELL'
+				tmux split-window '$SHELL'
 				exec tmux attach
 			''
 		 }
