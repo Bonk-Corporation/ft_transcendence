@@ -5,7 +5,9 @@ with import <nixpkgs> {};
 mkShell {
 	packages = [
 		python3
+		python3Packages.pip
 		virtualenv
+		gnused
 
 		nodejs
 		nodePackages.pnpm
@@ -18,15 +20,25 @@ mkShell {
 	];
 
 	shellHook = ''
+		export "PATH=venv/bin/:$PATH"
 		export PIP_DISABLE_PIP_VERSION_CHECK=1
 
-		pnpm install --reporter=silent
-		pnpm install -C frontend --reporter=silent
+		yes | pnpm install --reporter=silent
+		yes | pnpm install -C frontend --reporter=silent
 
 		make venv >/dev/null
+		${if prod then
+			''
+				sed -i '1s|.*|#!/app/venv/bin/python3|' venv/bin/pip3
+			''
+		  else
+			''
+				sed -i "1s|.*|#!$PWD/venv/bin/python3|" venv/bin/pip3
+			''
+		}
 		source venv/bin/activate
 
-		pip3 install -r requirements.txt --quiet
+		pip3 install -r requirements.txt --break-system-packages --quiet
 
 		${if prod then
 			''
