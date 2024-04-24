@@ -3,6 +3,7 @@ db.sqlite3
 .*.swp
 __pycache__
 node_modules
+target
 venv
 .env
 .pnpm-store
