@@ -5,6 +5,7 @@ import { Payment } from './Payment';
 import { Price } from './Price';
 import { BallPresentation } from './BallPresentation';
 
+
 export function ShopItem(props) {
   const [popUp, setPopUp] = useState(false);
 

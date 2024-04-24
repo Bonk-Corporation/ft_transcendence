@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 export function LogCard(props) {
   return (
     <a href="/profile" className="flex items-center rounded-full hover:bg-white transition-all group hover:cursor-pointer pr-4">

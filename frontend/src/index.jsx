@@ -1,4 +1,5 @@
 import 'vite/modulepreload-polyfill';
+import './style.css';
 import { render } from 'preact';
 import { LocationProvider, Router, Route, useLocation } from 'preact-iso';
 
@@ -9,7 +10,6 @@ import { Shop } from './pages/Shop/index.jsx';
 import { Login } from './pages/Auth/Login.jsx';
 import { NotFound } from './pages/_404.jsx';
 import { BVAmbient } from './scripts/bvambient.js';
-import './index.css';
 import { Profile } from './pages/Profile/index.jsx';
 
 export function App() {

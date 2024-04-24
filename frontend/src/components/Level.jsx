@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 export function Level({level, levelPercentage}) {
   return (
     <div className="w-full transition-all flex flex-col items-center">

@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 export function NotLogCard() {
   return (
     <div className="flex items-center pr-4">
