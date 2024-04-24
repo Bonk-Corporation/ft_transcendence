@@ -1,5 +1,6 @@
 import '../../index.css';
 import { useState, useEffect } from 'preact/hooks';
+import '../../style.css'
 
 export function Play() {
 	const [me, setMe] = useState(null);
