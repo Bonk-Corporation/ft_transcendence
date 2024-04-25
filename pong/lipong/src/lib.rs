@@ -24,7 +24,8 @@ fn start() -> Result<(), JsValue> {
     let document = web_sys::window().expect("No window element")
         .document().expect("No document element");
     
-    let start_button: HtmlButtonElement = document.get_element_by_id("start").expect("No element start").dyn_into::<HtmlButtonElement>()?;
+    let multi_button: HtmlButtonElement = document.get_element_by_id("multi").expect("No element multi").dyn_into::<HtmlButtonElement>()?;
+    let solo_button: HtmlButtonElement = document.get_element_by_id("solo").expect("No element solo").dyn_into::<HtmlButtonElement>()?;
     
     let context = render::get_context(&document)?;
     let vertex_shader = render::compile_shader(
@@ -106,8 +107,17 @@ fn start() -> Result<(), JsValue> {
   
     let cloned_data = client_data.clone();
     let cloned_ws = web_socket.clone();
-    let onclick_start = Closure::<dyn FnMut(_)>::new(move |_event: MouseEvent| {
-        match cloned_ws.send_with_str(("START".to_owned() + &serde_json::to_string(&cloned_data).unwrap()).as_str()) {
+    let onclick_multi = Closure::<dyn FnMut(_)>::new(move |_event: MouseEvent| {
+        match cloned_ws.send_with_str(("MULTI".to_owned() + &serde_json::to_string(&cloned_data).unwrap()).as_str()) {
+            Ok(_) => console_log!("messages sent"),
+            Err(err) => console_log!("error sending message: {:?}", err),
+        }
+    });
+
+    let cloned_data = client_data.clone();
+    let cloned_ws = web_socket.clone();
+    let onclick_solo = Closure::<dyn FnMut(_)>::new(move |_event: MouseEvent| {
+        match cloned_ws.send_with_str(("SOLO ".to_owned() + &serde_json::to_string(&cloned_data).unwrap()).as_str()) {
             Ok(_) => console_log!("messages sent"),
             Err(err) => console_log!("error sending message: {:?}", err),
         }
@@ -180,7 +190,8 @@ fn start() -> Result<(), JsValue> {
     });
     // Setting web_socket with callbacks
     
-    start_button.set_onclick(Some(onclick_start.as_ref().unchecked_ref()));
+    multi_button.set_onclick(Some(onclick_multi.as_ref().unchecked_ref()));
+    solo_button.set_onclick(Some(onclick_solo.as_ref().unchecked_ref()));
     document.add_event_listener_with_callback("keydown", onkey_down_callback.as_ref().unchecked_ref())?;
     document.add_event_listener_with_callback("keyup", onkey_up_callback.as_ref().unchecked_ref())?;
     web_socket.set_onmessage(Some(onmessage_callback.as_ref().unchecked_ref()));
@@ -192,6 +203,7 @@ fn start() -> Result<(), JsValue> {
     onerror_callback.forget();
     onkey_down_callback.forget();
     onkey_up_callback.forget();
-    onclick_start.forget();
+    onclick_multi.forget();
+    onclick_solo.forget();
 	Ok(())
 }

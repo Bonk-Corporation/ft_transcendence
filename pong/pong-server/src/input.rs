@@ -23,7 +23,7 @@ const BALL_ACCELERTION: f32 = 0.1;
 #[derive(Clone, Debug)]
 pub struct Client {
    pub id: String,
-   pub username: String,
+   pub name: String,
    pub id_game: Option<String>,
 }
 
@@ -254,6 +254,17 @@ impl Game {
             game_state: Arc::new(Mutex::new(GameState::none())),
         } 
     }
+    
+    pub fn new_solo(player1: Client, ai: Client, id: String) -> Game {
+        let (tx, _rx) = broadcast::channel(2);
+        Game {
+            player1: Some(player1),
+            player2: Some(ai),
+            tx,
+            id,
+            game_state: Arc::new(Mutex::new(GameState::none())),
+        } 
+    }
 
     pub fn is_full(&self) -> bool {
         match (self.player1.clone(), self.player2.clone()) {
@@ -318,13 +329,15 @@ impl Game {
                         }
                     }
                 }
+            } else if msg == "STOP " {
+                break;
             }
         }
         *game_on.lock().await = false;
         for moves in player_moves {
             let _ = moves.await;
         }
-        self.player1.as_ref().unwrap().username.clone()
+        self.player1.as_ref().unwrap().name.clone()
     }
 
     pub fn add_player(&mut self, client: Client) {
