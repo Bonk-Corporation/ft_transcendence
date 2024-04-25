@@ -4,18 +4,7 @@
     "serve": "webpack serve"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "@wasm-tool/wasm-pack-plugin": "1.5.0",
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "@wasm-tool/wasm-pack-plugin": "1.5.0",
-=======
->>>>>>> aa95d7c9e83c3e0063f541009657f4abebc2c8b8
->>>>>>> 83dccbf... + | Pong
-=======
->>>>>>> aa95d7c9e83c3e0063f541009657f4abebc2c8b8
->>>>>>> e61338a... + | Pong
     "html-webpack-plugin": "^5.3.2",
     "text-encoding": "^0.7.0",
     "webpack": "^5.49.0",
