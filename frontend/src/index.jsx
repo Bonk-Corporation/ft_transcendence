@@ -39,7 +39,7 @@ export function App() {
 			{
 				name: "FeuilleMorte",
 				avatar: "https://i.ytimg.com/vi/lX7ofuGJl6Y/hqdefault.jpg",
-				level: 21
+				level: 4
 			},
 			{
 				name: "Feur",
@@ -47,19 +47,19 @@ export function App() {
 				level: 42
 			},
 			{
-				name: "FeuilleMorte",
-				avatar: "https://i.ytimg.com/vi/lX7ofuGJl6Y/hqdefault.jpg",
+				name: "Bolvic",
+				avatar: "https://user-images.githubusercontent.com/8974888/231858967-7c37bf1e-335b-4f5a-9760-da97be9f54bb.png",
 				level: 21
 			},
 			{
-				name: "FeuilleMorte",
-				avatar: "https://i.ytimg.com/vi/lX7ofuGJl6Y/hqdefault.jpg",
+				name: "MaxMaxicoMax",
+				avatar: "https://s2.coinmarketcap.com/static/img/coins/200x200/23095.png",
 				level: 21
 			},
 			{
-				name: "FeuilleMorte",
-				avatar: "https://i.ytimg.com/vi/lX7ofuGJl6Y/hqdefault.jpg",
-				level: 21
+				name: "ndavenne",
+				avatar: "https://upload.wikimedia.org/wikipedia/commons/3/3d/Noah_mosaic.JPG",
+				level: 666
 			}
 		],
 		gameHistory: [
@@ -75,13 +75,13 @@ export function App() {
 			},
 			{
 				game: 'Bonk',
-				score: [1, 4],
+				score: [4, 1],
 				win: true,
 			},
 			{
 				game: 'Pong',
-				score: [1, 4],
-				win: false,
+				score: [4, 1],
+				win: true,
 			},
 			{
 				game: 'Pong',
