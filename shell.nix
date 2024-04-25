@@ -57,6 +57,8 @@ mkShell {
 
 		cargo install wasm-pack
 
+		cargo install wasm-pack
+
 		yes | pnpm install --reporter=silent
 		yes | pnpm install -C frontend --reporter=silent
 
