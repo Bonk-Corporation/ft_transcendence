@@ -229,24 +229,9 @@ async fn main() {
         .route("/", get(websocket_handler))
         .with_state(clients_poll);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     let listener = tokio::net::TcpListener::bind("0.0.0.0:6969")
         .await
         .expect("failed to bind ip adress to the listener");
-=======
-=======
->>>>>>> e61338a... + | Pong
-    let listener = match tokio::net::TcpListener::bind("10.11.3.4:6969").await {
-        Err(_) => tokio::net::TcpListener::bind("192.168.1.102:6969")
-                    .await
-                    .expect("binding failed"),
-        Ok(tcp) => tcp,
-    };
-<<<<<<< HEAD
->>>>>>> 83dccbf... + | Pong
-=======
->>>>>>> e61338a... + | Pong
 
     axum::serve(listener, app)
         .await
