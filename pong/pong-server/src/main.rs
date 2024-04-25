@@ -9,17 +9,18 @@ use axum::{
     routing::get,
 };
 use input::{
-    Move,
-    Game,
-    Client,
-    OnConnectClient
+    Client, Game, GameState, Move, OnConnectClient
 };
 use tokio::sync::RwLock;
+use futures::lock::Mutex;
+
+const AI_ID: &str = "ROBOCOP"; 
 
 #[derive(Debug)]
 struct Clients {
     poll: Vec<Client>,
     games: Vec<Game>,
+    bot_games: Vec<Client>,
 }
 
 impl Clients {
@@ -46,7 +47,6 @@ impl Clients {
                         break;
                     }
                     found = true;
-                    println!("{:?}", self.games);
                     for game in self.games.as_mut_slice() {
                         if game.is_full() {
                             continue;
@@ -66,13 +66,8 @@ impl Clients {
                     }
                     if None == client.id_game {
                         game_id = Some(uuid::Uuid::new_v4().to_string());
-                        {
-                            println!("before");
-                            self.games.push(Game::new(client.clone(), game_id.as_ref().unwrap().clone()));
-                            print!("after");
-                        }
+                        self.games.push(Game::new(client.clone(), game_id.as_ref().unwrap().clone()));
                         client.id_game = Some(game_id.as_ref().unwrap().clone());
-                        println!("create new game in: {:?}", self.games);
                     }
                     break;
                 },
@@ -85,6 +80,36 @@ impl Clients {
             Ok(game_id.unwrap())
         }
     }
+
+    async fn start_solo(&mut self, client_id: String) -> Result<String, String> {
+        let mut game_id = None;
+        for client in self.poll.as_mut_slice() {
+            match client.id.as_str() {
+                num if num == client_id => {
+                    if let Some(_) = client.id_game {
+                        return Err("Client already in game".to_string());
+                    }
+                    game_id = Some(uuid::Uuid::new_v4().to_string());
+                    let new_ai_game = Client {
+                        id: AI_ID.to_string(),
+                        name: "AI".to_string(),
+                        id_game: game_id.clone(),
+                    };
+                    let mut new_solo = Game::new_solo(client.clone(), new_ai_game.clone(), game_id.as_ref().unwrap().clone());
+                    self.games.push(new_solo.clone());
+                    self.bot_games.push(new_ai_game);
+                    tokio::spawn(async move {
+                        let winner = new_solo.start().await;
+                        println!("{} won", winner);
+                    });
+                    client.id_game = Some(game_id.as_ref().unwrap().clone());
+                },
+                _ => (),
+            }
+        }
+        Ok(game_id.unwrap())
+    }
+
     async fn receive_move(&self, movement: Move) -> Result<(), Box<dyn std::error::Error>> {
         for game in self.games.as_slice() {
             if movement.game_id == game.id {
@@ -99,6 +124,7 @@ impl Clients {
         }
         Ok(())
     }
+
     async fn stop_move(&self, movement: Move) -> Result<(), Box<dyn std::error::Error>> {
         for game in self.games.as_slice() {
             if movement.game_id == game.id {
@@ -122,6 +148,19 @@ impl Clients {
         }
         Err("No game found".to_string())
     }
+
+    fn get_game_states(&self) -> Vec<Arc<Mutex<GameState>>> {
+        let mut game_states = vec![];
+        for game in self.games.as_slice() {
+            if let Some(ai) = &game.player2 {
+                if &ai.name == AI_ID {
+                    game_states.push(Arc::clone(&game.game_state));
+                }
+            }
+        }
+
+        game_states
+    }
 }
 async fn websocket_handler(State(state): State<Arc<RwLock<Clients>>>, ws: WebSocketUpgrade) -> impl IntoResponse {
     ws.on_upgrade(|socket| handle_socket(state, socket))
@@ -131,6 +170,11 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
     let (sender, mut receiver) = socket.split();
     let sender = Arc::new(RwLock::new(sender));
     let mut join_handler = vec![];
+    let mut client = Client {
+        id: "".to_string(),
+        name: "Player".to_string(),
+        id_game: None,
+    };
     while let Some(Ok(msg)) = receiver.next().await {
         match msg {
             Message::Text(text) => {
@@ -138,13 +182,13 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                 match &text[0..5] {
                     "NEW  " => {
                         let on_connect: OnConnectClient = serde_json::from_str(&text[5..]).unwrap();
-                        let client = Client {
+                        client = Client {
                             id: on_connect.id,
-                            username: on_connect.username,
+                            name: "Player".to_string(),
                             id_game: None,
                         };
                         state.write().await.add_client(client.clone()).await.unwrap();
-                        sender.write().await.send(Message::Text(format!("{} added to poll | id: {}", client.username, client.id)))
+                        sender.write().await.send(Message::Text(format!("{} added to poll | id: {}", client.name, client.id)))
                             .await
                             .unwrap();
                     },
@@ -160,11 +204,11 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                             println!("stop move succeded");
                         }
                     },
-                    "START" => {
+                    "MULTI" => {
                         let on_connect: OnConnectClient = serde_json::from_str(&text[5..]).unwrap();
                         let client = Client {
                             id: on_connect.id,
-                            username: on_connect.username,
+                            name: "Player".to_string(),
                             id_game: None,
                         };
                         let game_id: Option<String> = match state.write().await.start_game(client.id).await {
@@ -199,6 +243,65 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                             }
                         }));
                     },
+                    "SOLO" => {
+                        let on_connect: OnConnectClient = serde_json::from_str(&text[5..]).unwrap();
+                        let client = Client {
+                            id: on_connect.id,
+                            name: "Player".to_string(),
+                            id_game: None,
+                        };
+                        let game_id: Option<String> = match state.write().await.start_solo(client.id).await {
+                            Ok(game_id) => {
+                                sender.write().await.send(Message::Text("GAMEID".to_owned() + &game_id))
+                                            .await
+                                            .unwrap();
+                                Some(game_id)
+                            },
+                            Err(err) => {
+                                println!("{}", err);
+                                None
+                            },
+                        };
+                        let cl_state = Arc::clone(&state);
+                        let ptr_ws = Arc::clone(&sender);
+                        join_handler.push(tokio::spawn(async move {
+                            if game_id == None {
+                                return;
+                            }
+                            loop {
+                                tokio::time::sleep(tokio::time::Duration::from_millis(33)).await;
+                                let game_state = cl_state.read().await.get_game(game_id.clone().unwrap()).await.unwrap().game_state;
+                                if game_state.lock().await.ball_ent.velocity.x != 0. {
+                                    game_state.lock().await.update_ball();
+                                    game_state.lock().await.update_score();
+                                    match ptr_ws.write().await.send(Message::Text("UPDATE".to_owned() + &serde_json::to_string(&(*game_state.lock().await)).unwrap())).await {
+                                        Ok(_) => (),
+                                        Err(_) => return,
+                                    };
+                                }
+                            }
+                        }));
+                    }
+                    "OURAI" => {
+                        let cl_state = Arc::clone(&state);
+                        let ptr_ws = Arc::clone(&sender);
+                        join_handler.push(tokio::spawn(async move {
+                            loop {
+                                tokio::time::sleep(tokio::time::Duration::from_millis(33)).await;
+                                let game_states = cl_state.read().await.get_game_states();
+                                for game_state in game_states {
+                                    if game_state.lock().await.ball_ent.velocity.x != 0. {
+                                        game_state.lock().await.update_ball();
+                                        game_state.lock().await.update_score();
+                                        match ptr_ws.write().await.send(Message::Text("UPDATE".to_owned() + &serde_json::to_string(&(*game_state.lock().await)).unwrap())).await {
+                                            Ok(_) => (),
+                                            Err(_) => return,
+                                        };
+                                    }
+                                }
+                            }
+                        }));
+                    }
                     _ => {
                         sender.write().await.send(Message::Text("Unknown command".to_string()))
                             .await
@@ -208,6 +311,25 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
             },
             Message::Close(_) => {
                 println!("Client Disconnected...");
+                for (i, cl) in state.read().await.poll.as_slice().into_iter().enumerate() {
+                    if cl.id == client.id {
+                        if let Some(game_id) = &cl.id_game { 
+                            match state.read().await.get_game(game_id.to_string()).await.unwrap().tx.send("STOP ".to_owned()) {
+                                Err(err) => println!("Err while client Disconnected: {}", err),
+                                Ok(_) => {
+                                    for (j, game) in state.read().await.games.as_slice().into_iter().enumerate() {
+                                        if game.id == *game_id {
+                                            state.write().await.games.swap_remove(j);
+                                            break;
+                                        }
+                                    }
+                                }
+                            };
+                        }
+                        state.write().await.poll.swap_remove(i);
+                        break;
+                    }
+                }
                 break;
             },
             _ => {
@@ -223,7 +345,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
 #[tokio::main]
 async fn main() {
 
-    let clients_poll = Arc::new(RwLock::new(Clients {poll: vec![], games: vec![]}));
+    let clients_poll = Arc::new(RwLock::new(Clients {poll: vec![], games: vec![], bot_games: vec![]}));
 
     let app = Router::new()
         .route("/", get(websocket_handler))
