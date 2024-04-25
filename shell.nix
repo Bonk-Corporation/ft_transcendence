@@ -2,6 +2,10 @@ with import <nixpkgs> {};
 
 { prod ? false }:
 
+let
+	fenix = import (fetchTarball "https://github.com/nix-community/fenix/archive/main.tar.gz") { };
+in
+
 mkShell {
 	packages = [
 		python3
@@ -17,11 +21,18 @@ mkShell {
 		black
 
 		tmux
+		
+		(with fenix; with latest; combine [
+			minimal.toolchain
+			targets.wasm32-unknown-unknown.latest.rust-std
+		])
 	];
 
 	shellHook = ''
 		export "PATH=venv/bin/:$PATH"
 		export PIP_DISABLE_PIP_VERSION_CHECK=1
+
+		cargo install wasm-pack
 
 		yes | pnpm install --reporter=silent
 		yes | pnpm install -C frontend --reporter=silent
