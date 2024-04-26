@@ -25,11 +25,21 @@ pub struct Entity {
 }
 
 #[derive(Clone, Serialize, Deserialize)]
+pub enum EndGame {
+	Player1,
+	Player2,
+	Draw,
+	Undecided,
+}
+
+#[derive(Clone, Serialize, Deserialize)]
 pub struct GameState {
   pub player1_ent  : Entity,
   pub player2_ent  : Entity,
   pub ball_ent     : Entity,
-  pub score    : (i16, i16)
+  pub score    : (i16, i16),
+  pub winner: EndGame,
+  pub finished: bool,
 }
 
 pub fn render(

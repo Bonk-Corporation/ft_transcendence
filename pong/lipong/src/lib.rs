@@ -65,7 +65,7 @@ fn start() -> Result<(), JsValue> {
     
     let location = document.location().expect("No location found").host()?;
     let index = location.rfind(":").expect("error parsing location");
-    let path = "ws://".to_owned() + &location[0..index]+ ":6969/";
+    let path = "ws://".to_owned() + &location[0..index]+ ":4210/";
     let web_socket = WebSocket::new(&path)?;
     web_socket.set_binary_type(web_sys::BinaryType::Arraybuffer);
     
@@ -78,8 +78,10 @@ fn start() -> Result<(), JsValue> {
             match &txt.as_string().unwrap()[0..6] {
                 "GAMEID" => {
                     *cloned_game_id.lock().unwrap() = txt.as_string().unwrap()[6..].to_string();
+					console_log!("Game Id received");
                 },
                 "UPDATE" => {
+					console_log!("Update received");
                     let game_state: render::GameState = serde_json::from_str(&txt.as_string().unwrap()[6..]).unwrap();
                     let (p1, p2) = game_state.score;
                     let score_str = "Player 1: ".to_owned() + &p1.to_string() + " Player 2: " + &p2.to_string();

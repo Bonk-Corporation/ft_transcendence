@@ -1,3 +1,4 @@
+#![feature(let_chains)]
 mod input;
 
 use std::sync::Arc;
@@ -13,6 +14,7 @@ use input::{
 };
 use tokio::sync::RwLock;
 use futures::lock::Mutex;
+use crate::input::EndGame;
 
 const AI_ID: &str = "ROBOCOP"; 
 
@@ -51,6 +53,7 @@ impl Clients {
                         if game.is_full() {
                             continue;
                         } else {
+                            println!("Game found");
                             game_id = Some(game.id.clone());
                             client.id_game = Some(game_id.as_ref().unwrap().clone());
                             game.add_player(client.clone());
@@ -58,7 +61,12 @@ impl Clients {
                                 let mut game_clone = game.clone();
                                 tokio::spawn(async move {
                                     let winner = game_clone.start().await;
-                                    println!("{} won", winner);
+                                    match winner {
+                                        EndGame::Player1 => println!("Player 1 won"),
+                                        EndGame::Player2 => println!("Player 2 won"),
+                                        EndGame::Draw => println!("Draw"),
+                                        EndGame::Undecided => println!("Undecided"),
+                                    }
                                 });
                             }
                             break;
@@ -68,6 +76,7 @@ impl Clients {
                         game_id = Some(uuid::Uuid::new_v4().to_string());
                         self.games.push(Game::new(client.clone(), game_id.as_ref().unwrap().clone()));
                         client.id_game = Some(game_id.as_ref().unwrap().clone());
+                        println!("Game created");
                     }
                     break;
                 },
@@ -100,7 +109,12 @@ impl Clients {
                     self.bot_games.push(new_ai_game);
                     tokio::spawn(async move {
                         let winner = new_solo.start().await;
-                        println!("{} won", winner);
+                        match winner {
+                            EndGame::Player1 => println!("Player 1 won"),
+                            EndGame::Player2 => println!("Player 2 won"),
+                            EndGame::Draw => println!("Draw"),
+                            EndGame::Undecided => println!("Undecided"),
+                        }
                     });
                     client.id_game = Some(game_id.as_ref().unwrap().clone());
                 },
@@ -162,6 +176,7 @@ impl Clients {
         game_states
     }
 }
+
 async fn websocket_handler(State(state): State<Arc<RwLock<Clients>>>, ws: WebSocketUpgrade) -> impl IntoResponse {
     ws.on_upgrade(|socket| handle_socket(state, socket))
 }
@@ -229,9 +244,16 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                             if game_id == None {
                                 return;
                             }
-                            loop {
+                            loop  {
+                                if let Err(_) = cl_state.read().await.get_game(game_id.clone().unwrap()).await {
+                                    break;
+                                }
                                 tokio::time::sleep(tokio::time::Duration::from_millis(33)).await;
-                                let game_state = cl_state.read().await.get_game(game_id.clone().unwrap()).await.unwrap().game_state;
+                                let game_state = if let Ok(game) = cl_state.read().await.get_game(game_id.clone().unwrap()).await {
+                                    game.game_state
+                                } else {
+                                    break;
+                                };
                                 if game_state.lock().await.ball_ent.velocity.x != 0. {
                                     game_state.lock().await.update_ball();
                                     game_state.lock().await.update_score();
@@ -239,6 +261,10 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                         Ok(_) => (),
                                         Err(_) => return,
                                     };
+                                }
+                                if game_state.lock().await.finished {
+                                    println!("quitting thread");
+                                    return;
                                 }
                             }
                         }));
@@ -311,26 +337,16 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
             },
             Message::Close(_) => {
                 println!("Client Disconnected...");
+                let mut index: i16 = -1;
                 for (i, cl) in state.read().await.poll.as_slice().into_iter().enumerate() {
                     if cl.id == client.id {
-                        if let Some(game_id) = &cl.id_game { 
-                            match state.read().await.get_game(game_id.to_string()).await.unwrap().tx.send("STOP ".to_owned()) {
-                                Err(err) => println!("Err while client Disconnected: {}", err),
-                                Ok(_) => {
-                                    for (j, game) in state.read().await.games.as_slice().into_iter().enumerate() {
-                                        if game.id == *game_id {
-                                            state.write().await.games.swap_remove(j);
-                                            break;
-                                        }
-                                    }
-                                }
-                            };
-                        }
-                        state.write().await.poll.swap_remove(i);
+                        index = i as i16;
                         break;
                     }
                 }
-                break;
+                if index != -1 {
+                    state.write().await.poll.swap_remove(index as usize);
+                }
             },
             _ => {
                 println!("Unknown message");
@@ -351,7 +367,7 @@ async fn main() {
         .route("/", get(websocket_handler))
         .with_state(clients_poll);
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:6969")
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:4210")
         .await
         .expect("failed to bind ip adress to the listener");
 

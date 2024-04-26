@@ -97,6 +97,16 @@ pub struct GameState {
     player2_ent : Entity,
     pub ball_ent: Entity,
     score       : (u8, u8),
+    pub winner: EndGame,
+    pub finished: bool,
+}
+
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+pub enum EndGame {
+    Player1,
+    Player2,
+    Draw,
+    Undecided,
 }
 
 impl GameState {
@@ -122,6 +132,8 @@ impl GameState {
             player2_ent : Entity::new(PLAYER_WIDTH, PLAYER_HEIGHT, player2_pos),
             ball_ent    : Entity::with_velocity(0.05, 0.05, ball_pos, ball_velocity),
             score       : (0, 0),
+            winner: EndGame::Undecided,
+            finished: false,
         }
     }
 
@@ -131,6 +143,8 @@ impl GameState {
             player2_ent : Entity::new(0.,0.,Vector2{x: 0., y: 0.}),
             ball_ent    : Entity::new(0.,0.,Vector2{x: 0., y: 0.}),
             score       : (0,0),
+            winner: EndGame::Undecided,
+            finished: false,
         }
     }
 
@@ -273,7 +287,7 @@ impl Game {
         }
     }
 
-    pub async fn start(&mut self) -> String {
+    pub async fn start(&mut self) -> EndGame {
         let mut rx = self.tx.subscribe();
         *self.game_state.lock().await = GameState::new();
         let mut player_moves = vec![];
@@ -330,6 +344,15 @@ impl Game {
                     }
                 }
             } else if msg == "STOP " {
+                let (p1, p2) = self.game_state.lock().await.score;
+                self.game_state.lock().await.finished = true;
+                self.game_state.lock().await.winner = if p1 < p2 {
+                    EndGame::Player2
+                } else if p1 > p2 {
+                    EndGame::Player1
+                } else {
+                    EndGame::Draw
+                };
                 break;
             }
         }
@@ -337,7 +360,7 @@ impl Game {
         for moves in player_moves {
             let _ = moves.await;
         }
-        self.player1.as_ref().unwrap().name.clone()
+        self.game_state.lock().await.winner
     }
 
     pub fn add_player(&mut self, client: Client) {
