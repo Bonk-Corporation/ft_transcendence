@@ -18,7 +18,9 @@ const PLAYER_SPIN: f32 = 4.;
 
 const BALL_SPEED: f32 = 5.;
 const BALL_ACCELERTION: f32 = 0.1;
+const MAX_BALL_SPEED: f32 = 20.;
 
+const MAX_SCORE: u8 = 10;
 
 #[derive(Clone, Debug)]
 pub struct Client {
@@ -190,6 +192,13 @@ impl GameState {
 
         if let Some(player) = paddle_hit {
             self.ball_ent.velocity.x = -(self.ball_ent.velocity.x + (BALL_ACCELERTION * self.ball_ent.velocity.x.signum()));
+            if self.ball_ent.velocity.x.signum() > MAX_BALL_SPEED {
+                self.ball_ent.velocity.x = if self.ball_ent.velocity.x > 0. {
+                    MAX_BALL_SPEED
+                } else {
+                    -MAX_BALL_SPEED
+                };
+            }
             
             let offset = (player.center().y - self.ball_ent.center().y) / player.height;
             self.ball_ent.velocity.y += PLAYER_SPIN * -offset;
@@ -200,6 +209,16 @@ impl GameState {
     }
 
     pub fn update_score(&mut self) {
+        let (p1, p2) =  self.score;
+        self.winner = if p1 >= MAX_SCORE {
+            self.finished = true;
+            EndGame::Player1
+        } else if p2 >= MAX_SCORE {
+            self.finished = true;
+            EndGame::Player2
+        } else {
+            EndGame::Undecided
+        };
         if self.ball_ent.position.x < 0. {
             let (player1_score, player2_score) = self.score;
             self.score = (player1_score, player2_score + 1);
