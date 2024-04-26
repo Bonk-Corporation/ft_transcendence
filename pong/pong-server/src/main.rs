@@ -262,6 +262,28 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                     };
                                 }
                                 if game_state.lock().await.finished {
+                                    let player1_id = if let Ok(game) = cl_state.read().await.get_game(game_id.clone().unwrap()).await {
+                                        game.player1.unwrap().id
+                                    } else {
+                                        return;
+                                    };
+                                    let player2_id = if let Ok(game) = cl_state.read().await.get_game(game_id.clone().unwrap()).await {
+                                        game.player2.unwrap().id
+                                    } else {
+                                        return;
+                                    };
+                                    let mut count = 0;
+                                    for client in cl_state.write().await.poll.as_mut_slice() {
+                                        if client.id == player1_id {
+                                            client.id_game = None;
+                                            count += 1;
+                                        } else if client.id == player2_id {
+                                            client.id_game = None;
+                                        }
+                                        if count >= 2 {
+                                            break;
+                                        }
+                                    }
                                     println!("quitting thread");
                                     return;
                                 }
