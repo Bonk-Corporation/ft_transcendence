@@ -343,16 +343,8 @@ impl Game {
                         }
                     }
                 }
-            } else if msg == "STOP " {
-                let (p1, p2) = self.game_state.lock().await.score;
-                self.game_state.lock().await.finished = true;
-                self.game_state.lock().await.winner = if p1 < p2 {
-                    EndGame::Player2
-                } else if p1 > p2 {
-                    EndGame::Player1
-                } else {
-                    EndGame::Draw
-                };
+            }
+            if self.game_state.lock().await.finished {
                 break;
             }
         }

@@ -1,4 +1,3 @@
-#![feature(let_chains)]
 mod input;
 
 use std::sync::Arc;
@@ -370,8 +369,8 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                     }
                                 }
                             }
-
                             game.game_state.lock().await.finished = true;
+                            let _ = game.tx.send("finish_him".to_owned());
                         }
                     }
                     for cl in state.write().await.poll.as_mut_slice() {
