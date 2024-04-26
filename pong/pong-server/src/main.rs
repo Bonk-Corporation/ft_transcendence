@@ -338,14 +338,48 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
             Message::Close(_) => {
                 println!("Client Disconnected...");
                 let mut index: i16 = -1;
+                let mut in_game = false;
+                let mut game_id = String::new();
                 for (i, cl) in state.read().await.poll.as_slice().into_iter().enumerate() {
                     if cl.id == client.id {
                         index = i as i16;
+                        if let Some(id) = &cl.id_game {
+                            in_game = true;
+                            game_id = id.to_string();
+                        }
                         break;
                     }
                 }
                 if index != -1 {
                     state.write().await.poll.swap_remove(index as usize);
+                }
+                if in_game {
+                    let mut free_player_id = String::new();
+                    for game in state.read().await.games.as_slice().into_iter() {
+                        if game.id == game_id {
+                            if let Some(player) = &game.player1 {
+                                if player.id == client.id {
+                                    if let Some(player2) = &game.player2 {
+                                        free_player_id = player2.id.clone();
+                                    }
+                                } else if let Some(player3) = &game.player2 {
+                                    if player3.id == client.id {
+                                        if let Some(player1) = &game.player1 {
+                                            free_player_id = player1.id.clone();
+                                        }
+                                    }
+                                }
+                            }
+
+                            game.game_state.lock().await.finished = true;
+                        }
+                    }
+                    for cl in state.write().await.poll.as_mut_slice() {
+                        if cl.id == free_player_id {
+                            cl.id_game = None;
+                            break;
+                        }
+                    }
                 }
             },
             _ => {
