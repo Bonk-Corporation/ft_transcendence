@@ -352,6 +352,18 @@ impl Game {
         for moves in player_moves {
             let _ = moves.await;
         }
+        let mut p1 = 0;
+        let mut p2 = 0;
+        {
+            (p1, p2) = self.game_state.lock().await.score;
+        }
+        if p1 > p2 {
+            self.game_state.lock().await.winner = EndGame::Player1;
+        } else if p1 < p2 {
+            self.game_state.lock().await.winner = EndGame::Player2;
+        } else {
+            self.game_state.lock().await.winner = EndGame::Draw;
+        }
         self.game_state.lock().await.winner
     }
 

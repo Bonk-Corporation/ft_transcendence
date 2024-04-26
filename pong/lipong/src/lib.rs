@@ -28,6 +28,8 @@ fn start() -> Result<(), JsValue> {
     let solo_button: HtmlButtonElement = document.get_element_by_id("solo").expect("No element solo").dyn_into::<HtmlButtonElement>()?;
     
     let context = render::get_context(&document)?;
+	let _ = context.clear_color(0.0, 0.0, 0.0, 1.0);
+    let _ = context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
     let vertex_shader = render::compile_shader(
         &context,
         WebGl2RenderingContext::VERTEX_SHADER,
@@ -83,10 +85,21 @@ fn start() -> Result<(), JsValue> {
                 "UPDATE" => {
 					console_log!("Update received");
                     let game_state: render::GameState = serde_json::from_str(&txt.as_string().unwrap()[6..]).unwrap();
-                    let (p1, p2) = game_state.score;
-                    let score_str = "Player 1: ".to_owned() + &p1.to_string() + " Player 2: " + &p2.to_string();
-                    cloned_score.set_inner_html(score_str.as_str());
-	                render::render(game_state, &context, &vertex_shader, &fragment_shader).expect("Rendering failed");
+					if game_state.finished {
+						match game_state.winner {
+							render::EndGame::Player1 => cloned_score.set_inner_html("Player 1 won"),
+							render::EndGame::Player2 => cloned_score.set_inner_html("Player 2 won"),
+							render::EndGame::Draw => cloned_score.set_inner_html("Draw"),
+							render::EndGame::Undecided => cloned_score.set_inner_html("Undecided"),
+						}
+						let _ = &context.clear_color(0.0, 0.0, 0.0, 1.0);
+    					let _ = &context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
+					} else {
+                    	let (p1, p2) = game_state.score;
+                    	let score_str = "Player 1: ".to_owned() + &p1.to_string() + " Player 2: " + &p2.to_string();
+                    	cloned_score.set_inner_html(score_str.as_str());
+	                	render::render(game_state, &context, &vertex_shader, &fragment_shader).expect("Rendering failed");
+					}
                 },
                 _ => (),
             }
