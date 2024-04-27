@@ -3,7 +3,7 @@ import './style.css';
 import { render } from 'preact';
 import { LocationProvider, Router, Route, useLocation } from 'preact-iso';
 
-import { Navbar } from './components/Navbar.jsx';
+import { Navbar } from './components/Navbar/Navbar.jsx';
 import { Play } from './pages/Play/index.jsx';
 import { Tournament } from './pages/Tournament/index.jsx';
 import { Shop } from './pages/Shop/index.jsx';

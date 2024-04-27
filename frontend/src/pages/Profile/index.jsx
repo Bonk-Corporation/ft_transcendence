@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { ProfileCard } from '../../components/ProfileCard';
-import { FriendCard } from '../../components/FriendCard';
-import { GameCard } from '../../components/GameCard';
-import { Card } from '../../components/Card';
-import { Stat } from '../../components/Stat';
+import { ProfileCard } from '../../components/Profile/ProfileCard';
+import { FriendCard } from '../../components/Profile/FriendCard';
+import { GameCard } from '../../components/Profile/GameCard';
+import { Card } from '../../components/utils/Card';
+import { Stat } from '../../components/Profile/Stat';
 
 
 export function Profile({profile}) {
@@ -42,7 +42,7 @@ export function Profile({profile}) {
             secondData={profile.gameHistory.reduce((accumulator, game) => !game.win && game.game == "Bonk" ? accumulator + 1 : accumulator, 0)}
             firstColor="#32CD32" secondColor="#FF6961"
       />
-      <Stat label="Score ratio - Bonk" firstLabel="Kill" secondLabel="Deaths"
+      <Stat label="Score ratio - Bonk" firstLabel="Kills" secondLabel="Deaths"
             firstData={profile.gameHistory.reduce((accumulator, game) => game.game == "Bonk" ? accumulator + game.score[0] : accumulator, 0)}
             secondData={profile.gameHistory.reduce((accumulator, game) => game.game == "Bonk" ? accumulator + game.score[1] : accumulator, 0)}
             firstColor="#79D2E6" secondColor="#FF964F"
