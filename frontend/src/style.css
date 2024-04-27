@@ -78,7 +78,7 @@ body {
 
 .down-gradient {
 	-webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-	color-stop(80%, rgba(0,0,0,1)), /* Début du dégradé à 25% de la hauteur */
-	to(rgba(0,0,0,0)) /* Fin du dégradé à 100% de la hauteur */
+	color-stop(80%, rgba(0,0,0,1)),
+	to(rgba(0,0,0,0))
 );
 }

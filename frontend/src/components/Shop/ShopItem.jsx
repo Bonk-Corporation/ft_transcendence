@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import { PopUp } from './PopUp';
-import { Card } from './Card';
+import { PopUp } from '../utils/PopUp';
+import { Card } from '../utils/Card';
 import { Payment } from './Payment';
 import { Price } from './Price';
 import { BallPresentation } from './BallPresentation';
