@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card } from './Card';
-import { Input } from './Input';
-import { CTA } from './CTA';
+import { Card } from '../utils/Card';
+import { Input } from '../utils/Input';
+import { CTA } from '../utils/CTA';
 import { Level } from './Level';
 
 

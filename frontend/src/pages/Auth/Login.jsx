@@ -1,6 +1,6 @@
-import { Card } from '../../components/Card'
-import { Input } from '../../components/Input';
-import { CTA } from '../../components/CTA';
+import { Card } from '../../components/utils/Card'
+import { Input } from '../../components/utils/Input';
+import { CTA } from '../../components/utils/CTA';
 
 
 // const CLIENT_ID = document.querySelector("setting[name=CLIENT_ID]").textContent

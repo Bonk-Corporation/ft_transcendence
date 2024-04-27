@@ -1,6 +1,6 @@
-import {ShopItem} from '../../components/ShopItem';
+import {ShopItem} from '../../components/Shop/ShopItem';
 import { useState } from 'preact/hooks';
-import { PopUp } from '../../components/PopUp';
+import { PopUp } from '../../components/utils/PopUp';
 
 const items = [
 {
@@ -41,12 +41,12 @@ const items = [
   ]
 },
 {
-  name: "4",
+  name: "Dinosaur",
   price: 4.2,
   images: [
-    "https://img.freepik.com/photos-gratuite/fond-texture-abstrait_1258-30484.jpg?size=338&ext=jpg&ga=GA1.1.867424154.1713398400&semt=ais",
-    "https://www.solidbackgrounds.com/images/2048x2048/2048x2048-boston-university-red-solid-color-background.jpg",
-    "https://i.pinimg.com/474x/22/18/6d/22186db2db07e9ec68f66cfb537e0aa5.jpg"
+    "https://media.sciencephoto.com/c0/48/95/68/c0489568-800px-wm.jpg",
+    "https://blogarchive.goodillustration.com/wp-content/uploads/2019/10/33.jpg",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUfRlMh3Gbxm22Ek6ZaR3nF6dbzlNcJ9yqBNeHQdPHKQ&s"
   ]
 },
 {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { BallPresentation } from './BallPresentation';
 import { Price } from './Price';
-import { Input } from './Input';
-import { CTA } from './CTA';
+import { Input } from '../utils/Input';
+import { CTA } from '../utils/CTA';
 
 
 export function Payment(props) {
