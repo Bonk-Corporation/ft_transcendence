@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Card } from './Card';
+import { Card } from '../utils/Card';
 import Chart from 'chart.js/auto';
 
 
