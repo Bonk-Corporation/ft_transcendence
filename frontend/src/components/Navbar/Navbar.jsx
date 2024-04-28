@@ -6,7 +6,7 @@ import { LogCard } from './LogCard';
 export function Navbar(props) {
 	const { url } = useLocation();
 
-	const logged = true;
+	const logged = false;
 
 	return (
 		<header className="
