@@ -8,7 +8,7 @@ export function Navbar(props) {
 
 	const logged = true;
 
-	const AUTHORIZED_LOCATIONS = ["/", "/tournament", "/shop", "/login", "/signup"];
+	const AUTHORIZED_LOCATIONS = ["/", "/tournament", "/shop", "/login", "/signup", "/profile"];
 
 	return (
 		<header className={`
