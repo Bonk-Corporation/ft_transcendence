@@ -116,7 +116,6 @@ export function App() {
 						<Route path="/" component={Play} />
 						<Route path="/login" component={Login} />
 						<Route path="/tournament" component={Tournament} />
-						<Route path="/play" component={Play} />
 						<Route path="/shop" component={Shop} />
 						<Route path="/profile" component={() => <Profile profile={profile} />} />
 						<Route path="/signup" component={Signup} />
