@@ -229,7 +229,7 @@ export function Shop() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="grid grid-cols-4 gap-8 my-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 my-4">
         {items.slice(page * 12, (page + 1) * 12).map((item, idx) => (
           <ShopItem item={item} />
         ))}
