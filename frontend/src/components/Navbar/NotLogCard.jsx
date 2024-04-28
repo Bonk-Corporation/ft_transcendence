@@ -8,9 +8,9 @@ export function NotLogCard() {
           Log in
         </button>
       </a>
-      <a href="/signin">
+      <a href="/signup">
         <button className="font-medium mx-2 border-2 border-white rounded-full px-6 py-2 bg-white text-black hover:bg-gray-300 hover:border-gray-300 transition-all ease-in-out">
-          Sign in
+          Sign up
         </button>
       </a>
     </div>
