@@ -13,6 +13,7 @@ export function Play() {
 	return (
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< HEAD:frontend/src/pages/Home/index.jsx
 		<div class="home">
 			{ me ? <h1 class="font-bold">{me.username} le goat</h1>
@@ -35,6 +36,16 @@ export function Play() {
 				<div class="w-1/2 rounded h-full bg-blue-500 mx-4 hover:w-3/4 transition-all">
 
 				</div>
+=======
+		<div className="flex flex-col h-full items-center justify-self-center">
+			<div className="w-screen max-w-[1000px] h-96 flex">
+				<a href="/pong" className="w-1/2 flex justify-center py-4 rounded h-full bg-red-500 mx-4 hover:w-3/4 transition-all">
+					Pong
+				</a>
+				<a href="/bonk" className="w-1/2 flex justify-center py-4 rounded h-full bg-blue-500 mx-4 hover:w-3/4 transition-all">
+					Bonk
+				</a>
+>>>>>>> 3627c31 (+ | Add access to games)
 
 			</div>
 >>>>>>> 9f34f5d (+ | Add a play menu without games)
