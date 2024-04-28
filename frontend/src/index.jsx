@@ -11,6 +11,7 @@ import { Login } from './pages/Auth/Login.jsx';
 import { NotFound } from './pages/_404.jsx';
 import { BVAmbient } from './scripts/bvambient.js';
 import { Profile } from './pages/Profile/index.jsx';
+import { Signup } from './pages/Auth/Signup';
 
 export function App() {
 	document.addEventListener("DOMContentLoaded", function() {
@@ -118,7 +119,7 @@ export function App() {
 						<Route path="/play" component={Play} />
 						<Route path="/shop" component={Shop} />
 						<Route path="/profile" component={() => <Profile profile={profile} />} />
-						{/*<Route path="/signup" component={Signup} />*/}
+						<Route path="/signup" component={Signup} />
 						<Route default component={NotFound} />
 					</Router>
 				</main>
