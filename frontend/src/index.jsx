@@ -12,6 +12,8 @@ import { NotFound } from './pages/_404.jsx';
 import { BVAmbient } from './scripts/bvambient.js';
 import { Profile } from './pages/Profile/index.jsx';
 import { Signup } from './pages/Auth/Signup';
+import { Pong } from './pages/Games/Pong';
+import { Bonk } from './pages/Games/Bonk';
 
 export function App() {
 	document.addEventListener("DOMContentLoaded", function() {
@@ -119,6 +121,8 @@ export function App() {
 						<Route path="/shop" component={Shop} />
 						<Route path="/profile" component={() => <Profile profile={profile} />} />
 						<Route path="/signup" component={Signup} />
+						<Route path="/pong" component={Pong} />
+						<Route path="/bonk" component={Bonk} />
 						<Route default component={NotFound} />
 					</Router>
 				</main>
