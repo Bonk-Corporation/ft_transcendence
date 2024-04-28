@@ -9,7 +9,7 @@ fdev:
 	$(PNPM) -C frontend run dev
 
 venv:
-	rm -rf $@
+	$(RM) -r $@
 	$(VIRTUALENV) $@
 
 .PHONY: run
