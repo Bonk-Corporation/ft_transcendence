@@ -14,14 +14,6 @@
 		"autoprefixer": "^10.4.19",
 		"eslint": "^8.57.0",
 		"eslint-config-preact": "^1.3.0",
-<<<<<<< HEAD
-<<<<<<< HEAD
-		"postcss": "^8.4.38",
-=======
->>>>>>> 923b2ee (+ | Add a navbar)
-		"tailwindcss": "^3.4.3",
-=======
->>>>>>> c0b85a1 (+ | Add game history)
 		"vite": "^4.3.2"
 	},
 	"eslintConfig": {
