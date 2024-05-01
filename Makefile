@@ -3,7 +3,7 @@ PYTHON = python3
 PNPM = pnpm
 
 run:
-	$(PYTHON) backend/manage.py runserver 0.0.0.0:8000
+	(cd backend && daphne bonk.asgi:application --port 8000 --bind 0.0.0.0)
 
 fdev:
 	$(PNPM) -C frontend run dev

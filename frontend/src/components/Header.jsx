@@ -15,6 +15,10 @@ export function Header() {
 				<a href="/login" class={url == '/login' && 'active'}>
 					Login
 				</a>
+				<a href="/ws/chat/" class={url == '/ws/chat/' && 'active'}>
+					Chat
+				</a>
+
 			</nav>
 		</header>
 	);
