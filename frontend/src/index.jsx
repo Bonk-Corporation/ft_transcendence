@@ -110,7 +110,7 @@ export function App() {
 	}
 
 	return (
-		<div id="ambienta" className="w-screen h-full min-h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center overflow-hidden">
+		<div id={navigator.userAgent.includes("Firefox") ? "" : "ambient"} className="w-screen h-full min-h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center overflow-hidden">
 			<LocationProvider>
 				<Navbar profile={profile} />
 				<main className="w-screen h-full z-50 flex-1 flex flex-col justify-center items-center px-10">
