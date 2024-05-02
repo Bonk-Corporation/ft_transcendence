@@ -35,7 +35,7 @@ export function Stat({label, firstLabel, secondLabel, firstData, secondData, fir
 		}, []);
 
   return (
-    <Card className="ml-4 flex items-center justify-center h-60 p-4 aspect-square">
+    <Card className="flex items-center justify-center h-60 p-4 aspect-square">
         <canvas ref={stat} ></canvas>
     </Card>
   );
