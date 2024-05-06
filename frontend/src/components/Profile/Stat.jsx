@@ -6,7 +6,6 @@ import Chart from 'chart.js/auto';
 export function Stat({label, firstLabel, secondLabel, firstData, secondData, firstColor, secondColor}) {
   const stat = useRef(null);
 
-	
 	useEffect(() => {
 		if (stat) {
 			const data = {
@@ -15,7 +14,10 @@ export function Stat({label, firstLabel, secondLabel, firstData, secondData, fir
 					label: label,
 					data: [firstData, secondData],
 					backgroundColor: [firstColor, secondColor],
-					hoverOffset: 4
+					hoverOffset: 4,
+					borderWidth: 0,
+					spacing: 3,
+					borderRadius: 42
 				}]
 			};
 		
@@ -27,7 +29,8 @@ export function Stat({label, firstLabel, secondLabel, firstData, secondData, fir
 					options: {
 						layout: {
 							padding: 5
-						}
+						},
+						cutout: 75
 					}
 				}
 				);
