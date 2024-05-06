@@ -6,8 +6,10 @@
 		"build": "vite build"
 	},
 	"dependencies": {
+		"apexcharts": "^3.49.0",
 		"preact": "^10.13.1",
-		"preact-iso": "^2.6.2"
+		"preact-iso": "^2.6.2",
+		"react-apexcharts": "^1.4.1"
 	},
 	"devDependencies": {
 		"@preact/preset-vite": "^2.5.0",
