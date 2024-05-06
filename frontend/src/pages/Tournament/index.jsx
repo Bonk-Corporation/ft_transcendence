@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { CTA } from '../../components/utils/CTA';
 import { PlayerCard } from '../../components/Tournament/PlayerCard';
+import { PopUp } from '../../components/utils/PopUp';
+import { Input } from '../../components/utils/Input';
 
 export function Tournament() {
   const [active, setActive] = useState("");
@@ -59,8 +61,14 @@ export function Tournament() {
     }
   ]
 
+  const [popUp, setPopUp] = useState(false);
   return (
     <div className="w-full flex justify-center h-[40rem]">
+      <PopUp active={popUp} setActive={setPopUp} className="flex flex-col items-center">
+        <h1 className="font-semibold text-xl">Add an user</h1>
+        <Input className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder="Search someone..." />
+        <CTA onClick={() => {setPopUp(false)}}>Invite</CTA>
+      </PopUp>
       <div className="h-full w-4/6 flex flex-col items-center">
         <div className="h-full w-full flex">
           <div onClick={() => setActive("Pong")} className={`${active == "Pong" ? "border-4 border-white" : ""} h-full w-1/3 hover:w-1/2 bg-red-500 transition-all ease-in-out flex justify-center py-4 text-xl`}>Pong</div>
@@ -68,7 +76,7 @@ export function Tournament() {
           <div onClick={() => setActive("Bonk")} className={`${active == "Bonk" ? "border-4 border-white" : ""} h-full w-1/3 hover:w-1/2 bg-green-500 transition-all ease-in-out flex justify-center py-4 text-xl`}>Bonk</div>
         </div>
         <div className="my-4 flex items-center justify-center">
-          <button className='mr-2 px-12 py-3 bg-transparent border-2 border-white rounded-lg hover:bg-white hover:text-black transition-all ease-in-out'><i className="fa-solid fa-link mr-2"></i>Invite</button>
+          <button onClick={() => {setPopUp(true)}} className='mr-2 px-12 py-3 bg-transparent border-2 border-white rounded-lg hover:bg-white hover:text-black transition-all ease-in-out'><i className="fa-solid fa-link mr-2"></i>Invite</button>
           <CTA className='ml-2 px-12 py-3 border-2 border-white hover:border-gray-300'><i className="fa-solid fa-play mr-2"></i>Play</CTA>
         </div>
       </div>
