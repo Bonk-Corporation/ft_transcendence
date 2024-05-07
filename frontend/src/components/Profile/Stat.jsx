@@ -4,12 +4,11 @@ import { Card } from '../utils/Card';
 import Chart from "react-apexcharts";
 
 
-export function Stat({label, firstLabel, secondLabel, firstData, secondData, firstColor, secondColor}) {
+export function Stat({labels, data, colors}) {
   const stat = useRef(null);
 
-  const data = {
-          
-	series: [firstData * 100 / (firstData + secondData)],
+  const opt = {
+	series: [data[0] * 100 / (data[0] + data[1])],
 	options: {
 	  plotOptions: {
 		radialBar: {
@@ -18,7 +17,7 @@ export function Stat({label, firstLabel, secondLabel, firstData, secondData, fir
 			background: 'white',
 		  },
 		  track: {
-			background: secondColor,
+			background: colors[1],
 			strokeWidth: '100%',
 			dropShadow: {
 				enabled: true,
@@ -40,8 +39,8 @@ export function Stat({label, firstLabel, secondLabel, firstData, secondData, fir
 		  }
 		}
 	  },
-	  colors: [firstColor],
-	  labels: [firstLabel],
+	  colors: [colors[0]],
+	  labels: [labels[0]],
 	  stroke: {
 		  lineCap: "round",
 	  },
@@ -50,7 +49,7 @@ export function Stat({label, firstLabel, secondLabel, firstData, secondData, fir
 
   return (
     <Card className="flex items-center justify-center p-2 aspect-square max-h-60">
-		<Chart options={data.options} series={data.series} type="radialBar" height={200} />
+		<Chart options={opt.options} series={opt.series} type="radialBar" height={200} />
     </Card>
   );
 }
