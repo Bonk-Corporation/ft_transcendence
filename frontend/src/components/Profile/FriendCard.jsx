@@ -13,9 +13,9 @@ export function FriendCard({profile}) {
                     <h1 className="my-1">Level {profile.level}</h1>
                 </div>
             </div>
-            <div>
+            <button>
                 <i className="fa-solid fa-user-minus text-2xl text-red-500 hover:text-red-600 cursor-pointer" ></i>
-            </div>
+            </button>
         </div>
     </Card>
   );

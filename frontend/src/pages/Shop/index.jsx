@@ -64,7 +64,7 @@ const items = [
   images: [
     "https://cdn.intra.42.fr/users/5ced09dd1359578b97cd25cb3851b5a0/rriviere.jpg",
     "https://cdn.intra.42.fr/users/4a14e47f1f9d84475a17b02658062de0/atellier.jpg",
-    "https://cdn.intra.42.fr/users/d133953cde3df8d6e7bd90b627aed54e/ggay.jpg"
+    "https://cdn.intra.42.fr/users/c5f71e71bac34ba63fc3ddcc18804b0b/rrouille.jpg"
   ]
 },
 {
