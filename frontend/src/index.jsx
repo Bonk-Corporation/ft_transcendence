@@ -14,6 +14,7 @@ import { Profile } from './pages/Profile/index.jsx';
 import { Signup } from './pages/Auth/Signup';
 import { Pong } from './pages/Games/Pong';
 import { Bonk } from './pages/Games/Bonk';
+import { useEffect, useState } from 'preact/hooks';
 
 export function App() {
 	document.addEventListener("DOMContentLoaded", function() {
@@ -32,6 +33,14 @@ export function App() {
 		});
 	});
 
+	const [me, setMe] = useState(null);
+
+	useEffect(() => {
+		if (me == null)
+			fetch("/api/me").then(res => res.json().then(data => {
+				setMe(data);
+			}));
+	});
 	const profile = {
 		name: "DinoMalin",
 		email: "dinomalin@gmail.com",
@@ -113,6 +122,9 @@ export function App() {
 		<div id={navigator.userAgent.includes("Firefox") ? "" : "ambient"} className="w-screen h-full min-h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center overflow-hidden">
 			<LocationProvider>
 				<Navbar profile={profile} />
+				{me ? <h1>{me.username}</h1> : null}
+				{me ? <h1>{me.display_name}</h1> : null}
+				{me ? <h1>{me.id}</h1> : null}
 				<main className="w-screen h-full z-50 flex-1 flex flex-col justify-center items-center px-10">
 					<Router>
 						<Route path="/" component={Play} />
