@@ -50,6 +50,9 @@ mkShell {
 			''
 		  else
 			''
+				# install git commit hooks
+				pnpx husky install
+
 				tmux new-session -d 'trap : INT; make || $SHELL'
 				tmux set -g mouse on # neat
 				tmux split-window -h 'trap : INT; make fdev || $SHELL'
