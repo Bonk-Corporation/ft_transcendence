@@ -11,6 +11,12 @@ def me(request, *args, **kwargs):
                 "id": request.user.id,
             }
         )
+    return JsonResponse(
+        {
+            "error": "You need to be logged in",
+        },
+        status=401,
+    )
 
 
 urls = [
