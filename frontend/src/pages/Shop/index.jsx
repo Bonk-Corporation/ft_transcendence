@@ -68,12 +68,12 @@ const items = [
   ]
 },
 {
-  name: "7",
+  name: "Louis",
   price: 4.2,
   images: [
-    "https://img.freepik.com/photos-gratuite/fond-texture-abstrait_1258-30484.jpg?size=338&ext=jpg&ga=GA1.1.867424154.1713398400&semt=ais",
-    "https://www.solidbackgrounds.com/images/2048x2048/2048x2048-boston-university-red-solid-color-background.jpg",
-    "https://i.pinimg.com/474x/22/18/6d/22186db2db07e9ec68f66cfb537e0aa5.jpg"
+    "https://media.discordapp.net/attachments/1183935721086660659/1195034771110240407/IMG_20240111_170017.jpg?ex=663d9c1c&is=663c4a9c&hm=9133d5a423c146a2a249d7669b8babaf6c4a502436e5a243bda06ef9f2d23c00&=&format=webp&width=446&height=592",
+    "https://cdn.intra.42.fr/users/bfdda89cc2018c20ccd09ab2c8f788cd/lgalloux.jpg",
+    "https://cdn.discordapp.com/attachments/1222318836255162469/1238138328386244638/20240508_001427.jpg?ex=663e31ac&is=663ce02c&hm=19ef63b02e070054639c52a820c250f92ec0db4c2187fb52c3c6c0e4c46f49df&"
   ]
 },
 {
