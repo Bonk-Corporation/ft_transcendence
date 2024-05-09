@@ -11,7 +11,6 @@ export function Login() {
 	const redirectUri = encodeURIComponent(`${location.protocol}//${HOST}`)
 	const url = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}/auth/42&response_type=code`;
 
-	// const url = '/login';
 	return (
 		<Card className="py-32 w-full max-w-[800px] px-16 flex flex-col items-center justify-center">
 			<div className="max-w-[600px] flex flex-col items-center justify-center">
