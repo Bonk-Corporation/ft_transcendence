@@ -11,15 +11,14 @@ import { CTA } from '../../components/utils/CTA';
 
 export function Profile({profile}) {
   const [popUp, setPopUp] = useState(false);
-
-  const stats = [
+  const [stats, setStats] = useState([
     {
       title: "Win ratio - Pong",
       labels: ["Win", "Lose"],
       colors: ["#32CD32", "#FF6961"],
       data: [
-        profile.gameHistory.reduce((accumulator, game) => game.win && game.game == "Pong" ? accumulator + 1 : accumulator, 0),
-        profile.gameHistory.reduce((accumulator, game) => !game.win && game.game == "Pong" ? accumulator + 1 : accumulator, 0)
+        profile ? profile.gameHistory.reduce((accumulator, game) => game.win && game.game == "Pong" ? accumulator + 1 : accumulator, 0) : 1,
+        profile ? profile.gameHistory.reduce((accumulator, game) => !game.win && game.game == "Pong" ? accumulator + 1 : accumulator, 0) : 1
       ],
     },
     {
@@ -27,8 +26,8 @@ export function Profile({profile}) {
       colors: ["#79D2E6", "#FF964F"],
       labels: ["Scored", "Ceded"],
       data: [
-        profile.gameHistory.reduce((accumulator, game) => game.game == "Pong" ? accumulator + game.score[0] : accumulator, 0),
-        profile.gameHistory.reduce((accumulator, game) => game.game == "Pong" ? accumulator + game.score[1] : accumulator, 0)
+        profile ? profile.gameHistory.reduce((accumulator, game) => game.game == "Pong" ? accumulator + game.score[0] : accumulator, 0) : 1,
+        profile ? profile.gameHistory.reduce((accumulator, game) => game.game == "Pong" ? accumulator + game.score[1] : accumulator, 0) : 1
       ],
     },
     {
@@ -36,8 +35,8 @@ export function Profile({profile}) {
       colors: ["#32CD32", "#FF6961"],
       labels: ["Win", "Lose"],
       data: [
-        profile.gameHistory.reduce((accumulator, game) => game.win && game.game == "Bonk" ? accumulator + 1 : accumulator, 0),
-        profile.gameHistory.reduce((accumulator, game) => !game.win && game.game == "Bonk" ? accumulator + 1 : accumulator, 0)
+        profile ? profile.gameHistory.reduce((accumulator, game) => game.win && game.game == "Bonk" ? accumulator + 1 : accumulator, 0) : 1,
+        profile ? profile.gameHistory.reduce((accumulator, game) => !game.win && game.game == "Bonk" ? accumulator + 1 : accumulator, 0) : 1
       ],
     },
     {
@@ -45,11 +44,11 @@ export function Profile({profile}) {
       colors: ["#79D2E6", "#FF964F"],
       labels: ["Kills", "Deaths"],
       data: [
-        profile.gameHistory.reduce((accumulator, game) => game.game == "Bonk" ? accumulator + game.score[0] : accumulator, 0),
-        profile.gameHistory.reduce((accumulator, game) => game.game == "Bonk" ? accumulator + game.score[1] : accumulator, 0)
+        profile ? profile.gameHistory.reduce((accumulator, game) => game.game == "Bonk" ? accumulator + game.score[0] : accumulator, 0) : 1,
+        profile ? profile.gameHistory.reduce((accumulator, game) => game.game == "Bonk" ? accumulator + game.score[1] : accumulator, 0) : 1
       ],
     },
-  ]
+  ]);
 
   return (
   <div className="flex flex-col">
@@ -72,18 +71,18 @@ export function Profile({profile}) {
         </div>
 
 	  	  {
-          profile.friends.map((friend) => (
+          profile ? profile.friends.map((friend) => (
             <FriendCard profile={friend}></FriendCard>
-          ))
+          )) : null
         }
 
     </div>
       <div className="ml-4 max-h-96 px-2 overflow-auto backdrop-blur-lg down-gradient">
         <h1 className="font-semibold text-xl">Game history</h1>
 	  	  {
-          profile.gameHistory.map((game) => (
+          profile ? profile.gameHistory.map((game) => (
             <GameCard game={game}></GameCard>
-          ))
+          )) : null
         }
       </div>
     </div>
