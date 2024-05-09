@@ -44,6 +44,8 @@ mkShell {
 
 		${if prod then
 			''
+				echo DEBUG=n >> backend/.env
+
 				pnpm -C frontend build
 				python3 backend/manage.py migrate bonk
 				python3 backend/manage.py migrate
@@ -52,6 +54,8 @@ mkShell {
 			''
 				# install git commit hooks
 				pnpx husky install
+
+				echo DEBUG=y >> backend/.env
 
 				tmux new-session -d 'trap : INT; make || $SHELL'
 				tmux set -g mouse on # neat
