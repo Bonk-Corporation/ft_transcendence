@@ -42,13 +42,16 @@ mkShell {
 
 		pip3 install -r requirements.txt --break-system-packages --quiet
 
+		if [ ! -e .initial_migration_done ]; then
+			python3 backend/manage.py migrate
+			touch .initial_migration_done
+		fi
+
 		${if prod then
 			''
 				echo DEBUG=n >> backend/.env
 
 				pnpm -C frontend build
-				python3 backend/manage.py migrate bonk
-				python3 backend/manage.py migrate
 			''
 		  else
 			''
