@@ -56,7 +56,7 @@ mkShell {
 		  else
 			''
 				# install git commit hooks
-				pnpx husky install
+				pnpx husky install >/dev/null 2>&1
 
 				echo DEBUG=y >> backend/.env
 
