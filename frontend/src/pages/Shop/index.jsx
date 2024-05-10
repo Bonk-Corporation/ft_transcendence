@@ -4,7 +4,6 @@ import { useEffect, useState } from 'preact/hooks';
 export function Shop() {
   const [page, setPage] = useState(0);
   const [items, setItems] = useState(null);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     if (items == null) {
@@ -12,7 +11,6 @@ export function Shop() {
 				setItems(data.items);
 			}));
 		}
-    setLoaded(true);
   }, [])
 
   return (
