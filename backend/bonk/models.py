@@ -1,27 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
-# from django.contrib.postgres.fields import ArrayField
-
-# Endpoint - me
+from django.contrib.postgres.fields import ArrayField
 
 
 class User(AbstractUser):
     name = models.CharField(max_length=96, unique=True)
     email = models.EmailField()
+    friends = models.ManyToManyField("self")
     level = models.PositiveIntegerField()
     level_percentage = models.PositiveIntegerField()
     avatar = models.URLField()
-
-    def __str__(self):
-        return self.name
-
-
-class Friend(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friends")
-    name = models.CharField(max_length=96, unique=True)
-    avatar = models.URLField()
-    level = models.PositiveIntegerField()
 
     def __str__(self):
         return self.name
