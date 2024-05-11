@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.contrib.postgres.fields import ArrayField
+
+# from django.contrib.postgres.fields import ArrayField
 
 # Endpoint - me
 
@@ -31,7 +32,7 @@ class GameHistory(models.Model):
         User, on_delete=models.CASCADE, related_name="game_history"
     )
     game = models.CharField(max_length=32)
-    score = models.ArrayField(models.PositiveIntegerField(), size=2)
+    # score = models.ArrayField(models.PositiveIntegerField(), size=2)
     win = models.BooleanField()
 
     def __str__(self):
@@ -44,7 +45,7 @@ class GameHistory(models.Model):
 class ShopItems(models.Model):
     name = models.CharField(max_length=92)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    images = models.ArrayField(models.URLField(), size=3)
+    # images = models.ArrayField(models.URLField(), size=3)
 
     def __str__(self):
         return self.name()
