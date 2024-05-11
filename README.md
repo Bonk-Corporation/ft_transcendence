@@ -49,6 +49,8 @@ Commit messages should apply to the following norm:
 - ```~ | <commit>``` : Modified something
 - ```+ | <commit>``` : Added something
 
+This commit format follow the [DinoFormat](github.com/DinoMalin/DinoFormat) rules
+
 ### Code Formatter
 - **Javascript**: Prettier
 - **Python**: Black
