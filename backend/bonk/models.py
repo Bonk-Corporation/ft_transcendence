@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 
+# Endpoint - me
+
 
 class User(AbstractUser):
     name = models.CharField(max_length=96, unique=True)
@@ -34,3 +36,15 @@ class GameHistory(models.Model):
 
     def __str__(self):
         return f"{self.game} - {'Win' if self.win else 'Loss'}"
+
+
+# Endpoint - shop
+
+
+class ShopItems(models.Model):
+    name = models.CharField(max_length=92)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    images = models.ArrayField(models.URLField(), size=3)
+
+    def __str__(self):
+        return self.name()
