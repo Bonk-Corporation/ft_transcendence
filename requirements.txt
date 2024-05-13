@@ -8,3 +8,4 @@ idna==3.6
 requests==2.31.0
 sqlparse==0.4.4
 urllib3==2.2.1
+psycopg2==2.9.9
