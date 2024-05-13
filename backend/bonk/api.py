@@ -6,9 +6,13 @@ def me(request, *args, **kwargs):
     if request.user.is_authenticated:
         return JsonResponse(
             {
-                "username": request.user.username,
-                "display_name": request.user.display_name,
-                "id": request.user.id,
+                "name": request.user.username,
+                "email": request.user.email,
+                "level": request.user.level,
+                "levelPercentage": request.user.level_percentage,
+                "avatar": request.user.avatar,
+                "friends": request.user.friends,
+                "gameHistory": request.user.game_history,
             }
         )
     return JsonResponse(
