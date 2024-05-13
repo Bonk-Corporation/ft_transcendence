@@ -20,6 +20,9 @@ mkShell {
 		nodePackages.prettier
 		black
 
+		postgresql
+		pkgs.glibcLocales
+
 		tmux
 		
 		(with fenix; with latest; combine [
@@ -29,14 +32,28 @@ mkShell {
 	];
 
 	shellHook = ''
+		set -o allexport
+		source .env
+		set +o allexport
+
 		export SHELL=zsh
 		export PS1="[1mBonk Corporation[0m %% "
 		export "PATH=venv/bin/:$PATH"
 		export PIP_DISABLE_PIP_VERSION_CHECK=1
 		export NIX_IGNORE_SYMLINK_STORE=1
 		export NIX_ENFORCE_PURITY=0
+		export PGDATA="backend/.pg"
 
 		cargo install wasm-pack
+
+		initdb 2>/dev/null
+		pg_ctl -o "-k /tmp" -l backend/pg.log start
+		createdb -h /tmp "$DB_NAME" 2>/dev/null
+		psql -h /tmp -c "
+			CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';
+			GRANT ALL ON DATABASE $DB_NAME TO $DB_USER;
+			ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
+			"$DB_NAME"
 
 		yes | pnpm install --reporter=silent
 		yes | pnpm install -C frontend --reporter=silent
@@ -77,8 +94,10 @@ mkShell {
 				tmux set -g mouse on # neat
 				tmux split-window -h 'trap : INT; make fdev || $SHELL'
 				tmux split-window '$SHELL'
-				exec tmux attach
+				tmux attach
 			''
 		 }
+		pg_ctl stop
+		exit
 	'';
 }

@@ -1,5 +1,5 @@
 """
-URL configuration for bonk project.
+URL configuration for ponk project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -18,14 +18,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.views.generic import TemplateView
-import bonk.auth
-import bonk.api
+import ponk.auth
+import ponk.api
 
 default = lambda url: re_path(".*", url)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("auth/", include(bonk.auth.urls)),
-    path("api/", include(bonk.api.urls)),
+    path("auth/", include(ponk.auth.urls)),
+    path("api/", include(ponk.api.urls)),
     default(TemplateView.as_view(template_name="index.html")),
 ]

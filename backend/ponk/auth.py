@@ -7,8 +7,8 @@ from django.http.response import (
 )
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth import authenticate, login
-from bonk.ftapi import oauth_token, user_info, APIException
-from bonk.models import User
+from ponk.ftapi import oauth_token, user_info, APIException
+from ponk.models import User
 
 
 class FtAuthBackend(BaseBackend):
