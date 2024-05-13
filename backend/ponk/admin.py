@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from bonk.models import User
+from ponk.models import User
 
 
 @admin.register(User)
