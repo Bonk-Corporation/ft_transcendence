@@ -90,7 +90,7 @@ export function Profile({profile}) {
     <div className="flex mt-8 items-center justify-center">
       {
         stats.map((stat) => (
-          <div className="ml-4">
+          <div className="ml-4 flex flex-col items-center">
             <h1 className="font-semibold text-xl">{stat.title}</h1>
             <Stat labels={stat.labels} data={stat.data} colors={stat.colors}/>
           </div>
