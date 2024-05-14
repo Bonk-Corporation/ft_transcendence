@@ -33,6 +33,8 @@ mkShell {
 		export PS1="[1mBonk Corporation[0m %% "
 		export "PATH=venv/bin/:$PATH"
 		export PIP_DISABLE_PIP_VERSION_CHECK=1
+		export NIX_IGNORE_SYMLINK_STORE=1
+		export NIX_ENFORCE_PURITY=0
 
 		cargo install wasm-pack
 
