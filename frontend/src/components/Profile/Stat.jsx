@@ -14,7 +14,7 @@ export function Stat({labels, data, colors}) {
 		radialBar: {
 		  hollow: {
 			size: '70%',
-			background: 'white',
+			background: '#2e2e2e',
 		  },
 		  track: {
 			background: colors[1],
@@ -34,7 +34,7 @@ export function Stat({labels, data, colors}) {
 			value: {
 			  offsetY: 6,
 			  fontSize: '16px',
-			  color: '#2d2d2d',
+			  color: 'white',
 			}
 		  }
 		}
