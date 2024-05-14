@@ -43,6 +43,8 @@ mkShell {
 		export NIX_IGNORE_SYMLINK_STORE=1
 		export NIX_ENFORCE_PURITY=0
 		export PGDATA="backend/.pg"
+		export NIX_IGNORE_SYMLINK_STORE=1
+		export NIX_ENFORCE_PURITY=0
 
 		cargo install wasm-pack
 
@@ -54,10 +56,6 @@ mkShell {
 			GRANT ALL ON DATABASE $DB_NAME TO $DB_USER;
 			ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 			"$DB_NAME"
-
-		cargo install wasm-pack
-
-		cargo install wasm-pack
 
 		yes | pnpm install --reporter=silent
 		yes | pnpm install -C frontend --reporter=silent
