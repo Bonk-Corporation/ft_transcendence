@@ -70,7 +70,7 @@ export function Tournament() {
         <CTA onClick={() => {setPopUp(false)}}>Invite</CTA>
       </PopUp>
       <div className="h-full w-4/6 flex flex-col items-center">
-        <div className="h-full w-full flex">
+        <div className="h-full w-full flex overflow-hidden rounded">
           <div onClick={() => setActive("Pong")} className={`${active == "Pong" ? "border-4 border-white" : ""} h-full w-1/3 hover:w-1/2 bg-red-500 transition-all ease-in-out flex justify-center py-4 text-xl`}>Pong</div>
           <div onClick={() => setActive("Ponk")} className={`${active == "Ponk" ? "border-4 border-white" : ""} h-full w-1/3 hover:w-1/2 bg-blue-500 transition-all ease-in-out flex justify-center py-4 text-xl`}>Ponk</div>
           <div onClick={() => setActive("Bonk")} className={`${active == "Bonk" ? "border-4 border-white" : ""} h-full w-1/3 hover:w-1/2 bg-green-500 transition-all ease-in-out flex justify-center py-4 text-xl`}>Bonk</div>
