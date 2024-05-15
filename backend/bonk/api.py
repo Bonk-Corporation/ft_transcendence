@@ -173,7 +173,7 @@ def fakeShop(request, *args, **kwargs):
                     "images": [
                         "https://i.imgur.com/uZsx44p.jpeg",
                         "https://cdn.intra.42.fr/users/bfdda89cc2018c20ccd09ab2c8f788cd/lgalloux.jpg",
-                        "https://cdn.discordapp.com/attachments/1222318836255162469/1238138328386244638/20240508_001427.jpg?ex=663e31ac&is=663ce02c&hm=19ef63b02e070054639c52a820c250f92ec0db4c2187fb52c3c6c0e4c46f49df&",
+                        "https://i.imgur.com/L6ycgOi.png",
                     ],
                 },
                 {
