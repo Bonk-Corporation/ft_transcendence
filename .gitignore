@@ -6,5 +6,4 @@ node_modules
 venv
 .env
 .pnpm-store
-target
-pkg
+.initial_migration_done

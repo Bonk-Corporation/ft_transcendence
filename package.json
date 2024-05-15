@@ -8,5 +8,8 @@
 	},
 	"dependencies": {
 		"chart.js": "^4.4.2"
+	},
+	"scripts": {
+		"prepare": "husky"
 	}
 }
