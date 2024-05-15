@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-cse^swp*#t9%=zipi6jh-h$don&c6^p6a7opmqgnk28f_fy*d7"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False  # TODO: should be done by nix-shell in production
+DEBUG = os.environ.get("DEBUG", "n") != "n"
 DJANGO_VITE_DEV_MODE = DEBUG
 
 HOST = "localhost:8000"

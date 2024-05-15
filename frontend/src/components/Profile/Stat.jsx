@@ -1,42 +1,55 @@
 import React, { useEffect, useRef } from 'react';
 import { Card } from '../utils/Card';
-import Chart from 'chart.js/auto';
+// import Chart from 'chart.js/auto';
+import Chart from "react-apexcharts";
 
 
-export function Stat({label, firstLabel, secondLabel, firstData, secondData, firstColor, secondColor}) {
+export function Stat({labels, data, colors}) {
   const stat = useRef(null);
 
-	
-	useEffect(() => {
-		if (stat) {
-			const data = {
-				labels: [firstLabel, secondLabel],
-				datasets: [{
-					label: label,
-					data: [firstData, secondData],
-					backgroundColor: [firstColor, secondColor],
-					hoverOffset: 4
-				}]
-			};
-		
-			new Chart(
-				stat.current,
-				{
-					type: 'doughnut',
-					data: data,
-					options: {
-						layout: {
-							padding: 5
-						}
-					}
-				}
-				);
+  const opt = {
+	series: [data[0] * 100 / (data[0] + data[1])],
+	options: {
+	  plotOptions: {
+		radialBar: {
+		  hollow: {
+			size: '70%',
+			background: 'white',
+		  },
+		  track: {
+			background: colors[1],
+			strokeWidth: '100%',
+			dropShadow: {
+				enabled: true,
+				top: 4,
+				left: 4,
+				blur: 8,
+				opacity: 0.5
 			}
-		}, []);
+		  },
+		  dataLabels: {
+			name: {
+			  show: true
+			},
+			value: {
+			  offsetY: 6,
+			  fontSize: '16px',
+			  color: '#2d2d2d',
+			}
+		  }
+		}
+	  },
+	  colors: [colors[0]],
+	  labels: [labels[0]],
+	  stroke: {
+		  lineCap: "round",
+	  },
+	},
+  };
 
   return (
-    <Card className="flex items-center justify-center h-60 p-4 aspect-square">
-        <canvas ref={stat} ></canvas>
+    <Card className="flex items-center justify-center p-2 aspect-square max-h-60">
+		<Chart options={opt.options} series={opt.series} type="radialBar" height={200} />
     </Card>
   );
 }
