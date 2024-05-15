@@ -111,8 +111,8 @@ fn display_circles(context: &WebGl2RenderingContext, centers: Vec<[f32; 2]>, pro
 		let r_h = 0.04;
 		let r_w = 0.05;
 
-		for i in 0..=200 {
-			let j: f32 = i as f32 * 2. * std::f32::consts::PI / 200.;
+		for i in 0..=2000 {
+			let j: f32 = i as f32 * 2. * std::f32::consts::PI / 2000.;
 			let vert1 = [center[0] + r_h * j.sin(), center[1] + r_w * j.cos()];
 			let vert2 = [center[0], center[1]];
 			circle_vertices.extend_from_slice(&vert1);

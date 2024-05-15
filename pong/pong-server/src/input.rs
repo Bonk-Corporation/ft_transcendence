@@ -13,14 +13,14 @@ const WINDOW_HEIGHT: f32 = 480.;
 const PLAYER_WIDTH: f32 = WINDOW_WIDTH * 0.1;
 const PLAYER_HEIGHT: f32 = WINDOW_HEIGHT * 0.35;
 
-const PLAYER_SPEED: f32 = 9.;
+const PLAYER_SPEED: f32 = 5.;
 const PLAYER_SPIN: f32 = 4.;
 
-const BALL_SPEED: f32 = 5.;
+const BALL_SPEED: f32 = 8.;
 const BALL_ACCELERTION: f32 = 0.1;
 const MAX_BALL_SPEED: f32 = 20.;
 
-const MAX_SCORE: u8 = 10;
+const MAX_SCORE: u8 = 5;
 
 #[derive(Clone, Debug)]
 pub struct Client {
@@ -183,15 +183,20 @@ impl GameState {
         self.ball_ent.position.y += self.ball_ent.velocity.y;
 
         let paddle_hit = if self.ball_ent.bounds().intersects(&self.player1_ent.bounds()) {
+            if self.ball_ent.velocity.x <= 0. {
+                self.ball_ent.velocity.x = -(self.ball_ent.velocity.x + (BALL_ACCELERTION * self.ball_ent.velocity.x.signum()));
+            }
             Some(&self.player1_ent)
         } else if self.ball_ent.bounds().intersects(&self.player2_ent.bounds()) {
+            if self.ball_ent.velocity.x >= 0. {
+                self.ball_ent.velocity.x = -(self.ball_ent.velocity.x + (BALL_ACCELERTION * self.ball_ent.velocity.x.signum()));
+            }
             Some(&self.player2_ent)
         } else {
             None
         };
 
         if let Some(player) = paddle_hit {
-            self.ball_ent.velocity.x = -(self.ball_ent.velocity.x + (BALL_ACCELERTION * self.ball_ent.velocity.x.signum()));
             if self.ball_ent.velocity.x.signum() > MAX_BALL_SPEED {
                 self.ball_ent.velocity.x = if self.ball_ent.velocity.x > 0. {
                     MAX_BALL_SPEED
