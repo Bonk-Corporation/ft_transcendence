@@ -7,10 +7,10 @@ import { Level } from './Level';
 
 export function ProfileCard({profile}) {
   return (
-    <div>
+    <>
         <Card className='flex flex-col items-center justify-center p-6 h-full'>
             <div className="flex items-center">
-                <div className={`rounded-full w-32 mr-4 aspect-square border-4 bg-[url(${profile ? profile.avatar : null})] bg-center bg-cover`} />
+                <div className={`rounded-full md:block hidden w-32 mr-4 aspect-square border-4 bg-[url(${profile ? profile.avatar : null})] bg-center bg-cover`} />
                 <div className="flex flex-col">
 									<Input className="my-2" placeholder={`${profile ? profile.name : null}`}/>
 									<Input className="my-2" placeholder={`${profile ? profile.email : null}`} />
@@ -23,6 +23,6 @@ export function ProfileCard({profile}) {
 						<CTA className='mb-4'>Update</CTA>
 						<Level level={profile ? profile.level : null} levelPercentage={profile ? profile.levelPercentage : null}/>
         </Card>
-    </div>
+    </>
   );
 }

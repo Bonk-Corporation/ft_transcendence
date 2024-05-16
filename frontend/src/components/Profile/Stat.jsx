@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card } from '../utils/Card';
 // import Chart from 'chart.js/auto';
 import Chart from "react-apexcharts";
 
 
 export function Stat({labels, data, colors}) {
-  const stat = useRef(null);
+  const [size, setSize] = useState(window.screen.width < 768 ? 150 : 200);
 
   const opt = {
 	series: [data[0] * 100 / (data[0] + data[1])],
@@ -47,9 +47,14 @@ export function Stat({labels, data, colors}) {
 	},
   };
 
+  useEffect(() => {
+	window.addEventListener('resize', () => {setSize(window.screen.width < 768 ? 150 : 200)})
+    return () => {window.removeEventListener('resize', () => {setSize(window.screen.width < 768 ? 150 : 200)})}
+  }, [])
+
   return (
-    <Card className="flex items-center justify-center p-2 aspect-square max-h-52">
-		<Chart options={opt.options} series={opt.series} type="radialBar" height={200} />
+    <Card className="flex items-center justify-center p-2 aspect-square max-h-32 md:max-h-52">
+		<Chart options={opt.options} series={opt.series} type="radialBar" height={size} />
     </Card>
   );
 }

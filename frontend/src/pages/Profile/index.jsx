@@ -55,7 +55,7 @@ export function Profile({profile}) {
   <div className="flex flex-col">
     <div className="flex flex-wrap items-start justify-center">
 	  <div className="max-h-96">
-	  	  <h1 className="font-semibold text-xl">Profile</h1>
+	  	  <h1 className="font-semibold text-lg md:text-xl">Profile</h1>
       	  <ProfileCard profile={profile} />
     </div>
 
@@ -65,9 +65,9 @@ export function Profile({profile}) {
       <CTA onClick={() => {setPopUp(false)}}>Invite</CTA>
     </PopUp>
 
-	  <div className="ml-4 px-2">
+	  <div className="ml-4 px-2 md:mt-0 mt-2">
         <div className="flex items-center justify-between backdrop-blur-lg">
-          <h1 className="font-semibold text-xl">Friends</h1>
+          <h1 className="font-semibold text-lg md:text-xl">Friends</h1>
           <i onClick={() => {setPopUp(true)}} className="fa-solid fa-circle-plus hover:text-gray-300 cursor-pointer"></i>
         </div>
         <div className="overflow-auto down-gradient max-h-96 pr-2 backdrop-blur-lg">
@@ -80,7 +80,7 @@ export function Profile({profile}) {
     </div>
 
       <div className="ml-4 px-2">
-        <h1 className="font-semibold text-xl backdrop-blur-lg">Game history</h1>
+        <h1 className="font-semibold text-lg md:text-xl backdrop-blur-lg">Game history</h1>
         <div className="overflow-y-auto overflow-x-hidden down-gradient max-h-96 pr-2 backdrop-blur-lg">
           {
             profile ? profile.gameHistory.map((game) => (
@@ -91,11 +91,11 @@ export function Profile({profile}) {
       </div>
     </div>
 
-    <div className="flex mt-8 items-center justify-center">
+    <div className="flex flex-wrap mt-8 items-center justify-center">
       {
         stats.map((stat) => (
           <div className="ml-4 flex flex-col items-center">
-            <h1 className="font-semibold text-xl">{stat.title}</h1>
+            <h1 className="font-semibold text-lg md:text-xl">{stat.title}</h1>
             <Stat labels={stat.labels} data={stat.data} colors={stat.colors}/>
           </div>
         ))
