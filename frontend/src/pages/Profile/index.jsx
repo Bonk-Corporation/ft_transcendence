@@ -66,7 +66,7 @@ export function Profile({profile}) {
     </PopUp>
 
 	  <div className="ml-4 px-2">
-        <div className="flex items-center justify-between sticky top-0 z-50 backdrop-blur-lg">
+        <div className="flex items-center justify-between backdrop-blur-lg">
           <h1 className="font-semibold text-xl">Friends</h1>
           <i onClick={() => {setPopUp(true)}} className="fa-solid fa-circle-plus hover:text-gray-300 cursor-pointer"></i>
         </div>
