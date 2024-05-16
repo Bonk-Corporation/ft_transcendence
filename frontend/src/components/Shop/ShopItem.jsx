@@ -18,8 +18,8 @@ export function ShopItem(props) {
       }
       <div onClick={() => {setPopUp(true)}}>
         <Card className='flex flex-col p-4 justify-center items-center hover:cursor-pointer border-gradient-hover hover:from-white/40 hover:to-white/10 hover:mx-[-5px] hover:my-[-5px]'>
-            <BallPresentation images={props.item.images}/>
-            <h1 className="text-xl font-medium text-center">{props.item.name}</h1>
+            <BallPresentation limit={true} images={props.item.images}/>
+            <h1 className="md:text-xl font-medium text-center">{props.item.name}</h1>
             <Price price={props.item.price}/>
         </Card>
       </div>
