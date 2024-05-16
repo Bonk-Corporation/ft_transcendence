@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { PopUp } from '../utils/PopUp';
 import { Card } from '../utils/Card';
-import { Payment } from './Payment';
+import { ItemSelection } from './ItemSelection';
 import { Price } from './Price';
 import { BallPresentation } from './BallPresentation';
 
@@ -13,7 +13,7 @@ export function ShopItem(props) {
     <div>
       {popUp ?
         <PopUp active={popUp} setActive={setPopUp}>
-          <Payment item={props.item} />
+          <ItemSelection item={props.item} />
         </PopUp> : null
       }
       <div onClick={() => {setPopUp(true)}}>
