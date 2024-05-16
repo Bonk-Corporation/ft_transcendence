@@ -53,7 +53,7 @@ export function Profile({profile}) {
 
   return (
   <div className="flex flex-col">
-    <div className="flex flex-wrap items-center justify-center">
+    <div className="flex flex-wrap items-start justify-center">
 	  <div className="max-h-96">
 	  	  <h1 className="font-semibold text-xl">Profile</h1>
       	  <ProfileCard profile={profile} />
@@ -78,9 +78,10 @@ export function Profile({profile}) {
           }
         </div>
     </div>
+
       <div className="ml-4 px-2">
         <h1 className="font-semibold text-xl backdrop-blur-lg">Game history</h1>
-        <div className="overflow-auto down-gradient max-h-96 pr-2 backdrop-blur-lg">
+        <div className="overflow-y-auto overflow-x-hidden down-gradient max-h-96 pr-2 backdrop-blur-lg">
           {
             profile ? profile.gameHistory.map((game) => (
               <GameCard game={game} display={displayGame} setDisplay={setDisplayGame}></GameCard>
