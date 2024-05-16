@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '../../components/utils/Card';
 import { CTA } from '../../components/utils/CTA';
 import { Chat } from '../../components/Chat/Chat';
 import { language } from '../../scripts/languages';
+import {start} from 'http://localhost:5173/static/pong-client/pkg';
 
 export function Pong({ profile, lang }) {
 	const [popUp, setPopUp] = useState(true);
@@ -11,6 +12,13 @@ export function Pong({ profile, lang }) {
 	/*
 	parameters de jeu : jouer contre ennemi ou bot
 	*/
+	useEffect(() => {
+		/*const loadWasm = async () => {
+			const wasmModule = await import('../../../pong-client/target/wasm32-unknown-unknown/release/pong_client.wasm?init');
+		};
+		loadWasm();*/
+		start();
+	}, [])
 
   return (
 		<>
@@ -23,7 +31,7 @@ export function Pong({ profile, lang }) {
 					<div onClick={() => setMode("bot")} className={`${mode == "bot" ? "bg-white text-black font-semibold" : ""} mr-2 rounded px-4 py-2 border-2 border-white transition-all cursor-pointer`}>{language.bot[lang]}</div>
 					<div onClick={() => setMode("player")} className={`${mode == "player" ? "bg-white text-black font-semibold" : ""} ml-2 rounded px-4 py-2 border-2 border-white transition-all cursor-pointer`}>{language.player[lang]}</div>
 				</div>
-				<CTA>{language.play[lang]}!</CTA>
+				<CTA id="play-button" name={mode}>{language.play[lang]}!</CTA>
 			</Card> : null
 		}
 			<canvas className="w-screen h-screen absolute">
