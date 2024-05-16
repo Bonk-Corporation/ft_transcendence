@@ -28,17 +28,17 @@ export function App() {
 
 		var particles = new BVAmbient({
 			selector: "#ambient",
-			fps: '60',
+			fps: 60,
 			max_transition_speed: 20000,
 			min_transition_speed: 10000,
-			particle_number: '100',
-			particle_maxwidth: '30',
-			particle_minwidth: '10',
-			particle_radius: '50',
+			particle_number: 100,
+			particle_maxwidth: 30,
+			particle_minwidth: 10,
+			particle_radius: 50,
 			particle_opacity: true,
 			particle_colision_change: false,
 			particle_background: "#331e4b",
-			refresh_onfocus: false
+			refresh_onfocus: false,
 		});
 	}, []);
 
