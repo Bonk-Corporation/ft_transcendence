@@ -1,5 +1,5 @@
 [package]
-name = "lipong"
+name = "pong-client"
 version = "0.1.0"
 authors = ["vcornill"]
 edition = "2018"
