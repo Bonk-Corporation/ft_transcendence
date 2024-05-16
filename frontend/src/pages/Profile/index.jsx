@@ -11,6 +11,7 @@ import { CTA } from '../../components/utils/CTA';
 
 export function Profile({profile}) {
   const [popUp, setPopUp] = useState(false);
+  const [displayGame, setDisplayGame] = useState('all');
   const [stats, setStats] = useState([
     {
       title: "Win ratio - Pong",
@@ -82,7 +83,7 @@ export function Profile({profile}) {
         <div className="overflow-auto down-gradient max-h-96 pr-2 backdrop-blur-lg">
           {
             profile ? profile.gameHistory.map((game) => (
-              <GameCard game={game}></GameCard>
+              <GameCard game={game} display={displayGame} setDisplay={setDisplayGame}></GameCard>
             )) : null
           }
         </div>
