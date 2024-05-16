@@ -24,8 +24,7 @@ fn start() -> Result<(), JsValue> {
     let document = web_sys::window().expect("No window element")
         .document().expect("No document element");
     
-    let multi_button: HtmlButtonElement = document.get_element_by_id("multi").expect("No element multi").dyn_into::<HtmlButtonElement>()?;
-    let solo_button: HtmlButtonElement = document.get_element_by_id("solo").expect("No element solo").dyn_into::<HtmlButtonElement>()?;
+    let play_button: HtmlButtonElement = document.get_element_by_id("play-button").expect("No element solo").dyn_into::<HtmlButtonElement>()?;
     
     let context = render::get_context(&document)?;
 	let _ = context.clear_color(0.0, 0.0, 0.0, 1.0);
@@ -59,7 +58,7 @@ fn start() -> Result<(), JsValue> {
         "##,
     )?;
    
-    let score = document.get_element_by_id("score").expect("no element score");
+    //let score = document.get_element_by_id("score").expect("no element score");
     let client_data = game::OnConnectClient::new(&document, uuid::Uuid::new_v4().to_string());
     let game_id = Arc::new(Mutex::new(String::new()));
  
@@ -74,7 +73,7 @@ fn start() -> Result<(), JsValue> {
     // Callbacks
     
     let cloned_game_id = Arc::clone(&game_id);
-    let cloned_score = score.clone();
+    //let cloned_score = score.clone();
     let onmessage_callback = Closure::<dyn FnMut(_)>::new(move |event: MessageEvent| {
         if let Ok(txt) = event.data().dyn_into::<js_sys::JsString>() {
             match &txt.as_string().unwrap()[0..6] {
@@ -85,19 +84,19 @@ fn start() -> Result<(), JsValue> {
                 "UPDATE" => {
 					console_log!("Update received");
                     let game_state: render::GameState = serde_json::from_str(&txt.as_string().unwrap()[6..]).unwrap();
-					if game_state.finished {
+					if game_state.finished {/*
 						match game_state.winner {
 							render::EndGame::Player1 => cloned_score.set_inner_html("Player 1 won"),
 							render::EndGame::Player2 => cloned_score.set_inner_html("Player 2 won"),
 							render::EndGame::Draw => cloned_score.set_inner_html("Draw"),
 							render::EndGame::Undecided => cloned_score.set_inner_html("Undecided"),
-						}
+						}*/
 						let _ = &context.clear_color(0.0, 0.0, 0.0, 1.0);
     					let _ = &context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
 					} else {
                     	let (p1, p2) = game_state.score;
                     	let score_str = "Player 1: ".to_owned() + &p1.to_string() + " Player 2: " + &p2.to_string();
-                    	cloned_score.set_inner_html(score_str.as_str());
+                    	//cloned_score.set_inner_html(score_str.as_str());
 	                	render::render(game_state, &context, &vertex_shader, &fragment_shader).expect("Rendering failed");
 					}
                 },
@@ -122,19 +121,18 @@ fn start() -> Result<(), JsValue> {
   
     let cloned_data = client_data.clone();
     let cloned_ws = web_socket.clone();
-    let onclick_multi = Closure::<dyn FnMut(_)>::new(move |_event: MouseEvent| {
-        match cloned_ws.send_with_str(("MULTI".to_owned() + &serde_json::to_string(&cloned_data).unwrap()).as_str()) {
-            Ok(_) => console_log!("messages sent"),
-            Err(err) => console_log!("error sending message: {:?}", err),
-        }
-    });
-
-    let cloned_data = client_data.clone();
-    let cloned_ws = web_socket.clone();
-    let onclick_solo = Closure::<dyn FnMut(_)>::new(move |_event: MouseEvent| {
-        match cloned_ws.send_with_str(("SOLO ".to_owned() + &serde_json::to_string(&cloned_data).unwrap()).as_str()) {
-            Ok(_) => console_log!("messages sent"),
-            Err(err) => console_log!("error sending message: {:?}", err),
+    let cloned_pb = play_button.clone();
+    let onclick_play = Closure::<dyn FnMut(_)>::new(move |_event: MouseEvent| {
+        if &cloned_pb.name() == "player" {
+            match cloned_ws.send_with_str(("MULTI".to_owned() + &serde_json::to_string(&cloned_data).unwrap()).as_str()) {
+                Ok(_) => console_log!("messages sent"),
+                Err(err) => console_log!("error sending message: {:?}", err),
+            }
+        } else {
+            match cloned_ws.send_with_str(("SOLO ".to_owned() + &serde_json::to_string(&cloned_data).unwrap()).as_str()) {
+                Ok(_) => console_log!("messages sent"),
+                Err(err) => console_log!("error sending message: {:?}", err),
+            }
         }
     });
 
@@ -205,8 +203,7 @@ fn start() -> Result<(), JsValue> {
     });
     // Setting web_socket with callbacks
     
-    multi_button.set_onclick(Some(onclick_multi.as_ref().unchecked_ref()));
-    solo_button.set_onclick(Some(onclick_solo.as_ref().unchecked_ref()));
+    play_button.set_onclick(Some(onclick_play.as_ref().unchecked_ref()));
     document.add_event_listener_with_callback("keydown", onkey_down_callback.as_ref().unchecked_ref())?;
     document.add_event_listener_with_callback("keyup", onkey_up_callback.as_ref().unchecked_ref())?;
     web_socket.set_onmessage(Some(onmessage_callback.as_ref().unchecked_ref()));
@@ -218,7 +215,6 @@ fn start() -> Result<(), JsValue> {
     onerror_callback.forget();
     onkey_down_callback.forget();
     onkey_up_callback.forget();
-    onclick_multi.forget();
-    onclick_solo.forget();
+    onclick_play.forget();
 	Ok(())
 }
