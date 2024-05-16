@@ -4,11 +4,12 @@ import { Card } from '../utils/Card';
 
 export function GameCard({game}) {
     return (
-        <Card color={`${game.win ? "[#00FF00]" : "[#FF0000]"}`} className='mb-3'>
-            <div className="flex p-4 items-center justify-between w-80 overflow-x-hidden">
+        <Card className='mb-3'>
+            <div className="flex px-4 py-3 items-center justify-between w-80 overflow-x-hidden">
                 <div className="flex items-center w-full justify-between">
-                    <h1 className="text-xl">{game.game}</h1>
-                    <h1 className="bg-white rounded-full font-semibold text-black px-2">{game.score[0]} | {game.score[1]}</h1>
+                    <h1 className="font-semibold">{game.game}</h1>
+                    <h1 className={`rounded-full font-semibold text-black justify-center px-2 border-2 ${game.win ? "bg-[#32CD32]" : "bg-[#FF6961]"}`}> + {game.xp}</h1>
+                    <h1 className={`bg-white rounded-full font-semibold text-black px-2 border-2 border-[${game.win ? "#32CD32" : "#FF6961"}]`}>{game.score[0]} | {game.score[1]}</h1>
                 </div>
             </div>
         </Card>

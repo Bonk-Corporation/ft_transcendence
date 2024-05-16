@@ -22,7 +22,7 @@ export function Profile({profile}) {
       ],
     },
     {
-      title: "Sore ratio - Pong",
+      title: "Score ratio - Pong",
       colors: ["#79D2E6", "#FF964F"],
       labels: ["Scored", "Ceded"],
       data: [
@@ -40,7 +40,7 @@ export function Profile({profile}) {
       ],
     },
     {
-      title: "Sore ratio - Bonk",
+      title: "Score ratio - Bonk",
       colors: ["#79D2E6", "#FF964F"],
       labels: ["Kills", "Deaths"],
       data: [
@@ -64,26 +64,28 @@ export function Profile({profile}) {
       <CTA onClick={() => {setPopUp(false)}}>Invite</CTA>
     </PopUp>
 
-	  <div className="ml-4 max-h-96 px-2 overflow-auto backdrop-blur-lg down-gradient">
+	  <div className="ml-4 px-2">
         <div className="flex items-center justify-between sticky top-0 z-50 backdrop-blur-lg">
           <h1 className="font-semibold text-xl">Friends</h1>
           <i onClick={() => {setPopUp(true)}} className="fa-solid fa-circle-plus hover:text-gray-300 cursor-pointer"></i>
         </div>
-
-	  	  {
-          profile ? profile.friends.map((friend) => (
-            <FriendCard profile={friend}></FriendCard>
-          )) : null
-        }
-
+        <div className="overflow-auto down-gradient max-h-96 pr-2 backdrop-blur-lg">
+          {
+            profile ? profile.friends.map((friend) => (
+              <FriendCard profile={friend}></FriendCard>
+            )) : null
+          }
+        </div>
     </div>
-      <div className="ml-4 max-h-96 px-2 overflow-auto backdrop-blur-lg down-gradient">
-        <h1 className="font-semibold text-xl sticky top-0 z-50 backdrop-blur-lg">Game history</h1>
-	  	  {
-          profile ? profile.gameHistory.map((game) => (
-            <GameCard game={game}></GameCard>
-          )) : null
-        }
+      <div className="ml-4 px-2">
+        <h1 className="font-semibold text-xl backdrop-blur-lg">Game history</h1>
+        <div className="overflow-auto down-gradient max-h-96 pr-2 backdrop-blur-lg">
+          {
+            profile ? profile.gameHistory.map((game) => (
+              <GameCard game={game}></GameCard>
+            )) : null
+          }
+        </div>
       </div>
     </div>
 
