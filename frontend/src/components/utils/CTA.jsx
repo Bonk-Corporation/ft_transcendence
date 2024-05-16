@@ -1,8 +1,8 @@
 import React from 'react';
 
-export function CTA({className = "", children, onClick = () => {}}) {
+export function CTA({className = "", black = false, children, onClick = () => {}}) {
   return (
-    <button onClick={onClick} className={`${className} px-6 py-1 bg-white rounded-lg text-black font-medium hover:bg-gray-300 transition-all ease-in-out`}>
+    <button onClick={onClick} className={`${className} px-6 py-1 ${black ? "bg-black text-white hover:bg-white hover:text-black" : "bg-white text-black hover:bg-gray-300"} rounded-lg font-medium  transition-all ease-in-out`}>
         {children}
     </button>
   );
