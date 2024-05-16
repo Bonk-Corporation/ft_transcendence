@@ -1,7 +1,7 @@
 import {ShopItem} from '../../components/Shop/ShopItem';
 import { useEffect, useState } from 'preact/hooks';
 
-export function Shop() {
+export function Shop({ profile, setProfile }) {
   const [page, setPage] = useState(0);
   const [items, setItems] = useState(null);
 
@@ -13,7 +13,7 @@ export function Shop() {
 				setItems(data.items);
 			}));
 		}
-
+    
     window.addEventListener('resize', () => {setFactor(window.screen.width < 768 ? 8 : 12)})
     return () => {window.removeEventListener('resize', () => {setFactor(window.screen.width < 768 ? 8 : 12)})}
   }, [])
@@ -22,7 +22,11 @@ export function Shop() {
     <div className={`flex flex-col items-center transition-all duration-300 ${items ? 'opacity-100' : 'opacity-0'}`}>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 my-4">
         {items ? items.slice(page * factor, (page + 1) * factor).map((item, idx) => (
-          <ShopItem item={item} />
+          <ShopItem item={item}
+                    possessed={profile ? profile.skins.includes(item.name) : false}
+                    selected={profile ? profile.selectedSkin == item.name : false}
+                    setProfile={setProfile}
+          />
         )) : null}
       </div>
       {

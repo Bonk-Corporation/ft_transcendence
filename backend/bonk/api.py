@@ -104,6 +104,8 @@ def fakeMe(request, *args, **kwargs):
                     "win": False,
                 },
             ],
+            "skins": ["Jesus", "Dictionnaire"],
+            "selectedSkin": "Jesus",
         }
     )
 

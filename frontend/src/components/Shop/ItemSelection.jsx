@@ -6,6 +6,18 @@ import { CTA } from '../utils/CTA';
 
 
 export function ItemSelection(props) {
+  function handleClick() {
+    if (!props.possessed)
+      console.log("Buying");
+    else if (!props.selected)
+      console.log("Selecting");
+    else
+      console.log("Deselecting");
+    
+    fetch("/api/me").then(res => res.json().then(data => {
+      props.setProfile(data);
+    }));
+  }
   return (
     <div className="flex flex-col justify-center items-center">
         <div className="flex flex-col items-center">
@@ -20,8 +32,10 @@ export function ItemSelection(props) {
                 </div>
             </div>
       </div>
-      <a href="https://buy.stripe.com/test_8wMdT15fvcvEcUweUU" className="mt-4 flex flex-col justify-center items-center">
-          <CTA>Buy</CTA>
+      <a  onClick={handleClick}
+          {...(props.possessed ? null : {href:"https://buy.stripe.com/test_8wMdT15fvcvEcUweUU"})}
+          target="_blank" className="mt-4 flex flex-col justify-center items-center">
+          <CTA black={props.selected}>{props.possessed ? props.selected ? "Deselect" : "Select" : "Buy"}</CTA>
       </a>
     </div>
   );
