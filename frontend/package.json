@@ -2,7 +2,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"wasm": "wasm-pack build ./pong-client",
+		"wasm": "wasm-pack build ./pong-client --target web",
 		"dev": "pnpm wasm && vite",
 		"build": "vite build"
 	},
