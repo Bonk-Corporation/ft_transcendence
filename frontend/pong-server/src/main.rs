@@ -9,11 +9,10 @@ use axum::{
     routing::get,
 };
 use input::{
-    Client, Game, GameState, Move, OnConnectClient
+    Client, Game, GameState, Move, OnConnectClient, EndGame
 };
 use tokio::sync::RwLock;
 use futures::lock::Mutex;
-use create::input::EndGame;
 
 const AI_ID: &str = "ROBOCOP"; 
 

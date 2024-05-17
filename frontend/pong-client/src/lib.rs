@@ -17,8 +17,8 @@ extern "C" {
     fn log(s: &str);
 }
 
-#[wasm_bindgen(start)]
-fn start() -> Result<(), JsValue> {
+#[wasm_bindgen]
+pub fn start() -> Result<(), JsValue> {
     //CONST department
    
     let document = web_sys::window().expect("No window element")

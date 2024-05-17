@@ -13,7 +13,11 @@ export function Pong({ profile, lang }) {
 	parameters de jeu : jouer contre ennemi ou bot
 	*/
 	useEffect(() => {
-		import ('../../../pong-client/pkg').catch(console.error);
+		/*const loadWasm = async () => {
+			const wasmModule = await import('../../../pong-client/target/wasm32-unknown-unknown/release/pong_client.wasm?init');
+		};
+		loadWasm();*/
+		start();
 	}, [])
 
   return (
