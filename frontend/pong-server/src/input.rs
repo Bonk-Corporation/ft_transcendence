@@ -346,12 +346,12 @@ impl Game {
         }));
         while let Ok(msg) = rx.recv().await {
             let movement: Result<Move, serde_json::Error> = serde_json::from_str(&msg[5..]);
-            let move = "MOVE" == &msg[0..5];
+            let is_move = "MOVE" == &msg[0..5];
             if let Ok(movement) = movement {
                 match (self.player1.clone(), self.player2.clone()) {
                     (_, None) | (None, _) => break, //a player has left the game
                     (Some(player1), Some(player2)) => {
-                        match move {
+                        match is_move {
                             true => if movement.id == player1.id {
                                 *p1_moves.lock().await = Movement::Static;
                             } else {
@@ -376,8 +376,8 @@ impl Game {
         for moves in player_moves {
             let _ = moves.await;
         }
-        let mut p1 = 0;
-        let mut p2 = 0;
+        let p1;
+        let p2;
         {
             (p1, p2) = self.game_state.lock().await.score;
         }
