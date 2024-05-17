@@ -53,33 +53,33 @@ export function Profile({profile}) {
 
   return (
   <div className="flex flex-col">
-    <div className="flex flex-wrap items-start justify-center">
-	  <div className="max-h-96">
-	  	  <h1 className="font-semibold text-lg md:text-xl">Profile</h1>
-      	  <ProfileCard profile={profile} />
-    </div>
+    <div className="flex flex-wrap items-start justify-center md:justify-between w-full h-96">
+      <div className="pl-2 h-full">
+          <h1 className="font-semibold text-lg md:text-xl">Profile</h1>
+            <ProfileCard profile={profile} />
+      </div>
 
-    <PopUp active={popUp} setActive={setPopUp} className="flex flex-col items-center">
-      <h1 className="font-semibold text-xl">Add a friend</h1>
-      <Input className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder="Search someone..." />
-      <CTA onClick={() => {setPopUp(false)}}>Invite</CTA>
-    </PopUp>
+      <PopUp active={popUp} setActive={setPopUp} className="flex flex-col items-center">
+        <h1 className="font-semibold text-xl">Add a friend</h1>
+        <Input className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder="Search someone..." />
+        <CTA onClick={() => {setPopUp(false)}}>Invite</CTA>
+      </PopUp>
 
-	  <div className="ml-4 px-2 md:mt-0 mt-2">
-        <div className="flex items-center justify-between">
-          <h1 className="font-semibold text-lg md:text-xl">Friends</h1>
-          <i onClick={() => {setPopUp(true)}} className="fa-solid fa-circle-plus hover:text-gray-300 cursor-pointer"></i>
-        </div>
-        <div className="overflow-auto down-gradient max-h-96 pr-2 backdrop-blur-lg">
-          {
-            profile ? profile.friends.map((friend) => (
-              <FriendCard profile={friend}></FriendCard>
-            )) : null
-          }
-        </div>
-    </div>
+      <div className="md:mt-0 mt-2 flex-1 ml-4 mr-4">
+          <div className="flex items-center justify-between">
+            <h1 className="font-semibold text-lg md:text-xl">Friends</h1>
+            <i onClick={() => {setPopUp(true)}} className="fa-solid fa-circle-plus mr-2 hover:text-gray-300 cursor-pointer"></i>
+          </div>
+          <div className="overflow-auto down-gradient max-h-96 pr-2 backdrop-blur-lg">
+            {
+              profile ? profile.friends.map((friend) => (
+                <FriendCard profile={friend}></FriendCard>
+              )) : null
+            }
+          </div>
+      </div>
 
-      <div className="ml-4 px-2">
+      <div className="">
         <h1 className="font-semibold text-lg md:text-xl">Game history</h1>
         <div className="overflow-y-auto overflow-x-hidden down-gradient max-h-96 pr-2 backdrop-blur-lg">
           {
@@ -91,10 +91,10 @@ export function Profile({profile}) {
       </div>
     </div>
 
-    <div className="flex flex-wrap mt-8 items-center justify-center">
+    <div className="flex flex-wrap mt-8 items-center justify-center md:justify-between w-full">
       {
         stats.map((stat) => (
-          <div className="ml-4 flex flex-col items-center">
+          <div className="flex flex-col items-center ml-2 mr-2">
             <h1 className="font-semibold text-lg md:text-xl">{stat.title}</h1>
             <Stat labels={stat.labels} data={stat.data} colors={stat.colors}/>
           </div>
