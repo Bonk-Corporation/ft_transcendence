@@ -66,7 +66,7 @@ export function Profile({profile}) {
     </PopUp>
 
 	  <div className="ml-4 px-2 md:mt-0 mt-2">
-        <div className="flex items-center justify-between backdrop-blur-lg">
+        <div className="flex items-center justify-between">
           <h1 className="font-semibold text-lg md:text-xl">Friends</h1>
           <i onClick={() => {setPopUp(true)}} className="fa-solid fa-circle-plus hover:text-gray-300 cursor-pointer"></i>
         </div>
@@ -80,7 +80,7 @@ export function Profile({profile}) {
     </div>
 
       <div className="ml-4 px-2">
-        <h1 className="font-semibold text-lg md:text-xl backdrop-blur-lg">Game history</h1>
+        <h1 className="font-semibold text-lg md:text-xl">Game history</h1>
         <div className="overflow-y-auto overflow-x-hidden down-gradient max-h-96 pr-2 backdrop-blur-lg">
           {
             profile ? profile.gameHistory.map((game) => (
