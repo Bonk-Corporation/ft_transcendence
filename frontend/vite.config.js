@@ -18,4 +18,7 @@ export default defineConfig({
     },
   },
   envDir: "..",
+  headers: {
+    "Access-Control-Allow-Headers": "application/wasm",
+  },
 });
