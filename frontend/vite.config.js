@@ -19,4 +19,7 @@ export default defineConfig({
     assetsDir: ".", // instead of assets/...
   },
   envDir: "..",
+  headers: {
+    "Access-Control-Allow-Headers": "application/wasm",
+  },
 });
