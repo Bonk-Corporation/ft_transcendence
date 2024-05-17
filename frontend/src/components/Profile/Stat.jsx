@@ -53,8 +53,8 @@ export function Stat({labels, data, colors}) {
   }, [])
 
   return (
-    <Card className="flex items-center justify-center p-2 aspect-square max-h-32 md:max-h-52">
-		<Chart options={opt.options} series={opt.series} type="radialBar" height={size} />
+    <Card className="flex items-center justify-center h-52">
+		<Chart options={opt.options} series={opt.series} type="radialBar" height={200} />
     </Card>
   );
 }
