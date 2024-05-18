@@ -82,8 +82,8 @@ mkShell {
 
 		${if prod then
 			''
-				sed -i '/DEBUG/d' .env
-				echo DEBUG=n >> .env
+				sed -i '/FT_DEBUG/d' .env
+				echo FT_DEBUG=n >> .env
 
 				pnpm -C frontend build
 			''
@@ -92,8 +92,8 @@ mkShell {
 				# install git commit hooks
 				pnpx husky install >/dev/null 2>&1
 
-				sed -i '/DEBUG/d' .env
-				echo DEBUG=y >> .env
+				sed -i '/FT_DEBUG/d' .env
+				echo FT_DEBUG=y >> .env
 
 				tmux new-session -d 'trap : INT; make || $SHELL'
 				tmux set -g mouse on # neat
