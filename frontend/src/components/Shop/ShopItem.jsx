@@ -20,7 +20,10 @@ export function ShopItem(props) {
         <Card className={`${props.selected ? 'border-gradient' : ""} flex flex-col p-4 justify-center items-center hover:cursor-pointer border-gradient-hover hover:from-white/40 hover:to-white/10 hover:mx-[-5px] hover:my-[-5px]`}>
             <BallPresentation limit={true} images={props.item.images}/>
             <h1 className="md:text-xl font-medium text-center">{props.item.name}</h1>
-            <Price price={props.item.price}/>
+			{props.possessed ?
+				<div className="bg-black border-2 rounded text-white px-2 font-semibold">Owned</div>
+				: <Price price={props.item.price}/>
+			}
         </Card>
       </div>
     </div>
