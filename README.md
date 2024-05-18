@@ -3,15 +3,13 @@
 ## General Requirements
 - Create an API app on 42 intra
 - Edit your redirect URI to ```https://localhost:8443/auth/42``` in production mode or to ```http://localhost:8000/auth/42``` in dev mode
-- Copy backend/.env.example into a backend/.env file
+- Copy .env.example into a .env file
 
-## Developpement Usage
-- Make sure ```DEBUG``` is set to ```True``` in backend/bonk/settings.py
+## Development Usage
 - ```nix-shell```
 - ```python backend/manage.py migrate```
 
  ## Production Usage
- - Make sure ```DEBUG``` is set to ```False``` in backend/bonk/settings.py
  - ```docker-compose up```
 
 ## Technologies
@@ -24,7 +22,7 @@
 - Backend **M**
 - Front-end **m**
 - Database **m**
-- User managment **M**
+- User management **M**
 - OAuth 2.0 - API 42 **M**
 - Networked multiplayer **M**
 - More than 2 players **M**
