@@ -45,6 +45,7 @@ mkShell {
 		export PGDATA="backend/.pg"
 		export NIX_IGNORE_SYMLINK_STORE=1
 		export NIX_ENFORCE_PURITY=0
+		export TERM=xterm
 
 		cargo install wasm-pack
 
@@ -81,7 +82,8 @@ mkShell {
 
 		${if prod then
 			''
-				echo DEBUG=n >> backend/.env
+				sed -i '/DEBUG/d' .env
+				echo DEBUG=n >> .env
 
 				pnpm -C frontend build
 			''
@@ -90,7 +92,8 @@ mkShell {
 				# install git commit hooks
 				pnpx husky install >/dev/null 2>&1
 
-				echo DEBUG=y >> backend/.env
+				sed -i '/DEBUG/d' .env
+				echo DEBUG=y >> .env
 
 				tmux new-session -d 'trap : INT; make || $SHELL'
 				tmux set -g mouse on # neat
