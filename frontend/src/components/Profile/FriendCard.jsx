@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '../utils/Card';
 
-export function FriendCard({profile}) {
+export function FriendCard({profile, request = false}) {
   return (
     <Card className='mb-4'>
         <div className="flex p-3 items-center justify-between overflow-hidden">
@@ -12,9 +12,20 @@ export function FriendCard({profile}) {
                     <h1>Level {profile.level}</h1>
                 </div>
             </div>
-            <button>
-                <i className="fa-solid fa-user-minus text-2xl text-red-500 hover:text-red-600 cursor-pointer" ></i>
-            </button>
+            {
+                request ?
+                <div className="flex">                
+                    <button className="aspect-square w-7 h-7 flex items-center justify-center rounded-full border hover:border-green-600 border-green-500">
+                        <i className="fa-solid fa-check text-lg text-green-500 hover:text-green-600 cursor-pointer"></i>
+                    </button>
+                    <button className="aspect-square w-7 h-7 flex items-center justify-center rounded-full border hover:border-red-600 border-red-500 ml-2">
+                        <i className="fa-solid fa-xmark text-lg text-red-500 hover:text-red-600 cursor-pointer"></i>
+                    </button>
+                </div> :
+                <button>
+                    <i className="fa-solid fa-user-minus text-2xl text-red-500 hover:text-red-600 cursor-pointer"></i>
+                </button>
+            }
         </div>
     </Card>
   );

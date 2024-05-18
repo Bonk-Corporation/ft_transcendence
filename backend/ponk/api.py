@@ -32,6 +32,18 @@ def fakeMe(request, *args, **kwargs):
             "level": 18,
             "levelPercentage": 78,
             "avatar": "https://i.pinimg.com/236x/9d/58/d1/9d58d1fba36aa76996b5de3f3d233d22.jpg",
+            "friendsRequests": [
+                {
+                    "name": "DropNod",
+                    "avatar": "https://pbs.twimg.com/profile_images/1673459909881393153/4iFuxZZt_400x400.jpg",
+                    "level": 6,
+                },
+                {
+                    "name": "Thryndir",
+                    "avatar": "https://i.imgur.com/uZsx44p.jpeg",
+                    "level": 1000,
+                },
+            ],
             "friends": [
                 {
                     "name": "FeuilleMorte",

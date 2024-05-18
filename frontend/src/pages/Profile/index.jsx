@@ -71,6 +71,11 @@ export function Profile({profile}) {
             <i onClick={() => {setPopUp(true)}} className="fa-solid fa-circle-plus mr-2 hover:text-gray-300 cursor-pointer"></i>
           </div>
           <div className="overflow-auto down-gradient max-h-96 pr-2 backdrop-blur-lg">
+          {
+              profile ? profile.friendsRequests.map((friend) => (
+                <FriendCard profile={friend} request={true}></FriendCard>
+              )) : null
+            }
             {
               profile ? profile.friends.map((friend) => (
                 <FriendCard profile={friend}></FriendCard>
