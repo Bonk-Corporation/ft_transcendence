@@ -33,7 +33,7 @@ export function ItemSelection(props) {
             </div>
       </div>
       <a  onClick={handleClick}
-          {...(props.possessed ? null : {href:"https://buy.stripe.com/test_8wMdT15fvcvEcUweUU"})}
+          {...(props.possessed ? null : {href:"https://buy.stripe.com/cN25lU2SXeFZcRqfYY"})}
           target="_blank" className="mt-4 flex flex-col justify-center items-center">
           <CTA black={props.selected}>{props.possessed ? props.selected ? "Deselect" : "Select" : "Buy"}</CTA>
       </a>
