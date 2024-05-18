@@ -55,7 +55,7 @@ mkShell {
 		psql -h /tmp -c "
 			CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';
 			GRANT ALL ON DATABASE $DB_NAME TO $DB_USER;
-			ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
+			ALTER DATABASE $DB_NAME OWNER TO $DB_USER;" \
 			"$DB_NAME"
 
 		yes | pnpm install --reporter=silent
