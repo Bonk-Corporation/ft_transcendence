@@ -5,7 +5,7 @@ from ponk.models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ["name"]
+    list_display = ["username"]
 
 
 admin.site.unregister(User)

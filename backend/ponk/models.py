@@ -4,9 +4,9 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class User(AbstractUser):
-    name = models.CharField(max_length=96, unique=True)
     email = models.EmailField()
-    friends = models.ManyToManyField("self")
+    friends = models.ManyToManyField("self", symmetrical=True, blank=True)
+    friend_requests = models.ManyToManyField("self", blank=True)
     level = models.PositiveIntegerField()
     level_percentage = models.PositiveIntegerField()
     avatar = models.URLField()

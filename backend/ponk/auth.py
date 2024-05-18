@@ -20,7 +20,8 @@ class FtAuthBackend(BaseBackend):
             try:
                 user = User.objects.get(username=info.login)
             except User.DoesNotExist:
-                user = User(username=info.login, display_name=info.display_name)
+                user = User(username=info.login, level=0, level_percentage=0)
+
                 user.save()
             return user
         except APIException:
