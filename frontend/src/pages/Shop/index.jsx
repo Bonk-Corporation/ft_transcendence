@@ -25,7 +25,7 @@ export function Shop({ profile, setProfile }) {
           <ShopItem item={item}
                     possessed={profile ? profile.skins.includes(item.name) : false}
                     selected={profile ? profile.selectedSkin == item.name : false}
-                    setProfile={setProfile}
+                    profile={profile} setProfile={setProfile}
           />
         )) : null}
       </div>
