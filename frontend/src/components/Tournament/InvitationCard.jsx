@@ -3,7 +3,7 @@ import { Card } from '../utils/Card';
 
 export function InvitationCard({ invitation }) {
   return (
-    <Card className='p-2 px-4 mb-2 w-72 overflow-hidden hover:from-white/40 hover:to-white/10 cursor-pointer'>
+    <Card className='p-2 px-4 mb-2 w-72 hover:w-96 overflow-hidden hover:from-white/40 hover:to-white/10 cursor-pointer'>
         <a href="/tournament/room" className="flex items-center">
           <div className={`bg-[url(${invitation.author.avatar})] bg-center bg-cover w-8 h-8 rounded-full mr-2`}/>
           <div className="w-full overflow-hidden">
