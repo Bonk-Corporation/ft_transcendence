@@ -4,7 +4,7 @@ import { PlayerCard } from '../../components/Tournament/PlayerCard';
 import { PopUp } from '../../components/utils/PopUp';
 import { Input } from '../../components/utils/Input';
 
-export function Tournament() {
+export function Room() {
   const [active, setActive] = useState("");
   const admin = "DinoMalin";
 
