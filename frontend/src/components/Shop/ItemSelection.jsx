@@ -34,11 +34,10 @@ export function ItemSelection(props) {
             </div>
       </div>
       <a  onClick={handleClick}
-          {...(props.possessed ? null : {href:"https://buy.stripe.com/cN25lU2SXeFZcRqfYY"})}
           target="_blank" className="mt-4 flex flex-col justify-center items-center">
           {
             props.possessed ?
-            <CTA black={props.selected}>{props.selected ? "Deselect" : "Select"}</CTA> :
+            <CTA className='w-72 h-11 font-normal' black={props.selected}>{props.selected ? "Deselect" : "Select"}</CTA> :
             // @ts-ignore
             <stripe-buy-button
               buy-button-id="buy_btn_1PIBt8KG666poqhFwKbTAzAp"
