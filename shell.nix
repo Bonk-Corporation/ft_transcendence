@@ -96,7 +96,6 @@ mkShell {
 				sed -i '/FT_DEBUG/d' .env
 				echo FT_DEBUG=y >> .env
 
-				tmux set-option -ga ' CLIENT_ID CLIENT_SECRET DB_NAME DB_PASS DB_USER VITE_STRIPE_API_KEY FT_DEBUG'
 				tmux new-session -d 'trap : INT; make || $SHELL'
 				tmux set -g mouse on # neat
 				tmux split-window -h 'trap : INT; make fdev || $SHELL'

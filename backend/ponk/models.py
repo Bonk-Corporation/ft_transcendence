@@ -10,6 +10,7 @@ class User(AbstractUser):
     level = models.PositiveIntegerField()
     level_percentage = models.PositiveIntegerField()
     avatar = models.URLField()
+    skins = ArrayField(models.CharField())
 
     def __str__(self):
         return self.name
