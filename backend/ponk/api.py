@@ -1,5 +1,6 @@
-from django.urls import path
+from django.urls import path, include
 from django.http.response import JsonResponse
+import ponk.friends
 
 
 def me(request, *args, **kwargs):
@@ -342,4 +343,5 @@ def fakeShop(request, *args, **kwargs):
 urls = [
     path("me", fakeMe),
     path("shop", fakeShop),
+    path("friends/", include(ponk.friends.urls)),
 ]
