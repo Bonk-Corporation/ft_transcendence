@@ -5,7 +5,8 @@ import { LocationProvider, Router, Route, useLocation } from 'preact-iso';
 
 import { Navbar } from './components/Navbar/Navbar.jsx';
 import { Play } from './pages/Play/index.jsx';
-import { Tournament } from './pages/Tournament/index.jsx';
+import { Room } from './pages/Tournament/Room.jsx';
+import { Menu } from './pages/Tournament/Menu.jsx';
 import { Shop } from './pages/Shop/index.jsx';
 import { Login } from './pages/Auth/Login.jsx';
 import { NotFound } from './pages/_404.jsx';
@@ -50,7 +51,8 @@ export function App() {
 					<Router>
 						<Route path="/" component={Play} />
 						<Route path="/login" component={Login} />
-						<Route path="/tournament" component={Tournament} />
+						<Route path="/tournament" component={Menu} />
+						<Route path="/tournament/room" component={Room} />
 						<Route path="/shop" component={() => <Shop profile={profile} setProfile={setProfile} />} />
 						<Route path="/profile" component={() => <Profile profile={profile} />} />
 						<Route path="/signup" component={Signup} />
