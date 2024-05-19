@@ -18,6 +18,7 @@ export function ItemSelection(props) {
       props.setProfile(data);
     }));
   }
+
   return (
     <div className="flex flex-col justify-center items-center">
         <div className="flex flex-col items-center">
@@ -35,7 +36,16 @@ export function ItemSelection(props) {
       <a  onClick={handleClick}
           {...(props.possessed ? null : {href:"https://buy.stripe.com/cN25lU2SXeFZcRqfYY"})}
           target="_blank" className="mt-4 flex flex-col justify-center items-center">
-          <CTA black={props.selected}>{props.possessed ? props.selected ? "Deselect" : "Select" : "Buy"}</CTA>
+          {
+            props.possessed ?
+            <CTA black={props.selected}>{props.selected ? "Deselect" : "Select"}</CTA> :
+            // @ts-ignore
+            <stripe-buy-button
+              buy-button-id="buy_btn_1PIBt8KG666poqhFwKbTAzAp"
+              publishable-key={import.meta.env.VITE_STRIPE_API_KEY}
+              client-reference-id={props.profile.name + "/" + props.item.name}
+            />
+          }
       </a>
     </div>
   );
