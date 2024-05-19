@@ -42,7 +42,7 @@ export function ItemSelection(props) {
             <stripe-buy-button
               buy-button-id="buy_btn_1PIBt8KG666poqhFwKbTAzAp"
               publishable-key={import.meta.env.VITE_STRIPE_API_KEY}
-              client-reference-id={props.profile.name + "/" + props.item.name}
+              client-reference-id={props.profile.name + "_" + props.item.name}
             />
           }
       </a>
