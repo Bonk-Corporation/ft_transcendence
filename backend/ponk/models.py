@@ -12,9 +12,6 @@ class User(AbstractUser):
     avatar = models.URLField()
     skins = ArrayField(models.CharField())
 
-    def __str__(self):
-        return self.name
-
 
 class GameHistory(models.Model):
     user = models.ForeignKey(
