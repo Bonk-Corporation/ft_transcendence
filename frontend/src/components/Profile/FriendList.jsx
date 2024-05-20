@@ -3,6 +3,7 @@ import { FriendCard } from './FriendCard';
 import { PopUp } from '../utils/PopUp';
 import { Input } from '../utils/Input';
 import { CTA } from '../utils/CTA';
+import { Card } from '../utils/Card';
 
 export function FriendList({friends, friendsRequests}) {
   const [popUp, setPopUp] = useState(false);
@@ -38,16 +39,22 @@ export function FriendList({friends, friendsRequests}) {
           <h1 className="font-semibold text-lg md:text-xl">Friends</h1>
           <i onClick={() => {setPopUp(true)}} className="fa-solid fa-circle-plus mr-2 hover:text-gray-300 cursor-pointer"></i>
         </div>
-        <div className="overflow-auto down-gradient max-h-96 pr-2 backdrop-blur-lg">
+        <div className={`overflow-auto ${friends.length && friendsRequests.length ? "down-gradient" : ""}  max-h-96 pr-2 backdrop-blur-lg`}>
           {
-              friendsRequests.map((friend) => (
-              <FriendCard profile={friend} request={true}></FriendCard>
-              ))
+            friendsRequests.map((friend) => (
+            <FriendCard profile={friend} request={true}></FriendCard>
+            ))
           }
           {
-              friends.map((friend) => (
-              <FriendCard profile={friend}></FriendCard>
-              ))
+            friends.map((friend) => (
+            <FriendCard profile={friend}></FriendCard>
+            ))
+          }
+          {
+            !friends.length && !friendsRequests.length ?
+            <Card className='p-4 flex items-center flex-col'>
+              <h1 className="font-semibold text-md md:text-lg">No friends yet. Click on + to add a friend.</h1>
+            </Card> : null
           }
         </div>
     </div>
