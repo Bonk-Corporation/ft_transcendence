@@ -6,20 +6,32 @@ import { CTA } from '../utils/CTA';
 
 export function FriendList({friends, friendsRequests}) {
   const [popUp, setPopUp] = useState(false);
+  const [error, setError] = useState("");
   const inputRef = useRef(null);
 
   function handleClick() {
-    console.log(inputRef.current.value);
-    // setPopUp(false);
+    if (inputRef.current.value.trim().length) {
+      fetch(`/api/friends/send/${inputRef.current.value}`, {
+        method: "POST",
+      }).then(res => {
+        if (!res.ok)
+          throw new Error(res.statusText);
+        return res.json();
+      }).then(data => {
+        setPopUp(false);
+      }).catch(err => {
+        setError(err.message);
+      })
+    }
   }
 
   return (
     <div className="md:mt-0 mt-2 flex-1 ml-4 mr-4">
-
         <PopUp active={popUp} setActive={setPopUp} className="flex flex-col items-center">
           <h1 className="font-semibold text-xl">Add a friend</h1>
-          <Input ref={inputRef} className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder="Search someone..." />
-          <CTA onClick={handleClick}>Invite</CTA>
+          <Input ref={inputRef} className="rounded-full bg-[#4f4f4f] mt-2" placeholder="Search someone..." />
+          <p className="mb-2 text-sm text-red-500">{error}</p>
+          <CTA className='' onClick={handleClick}>Invite</CTA>
         </PopUp>
 
         <div className="flex items-center justify-between">
