@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FriendCard } from './FriendCard';
 import { PopUp } from '../utils/PopUp';
 import { Input } from '../utils/Input';
@@ -6,14 +6,20 @@ import { CTA } from '../utils/CTA';
 
 export function FriendList({friends, friendsRequests}) {
   const [popUp, setPopUp] = useState(false);
+  const inputRef = useRef(null);
+
+  function handleClick() {
+    console.log(inputRef.current.value);
+    // setPopUp(false);
+  }
 
   return (
     <div className="md:mt-0 mt-2 flex-1 ml-4 mr-4">
 
         <PopUp active={popUp} setActive={setPopUp} className="flex flex-col items-center">
           <h1 className="font-semibold text-xl">Add a friend</h1>
-          <Input className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder="Search someone..." />
-          <CTA onClick={() => {setPopUp(false)}}>Invite</CTA>
+          <Input ref={inputRef} className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder="Search someone..." />
+          <CTA onClick={handleClick}>Invite</CTA>
         </PopUp>
 
         <div className="flex items-center justify-between">
