@@ -6,6 +6,7 @@ import { Input } from '../../components/utils/Input';
 
 export function Room() {
   const [active, setActive] = useState("");
+  const inputRef = useRef(null);
   const admin = "DinoMalin";
 
   const players = [
@@ -62,12 +63,22 @@ export function Room() {
   ]
 
   const [popUp, setPopUp] = useState(false);
+
+  function clear() {
+    inputRef.current.value = "";
+  }
+
+  function handleClick() {
+    setPopUp(false);
+    inputRef.current.value = "";
+  }
+
   return (
     <div className="w-full flex justify-center h-[40rem]">
-      <PopUp active={popUp} setActive={setPopUp} className="flex flex-col items-center">
+      <PopUp clear={clear} active={popUp} setActive={setPopUp} className="flex flex-col items-center">
         <h1 className="font-semibold text-xl">Add an user</h1>
-        <Input className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder="Search someone..." />
-        <CTA onClick={() => {setPopUp(false)}}>Invite</CTA>
+        <Input ref={inputRef} className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder="Search someone..." />
+        <CTA onClick={handleClick}>Invite</CTA>
       </PopUp>
       <div className="h-full w-4/6 flex flex-col items-center">
         <div className="h-full w-full flex overflow-hidden rounded">

@@ -26,11 +26,17 @@ export function FriendList({friends, friendsRequests}) {
         setError(err.message);
       })
     }
+    inputRef.current.value = "";
+  }
+
+  function clear() {
+    inputRef.current.value = "";
+    setError("");
   }
 
   return (
     <div className="md:mt-0 mt-2 flex-1 ml-4 mr-4">
-        <PopUp active={popUp} setActive={setPopUp} className="flex flex-col items-center">
+        <PopUp clear={clear} active={popUp} setActive={setPopUp} className="flex flex-col items-center">
           <h1 className="font-semibold text-xl">Add a friend</h1>
           <Input ref={inputRef} className="rounded-full bg-[#4f4f4f] mt-2" placeholder="Search someone..." />
           <p className="mb-2 text-sm text-red-500">{error}</p>
