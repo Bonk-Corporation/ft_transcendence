@@ -36,13 +36,18 @@ def oauth_token(code):
 class FtUser:
     login: str
     display_name: str
+    avatar: str
 
     @classmethod
     def from_json(klass, data):
-        if not "login" in data or not "displayname" in data:
+        if not "login" in data or not "displayname" in data or not "image" in data:
             raise APIException("Invalid /v2/me response")
 
-        return klass(login=data["login"], display_name=data["displayname"])
+        return klass(
+            login=data["login"],
+            display_name=data["displayname"],
+            avatar=data["image"]["versions"]["small"],
+        )
 
 
 def user_info(token):

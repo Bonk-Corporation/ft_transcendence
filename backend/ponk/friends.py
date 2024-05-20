@@ -101,6 +101,28 @@ def remove_friend(request, *args, **kwargs):
     return JsonResponse({"success": True})
 
 
+@authenticated
+def get_friends_info(request, *args, **kwargs):
+    username = kwargs.get("user")
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return JsonResponse({"error": f"User {username} does not exist"}, status=404)
+
+    friends = user.friends.all()
+    friends_info = []
+
+    for friend in friends:
+        friend_info = {
+            "name": friend.username,
+            "avatar": friend.avatar,
+            "level": friend.level,
+        }
+        friends_info.append(friend_info)
+
+    return JsonResponse({"friends": friends_info}, status=200)
+
+
 urls = [
     path("send/<str:user>", friend_request),
     path("accept/<str:user>", accept_friend_request),
