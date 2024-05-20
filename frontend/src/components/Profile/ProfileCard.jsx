@@ -12,7 +12,7 @@ export function ProfileCard({profile}) {
             <div className="flex items-center">
                 <div className={`rounded-full md:block hidden w-32 mr-4 aspect-square border-4 bg-[url(${profile ? profile.avatar : null})] bg-center bg-cover`} />
                 <div className="flex flex-col">
-									<Input className="my-2" placeholder={`${profile ? profile.name : null}`}/>
+									<Input disabled={true} className="my-2" placeholder={`${profile ? profile.name : null}`}/>
 									<Input className="my-2" placeholder={`${profile ? profile.email : null}`} />
 								</div>
             </div>
