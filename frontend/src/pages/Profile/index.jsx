@@ -1,12 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { ProfileCard } from '../../components/Profile/ProfileCard';
-import { FriendCard } from '../../components/Profile/FriendCard';
-import { GameCard } from '../../components/Profile/GameCard';
-import { Card } from '../../components/utils/Card';
 import { Stat } from '../../components/Profile/Stat';
-import { PopUp } from '../../components/utils/PopUp';
-import { Input } from '../../components/utils/Input';
-import { CTA } from '../../components/utils/CTA';
 import { FriendList } from '../../components/Profile/FriendList';
 import { GameHistory } from '../../components/Profile/GameHistory';
 
