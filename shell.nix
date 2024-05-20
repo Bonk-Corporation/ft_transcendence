@@ -7,6 +7,8 @@ let
 in
 
 mkShell {
+
+	
 	packages = [
 		python3
 		python3Packages.pip
@@ -76,16 +78,13 @@ mkShell {
 
 		pip3 install -r requirements.txt --break-system-packages --quiet
 
-		if [ ! -e .initial_migration_done ]; then
+		if [ ! python3 manage.py showmigrations | grep -q ' [X] ']; then
 			python3 backend/manage.py migrate
-			touch .initial_migration_done
 		fi
-
+		sed -i '/FT_DEBUG/d' .env
 		${if prod then
 			''
-				sed -i '/FT_DEBUG/d' .env
 				echo FT_DEBUG=n >> .env
-
 				pnpm -C frontend build
 			''
 		  else
@@ -93,9 +92,7 @@ mkShell {
 				# install git commit hooks
 				pnpx husky install >/dev/null 2>&1
 
-				sed -i '/FT_DEBUG/d' .env
 				echo FT_DEBUG=y >> .env
-
 				tmux set-option -ga ' CLIENT_ID CLIENT_SECRET DB_NAME DB_PASS DB_USER VITE_STRIPE_API_KEY FT_DEBUG'
 				tmux new-session -d 'trap : INT; make || $SHELL'
 				tmux set -g mouse on # neat
