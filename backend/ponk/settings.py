@@ -35,6 +35,8 @@ if not DEBUG:
         "localhost",  # to test production
         HOST,
     ]
+else:
+    ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
