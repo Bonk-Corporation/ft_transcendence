@@ -15,8 +15,10 @@ export function FriendList({friends, friendsRequests}) {
       fetch(`/api/friends/send/${inputRef.current.value}`, {
         method: "POST",
       }).then(res => {
-        if (!res.ok)
-          throw new Error(res.statusText);
+        if (!res.ok) {
+          return res.json().then(errData => {
+            throw new Error(errData.error)})
+        }
         return res.json();
       }).then(data => {
         setPopUp(false);
