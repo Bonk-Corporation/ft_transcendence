@@ -18,8 +18,8 @@ export function Profile({profile}) {
       labels: ["Win", "Lose"],
       colors: ["#32CD32", "#FF6961"],
       data: [
-        profile ? profile.gameHistory.reduce((accumulator, game) => game.win && game.game == "Pong" ? accumulator + 1 : accumulator, 0) : 1,
-        profile ? profile.gameHistory.reduce((accumulator, game) => !game.win && game.game == "Pong" ? accumulator + 1 : accumulator, 0) : 1
+        profile ? profile.gameHistory.length ? profile.gameHistory.reduce((accumulator, game) => game.win && game.game == "Pong" ? accumulator + 1 : accumulator, 0) : 1 : 1,
+        profile ? profile.gameHistory.length ? profile.gameHistory.reduce((accumulator, game) => !game.win && game.game == "Pong" ? accumulator + 1 : accumulator, 0) : 1 : 1
       ],
     },
     {
@@ -27,8 +27,8 @@ export function Profile({profile}) {
       colors: ["#79D2E6", "#FF964F"],
       labels: ["Scored", "Ceded"],
       data: [
-        profile ? profile.gameHistory.reduce((accumulator, game) => game.game == "Pong" ? accumulator + game.score[0] : accumulator, 0) : 1,
-        profile ? profile.gameHistory.reduce((accumulator, game) => game.game == "Pong" ? accumulator + game.score[1] : accumulator, 0) : 1
+        profile ? profile.gameHistory.length ? profile.gameHistory.reduce((accumulator, game) => game.game == "Pong" ? accumulator + game.score[0] : accumulator, 0) : 1 : 1,
+        profile ? profile.gameHistory.length ? profile.gameHistory.reduce((accumulator, game) => game.game == "Pong" ? accumulator + game.score[1] : accumulator, 0) : 1 : 1
       ],
     },
     {
@@ -36,8 +36,8 @@ export function Profile({profile}) {
       colors: ["#32CD32", "#FF6961"],
       labels: ["Win", "Lose"],
       data: [
-        profile ? profile.gameHistory.reduce((accumulator, game) => game.win && game.game == "Bonk" ? accumulator + 1 : accumulator, 0) : 1,
-        profile ? profile.gameHistory.reduce((accumulator, game) => !game.win && game.game == "Bonk" ? accumulator + 1 : accumulator, 0) : 1
+        profile ? profile.gameHistory.length ? profile.gameHistory.reduce((accumulator, game) => game.win && game.game == "Bonk" ? accumulator + 1 : accumulator, 0) : 1 : 1,
+        profile ? profile.gameHistory.length ? profile.gameHistory.reduce((accumulator, game) => !game.win && game.game == "Bonk" ? accumulator + 1 : accumulator, 0) : 1 : 1
       ],
     },
     {
@@ -45,8 +45,8 @@ export function Profile({profile}) {
       colors: ["#79D2E6", "#FF964F"],
       labels: ["Kills", "Deaths"],
       data: [
-        profile ? profile.gameHistory.reduce((accumulator, game) => game.game == "Bonk" ? accumulator + game.score[0] : accumulator, 0) : 1,
-        profile ? profile.gameHistory.reduce((accumulator, game) => game.game == "Bonk" ? accumulator + game.score[1] : accumulator, 0) : 1
+        profile ? profile.gameHistory.length ? profile.gameHistory.reduce((accumulator, game) => game.game == "Bonk" ? accumulator + game.score[0] : accumulator, 0) : 1 : 1,
+        profile ? profile.gameHistory.length ? profile.gameHistory.reduce((accumulator, game) => game.game == "Bonk" ? accumulator + game.score[1] : accumulator, 0) : 1 : 1
       ],
     },
   ]);
