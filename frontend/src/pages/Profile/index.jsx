@@ -7,11 +7,11 @@ import { Stat } from '../../components/Profile/Stat';
 import { PopUp } from '../../components/utils/PopUp';
 import { Input } from '../../components/utils/Input';
 import { CTA } from '../../components/utils/CTA';
+import { FriendList } from '../../components/Profile/FriendList';
+import { GameHistory } from '../../components/Profile/GameHistory';
 
 
 export function Profile({profile}) {
-  const [popUp, setPopUp] = useState(false);
-  const [displayGame, setDisplayGame] = useState('all');
   const [stats, setStats] = useState([
     {
       title: "Win ratio - Pong",
@@ -59,41 +59,15 @@ export function Profile({profile}) {
             <ProfileCard profile={profile} />
       </div>
 
-      <PopUp active={popUp} setActive={setPopUp} className="flex flex-col items-center">
-        <h1 className="font-semibold text-xl">Add a friend</h1>
-        <Input className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder="Search someone..." />
-        <CTA onClick={() => {setPopUp(false)}}>Invite</CTA>
-      </PopUp>
+      {
+        profile ?
+        <>
+          <FriendList friends={profile.friends} friendsRequests={profile.friendsRequests} />
+          <GameHistory gameHistory={profile.gameHistory}/>
+        </>
+        : null
+      }
 
-      <div className="md:mt-0 mt-2 flex-1 ml-4 mr-4">
-          <div className="flex items-center justify-between">
-            <h1 className="font-semibold text-lg md:text-xl">Friends</h1>
-            <i onClick={() => {setPopUp(true)}} className="fa-solid fa-circle-plus mr-2 hover:text-gray-300 cursor-pointer"></i>
-          </div>
-          <div className="overflow-auto down-gradient max-h-96 pr-2 backdrop-blur-lg">
-          {
-              profile ? profile.friendsRequests.map((friend) => (
-                <FriendCard profile={friend} request={true}></FriendCard>
-              )) : null
-            }
-            {
-              profile ? profile.friends.map((friend) => (
-                <FriendCard profile={friend}></FriendCard>
-              )) : null
-            }
-          </div>
-      </div>
-
-      <div className="">
-        <h1 className="font-semibold text-lg md:text-xl">Game history</h1>
-        <div className="overflow-y-auto overflow-x-hidden down-gradient max-h-96 pr-2 backdrop-blur-lg">
-          {
-            profile ? profile.gameHistory.map((game) => (
-              <GameCard game={game} display={displayGame} setDisplay={setDisplayGame}></GameCard>
-            )) : null
-          }
-        </div>
-      </div>
     </div>
 
     <div className="flex flex-wrap mt-8 items-center justify-center md:justify-between w-full">
