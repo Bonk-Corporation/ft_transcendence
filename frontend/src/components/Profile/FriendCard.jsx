@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card } from '../utils/Card';
 
-export function FriendCard({profile, request = false}) {
+export function FriendCard({fetchProfile, profile, request = false}) {
   const [deleted, setDeleted] = useState(false);
   function handleClick(call) {
     fetch(`/api/friends/${call}/${profile.name}`, {
@@ -11,10 +11,7 @@ export function FriendCard({profile, request = false}) {
         throw new Error(res.statusText);
       return res.json();
     }).then(data => {
-      if (call == 'accept')
-        request = true;
-      else if (call == 'deny' || call == 'remove')
-        setDeleted(true);
+      fetchProfile();
     }).catch(err => {})
   }
   return (

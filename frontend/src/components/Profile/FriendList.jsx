@@ -5,7 +5,7 @@ import { Input } from '../utils/Input';
 import { CTA } from '../utils/CTA';
 import { Card } from '../utils/Card';
 
-export function FriendList({friends, friendsRequests}) {
+export function FriendList({fetchProfile, friends, friendsRequests}) {
   const [popUp, setPopUp] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef(null);
@@ -19,7 +19,7 @@ export function FriendList({friends, friendsRequests}) {
           return res.json().then(errData => {
             throw new Error(errData.error)})
         }
-        return res.json();
+        fetchProfile();
       }).then(data => {
         setPopUp(false);
       }).catch(err => {
@@ -50,12 +50,12 @@ export function FriendList({friends, friendsRequests}) {
         <div className={`overflow-auto ${friends.length && friendsRequests.length ? "down-gradient" : ""}  max-h-96 pr-2 backdrop-blur-lg`}>
           {
             friendsRequests.map((friend) => (
-            <FriendCard profile={friend} request={true}></FriendCard>
+            <FriendCard fetchProfile={fetchProfile} profile={friend} request={true}></FriendCard>
             ))
           }
           {
             friends.map((friend) => (
-            <FriendCard profile={friend}></FriendCard>
+            <FriendCard fetchProfile={fetchProfile} profile={friend}></FriendCard>
             ))
           }
           {
