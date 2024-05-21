@@ -9,9 +9,10 @@ export function Navbar(props) {
 	const logged = true;
 
 	const AUTHORIZED_LOCATIONS = ["/play", "/tournament", "/shop", "/profile"];
+	const LOG_LOCATIONS = ["/", "/signup"]
 
 	useEffect(() => {
-		if (props.triedLog && props.profile && props.profile.error) {
+		if (!LOG_LOCATIONS.includes(location.url) && props.triedLog && props.profile && props.profile.error && location.url) {
 			location.route('/');
 		}
 	}, [props.profile, location, props.triedLog]);

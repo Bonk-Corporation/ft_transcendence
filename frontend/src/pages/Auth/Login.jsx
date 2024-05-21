@@ -22,7 +22,7 @@ export function Login(props) {
 	}, [props.profile])
 
 	return (
-		<Card className="py-32 w-full max-w-[800px] px-16 flex flex-col items-center justify-center">
+		<Card className="py-28 w-full max-w-[800px] px-16 flex flex-col items-center justify-center">
 			<div className="max-w-[600px] flex flex-col items-center justify-center">
 				<h1 className="text-2xl font-semibold">Log in</h1>
 				<form action="" method="POST" className="w-full flex flex-col items-center">
@@ -31,6 +31,10 @@ export function Login(props) {
 				</form>
 				<CTA onClick={() => props.setTriedLog(true)} className="my-2">Log in</CTA>
 				<a onClick={() => props.setTriedLog(true)} className="underline" href={url}>Log in with 42</a>
+			</div>
+			<div className="mt-6 flex flex-col items-center">
+				<p className="text-sm mb-1">No account yet ?</p>
+				<a href="/signup"><CTA>Sign up</CTA></a>
 			</div>
 		</Card>
 	);
