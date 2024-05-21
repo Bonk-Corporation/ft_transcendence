@@ -32,10 +32,8 @@ export function Login(props) {
 				<CTA onClick={() => props.setTriedLog(true)} className="my-2">Log in</CTA>
 				<a onClick={() => props.setTriedLog(true)} className="underline" href={url}>Log in with 42</a>
 			</div>
-			<div>
-
-			</div>
-			<div className="mt-6 flex flex-col items-center">
+			<hr className="w-56 my-3" />
+			<div className="flex flex-col items-center">
 				<p className="text-sm mb-1">No account yet ?</p>
 				<a href="/signup"><CTA>Sign up</CTA></a>
 			</div>
