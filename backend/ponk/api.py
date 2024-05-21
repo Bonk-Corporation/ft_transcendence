@@ -4,46 +4,8 @@ from ponk.api_decorators import authenticated
 from ponk.money import urls as money_api, skins
 import ponk.friends
 from ponk.models import User
-
-
-def get_friends_info(username):
-    try:
-        user = User.objects.get(username=username)
-    except User.DoesNotExist:
-        return {"error": f"User {username} does not exist"}
-
-    friends = user.friends.all()
-    friends_info = []
-
-    for friend in friends:
-        friend_info = {
-            "name": friend.username,
-            "avatar": friend.avatar,
-            "level": friend.level,
-        }
-        friends_info.append(friend_info)
-
-    return friends_info
-
-
-def get_friends_request_info(username):
-    try:
-        user = User.objects.get(username=username)
-    except User.DoesNotExist:
-        return {"error": f"User {username} does not exist"}
-
-    friends = user.friend_requests.all()
-    friends_info = []
-
-    for friend in friends:
-        friend_info = {
-            "name": friend.username,
-            "avatar": friend.avatar,
-            "level": friend.level,
-        }
-        friends_info.append(friend_info)
-
-    return friends_info
+from ponk.friends import get_friends_info
+from ponk.friends import get_friends_request_info
 
 
 @authenticated
