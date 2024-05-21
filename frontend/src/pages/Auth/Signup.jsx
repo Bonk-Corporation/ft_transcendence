@@ -17,6 +17,10 @@ export function Signup() {
 				<CTA className="my-2">Sign up</CTA>
 				<a className="underline" href={url}>Sign up with 42</a>
 			</div>
+			<div className="mt-6 flex flex-col items-center">
+				<p className="text-sm mb-1">Already have an account ?</p>
+				<a href="/"><CTA>Log in</CTA></a>
+			</div>
 		</Card>
 	);
 }
