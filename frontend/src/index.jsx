@@ -19,10 +19,12 @@ import { useEffect, useState } from 'preact/hooks';
 
 export function App() {
 	const [profile, setProfile] = useState(null);
+	const [triedLog, setTriedLog] = useState(false);
 
 	function fetchProfile() {
 		fetch("/api/me").then(res => res.json().then(data => {
 			setProfile(data);
+			setTriedLog(true);
 		}));
 	}
 		
@@ -50,11 +52,11 @@ export function App() {
 	return (
 		<div id="ambient" className="w-screen h-full min-h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center overflow-hidden">
 			<LocationProvider>
-				<Navbar profile={profile} />
+				<Navbar profile={profile} triedLog={triedLog} />
 				<main className="w-screen h-full z-50 flex-1 flex flex-col justify-center items-center px-10">
 					<Router>
-						<Route path="/" component={Play} />
-						<Route path="/login" component={Login} />
+						<Route path="/" component={() => <Login profile={profile} triedLog={triedLog} setTriedLog={setTriedLog} />} />
+						<Route path="/play" component={Play} />
 						<Route path="/tournament" component={Menu} />
 						<Route path="/tournament/room" component={Room} />
 						<Route path="/shop" component={() => <Shop profile={profile} setProfile={setProfile} />} />

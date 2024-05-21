@@ -1,15 +1,25 @@
 import { Card } from '../../components/utils/Card'
 import { Input } from '../../components/utils/Input';
 import { CTA } from '../../components/utils/CTA';
+import { useEffect } from 'preact/hooks';
+import { useLocation } from 'preact-iso';
 
 
 const CLIENT_ID = document.querySelector("setting[name=CLIENT_ID]").textContent
 const HOST = document.querySelector("setting[name=HOST]").textContent
 document.querySelector("settings").remove()
 
-export function Login() {
+export function Login(props) {
 	const redirectUri = encodeURIComponent(`${location.protocol}//${HOST}`)
 	const url = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}/auth/42&response_type=code`;
+
+	const loc = useLocation();
+
+	useEffect(() => {
+		if (props.triedLog && props.profile && !props.profile.error) {
+			loc.route('/play');
+		}
+	}, [props.profile])
 
 	return (
 		<Card className="py-32 w-full max-w-[800px] px-16 flex flex-col items-center justify-center">
@@ -19,8 +29,8 @@ export function Login() {
 					<Input className="my-1 w-full" placeholder="Username" type="text"/>
 					<Input className="my-1 w-full" placeholder="Password" type="password"/>
 				</form>
-				<CTA className="my-2">Log in</CTA>
-				<a className="underline" href={url}>Log in with 42</a>
+				<CTA onClick={() => props.setTriedLog(true)} className="my-2">Log in</CTA>
+				<a onClick={() => props.setTriedLog(true)} className="underline" href={url}>Log in with 42</a>
 			</div>
 		</Card>
 	);
