@@ -5,7 +5,7 @@ import { FriendList } from '../../components/Profile/FriendList';
 import { GameHistory } from '../../components/Profile/GameHistory';
 
 
-export function Profile({profile}) {
+export function Profile({fetchProfile, profile}) {
   const [stats, setStats] = useState([
     {
       title: "Win ratio - Pong",
@@ -56,7 +56,7 @@ export function Profile({profile}) {
       {
         profile ?
         <>
-          <FriendList friends={profile.friends} friendsRequests={profile.friendsRequests} />
+          <FriendList fetchProfile={fetchProfile} friends={profile.friends} friendsRequests={profile.friendsRequests} />
           <GameHistory gameHistory={profile.gameHistory}/>
         </>
         : null

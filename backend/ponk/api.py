@@ -26,7 +26,7 @@ def get_friends_info(username):
     return friends_info
 
 
-def get_friend_requests_info(username):
+def get_friends_request_info(username):
     try:
         user = User.objects.get(username=username)
     except User.DoesNotExist:

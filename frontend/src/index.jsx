@@ -19,12 +19,16 @@ import { useEffect, useState } from 'preact/hooks';
 
 export function App() {
 	const [profile, setProfile] = useState(null);
+
+	function fetchProfile() {
+		fetch("/api/me").then(res => res.json().then(data => {
+			setProfile(data);
+		}));
+	}
 		
 	useEffect(() => {
 		if (profile == null) {
-			fetch("/api/me").then(res => res.json().then(data => {
-				setProfile(data);
-			}));
+			fetchProfile();
 		}
 
 		var particles = new BVAmbient({
@@ -54,7 +58,7 @@ export function App() {
 						<Route path="/tournament" component={Menu} />
 						<Route path="/tournament/room" component={Room} />
 						<Route path="/shop" component={() => <Shop profile={profile} setProfile={setProfile} />} />
-						<Route path="/profile" component={() => <Profile profile={profile} />} />
+						<Route path="/profile" component={() => <Profile fetchProfile={fetchProfile} profile={profile} />} />
 						<Route path="/signup" component={Signup} />
 						<Route path="/pong" component={Pong} />
 						<Route path="/bonk" component={Bonk} />
