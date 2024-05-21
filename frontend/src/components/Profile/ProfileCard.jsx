@@ -13,7 +13,7 @@ export function ProfileCard({profile}) {
                 <div className={`rounded-full md:block hidden w-32 mr-4 aspect-square border-4 bg-[url(${profile ? profile.avatar : null})] bg-center bg-cover`} />
                 <div className="flex flex-col">
 									<Input disabled={true} className="my-2" placeholder={`${profile ? profile.name : null}`}/>
-									<Input className="my-2" placeholder={`${profile ? profile.email.length ? profile.email : "email" : null}`} />
+									<Input className="my-2" placeholder={`${profile ? "Something you want to say..." : null}`} />
 								</div>
             </div>
 						<div className="my-4 flex flex-col w-full">
