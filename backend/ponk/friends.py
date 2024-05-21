@@ -21,7 +21,7 @@ def friend_request(request, *args, **kwargs):
             {"error": "You cannot send a friend request to yourself"}, status=409
         )
 
-    if target_user in request.user.friend_requests.all():
+    if request.user in target_user.friend_requests.all():
         return JsonResponse(
             {"error": "You have already sent a friend request to {}".format(username)},
             status=409,
