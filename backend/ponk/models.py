@@ -6,7 +6,7 @@ from django.contrib.postgres.fields import ArrayField
 class User(AbstractUser):
     email = models.EmailField()
     friends = models.ManyToManyField("self", symmetrical=True, blank=True)
-    friend_requests = models.ManyToManyField("self", blank=True)
+    friend_requests = models.ManyToManyField("self", symmetrical=False, blank=True)
     level = models.PositiveIntegerField()
     level_percentage = models.PositiveIntegerField()
     avatar = models.URLField()
