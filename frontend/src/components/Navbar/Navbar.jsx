@@ -1,18 +1,24 @@
 import { useLocation } from 'preact-iso';
 import { NotLogCard } from './NotLogCard';
 import { LogCard } from './LogCard';
+import { useEffect } from 'preact/hooks';
 
 
 export function Navbar(props) {
-	const { url } = useLocation();
-
+	const location = useLocation();
 	const logged = true;
 
-	const AUTHORIZED_LOCATIONS = ["/", "/tournament", "/shop", "/login", "/signup", "/profile"];
+	const AUTHORIZED_LOCATIONS = ["/play", "/tournament", "/shop", "/profile"];
+
+	useEffect(() => {
+		if (props.triedLog && props.profile && props.profile.error) {
+			location.route('/');
+		}
+	}, [props.profile, location, props.triedLog]);
 
 	return (
 		<header className={`
-			${AUTHORIZED_LOCATIONS.includes(url) ? "" : "hidden"}
+			${AUTHORIZED_LOCATIONS.includes(location.url) ? "" : "hidden"}
 			w-full pl-8 pr-4 py-4 z-50 mb-8
 			flex justify-between items-center rounded-full
 			angle-gradient border-gradient nav font-semibold transition-all backdrop-blur-lg
@@ -27,13 +33,13 @@ export function Navbar(props) {
 			</svg>
 
 			<nav className="md:flex hidden">
-				<a href="/tournament" className={`mx-10 text-xl text-shadow ${url == '/tournament' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
+				<a href="/tournament" className={`mx-10 text-xl text-shadow ${location.url == '/tournament' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
 					Tournament
 				</a>
-				<a href="/" className={`mx-10 text-xl text-shadow ${url == '/' || url == '/play' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
+				<a href="/play" className={`mx-10 text-xl text-shadow ${location.url == '/play' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
 					Play
 				</a>
-				<a href="/shop" className={`mx-10 text-xl text-shadow ${url == '/shop' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
+				<a href="/shop" className={`mx-10 text-xl text-shadow ${location.url == '/shop' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
 					Shop
 				</a>
 			</nav>

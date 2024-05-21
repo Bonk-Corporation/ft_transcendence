@@ -38,6 +38,7 @@ export function FriendList({fetchProfile, friends, friendsRequests}) {
     <div className="md:mt-0 mt-2 flex-1 ml-4 mr-4">
         <PopUp clear={clear} active={popUp} setActive={setPopUp} className="flex flex-col items-center">
           <h1 className="font-semibold text-xl">Add a friend</h1>
+          {/* @ts-ignore */}
           <Input ref={inputRef} className="rounded-full bg-[#4f4f4f] mt-2" placeholder="Search someone..." />
           <p className="mb-2 text-sm text-red-500">{error}</p>
           <CTA className='' onClick={handleClick}>Invite</CTA>
