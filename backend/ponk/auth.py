@@ -4,11 +4,17 @@ from django.http.response import (
     HttpResponse,
     HttpResponseBadRequest,
     HttpResponseServerError,
+    JsonResponse,
 )
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth import authenticate, login
 from ponk.ftapi import oauth_token, user_info, APIException
-from ponk.models import User
+from ponk.models import (
+    User,
+    AuthMethod,
+)
+import json
+import sys
 
 
 class FtAuthBackend(BaseBackend):
@@ -18,17 +24,17 @@ class FtAuthBackend(BaseBackend):
             info = user_info(token)
 
             try:
-                user = User.objects.get(username=info.login)
+                while True:
+                    user = User.objects.get(username=info.login)
+                    print(f"GET: {user}")
+                    if user.auth_method == AuthMethod.FT:
+                        break
+                    info.login = f"{info.login}."
             except User.DoesNotExist:
-                user = User(
-                    username=info.login,
-                    level=0,
-                    level_percentage=0,
-                    skins=[],
-                    avatar=info.avatar,
+                user = User.objects.create_user(
+                    username=info.login, avatar=info.avatar, auth_method=AuthMethod.FT
                 )
-
-                user.save()
+                print(f"CREATE: {user}")
             return user
         except APIException:
             return None
@@ -49,13 +55,76 @@ def oauth_login(request, *args, **kwargs):
         user = authenticate(request, code=code)
         if not user:
             return HttpResponseServerError()
-
-        login(request, user)
-        return redirect("/")
+        login(request, user, backend="ponk.auth.FtAuthBackend")
+        return redirect("/play")
     except APIException:
         return HttpResponseServerError()
 
 
+def basic_login(request, *args, **kwargs):
+    try:
+        data = json.loads(request.body)
+        user = authenticate(username=data["username"], password=data["password"])
+
+        if not user:
+            return JsonResponse(
+                {
+                    "error": "invalid username or password !",
+                },
+                status=403,
+            )
+        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+        return JsonResponse(
+            {
+                "success": True,
+            }
+        )
+    except BaseException as e:
+        print(e, file=sys.stderr)
+        return JsonResponse(
+            {
+                "error": "fatal error !",
+            },
+            status=400,
+        )
+
+
+def basic_register(request, *args, **kwargs):
+    try:
+        data = json.loads(request.body)
+
+        try:
+            user = User.objects.get(username=data["username"])
+        except User.DoesNotExist:
+            user = User.objects.create_user(
+                username=data["username"],
+                password=data["password"],
+                auth_method=AuthMethod.BASIC,
+            )
+            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+            return JsonResponse(
+                {
+                    "success": True,
+                }
+            )
+        return JsonResponse(
+            {
+                "error": "user already exist !",
+            },
+            status=403,
+        )
+    except BaseException as e:
+        print(e, file=sys.stderr)
+        return JsonResponse(
+            {
+                "error": "fatal error !",
+            },
+            status=400,
+        )
+
+
 urls = [
     path("42", oauth_login),
+    path("login", basic_login),
+    path("register", basic_register),
 ]
