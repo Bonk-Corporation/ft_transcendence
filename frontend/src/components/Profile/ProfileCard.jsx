@@ -3,9 +3,18 @@ import { Card } from '../utils/Card';
 import { Input } from '../utils/Input';
 import { CTA } from '../utils/CTA';
 import { Level } from './Level';
+import { useLocation } from 'preact-iso';
 
 
-export function ProfileCard({ profile }) {
+export function ProfileCard({ profile, setProfile, setTriedLog }) {
+  const location = useLocation();
+
+  function logOut() {
+    setProfile(null);
+    setTriedLog(false);
+    location.route('/');
+  }
+
   return (
     <>
       <Card className='flex flex-col items-center justify-center p-6 h-full'>
@@ -29,7 +38,10 @@ export function ProfileCard({ profile }) {
           <Input className="w-full mb-2" placeholder="New password" />
           <Input className="w-full mt-2" placeholder="Confirm password" />
         </div>
-        <CTA className='mb-4'>Update</CTA>
+        <div className="flex mb-4">
+          <CTA className='mr-4'>Update</CTA>
+          <CTA onClick={logOut} className='ml-4 border-red-500 border-2 text-red-500 hover:bg-red-500 hover:text-white' transparent={true}>Log out</CTA>
+        </div>
         <Level level={profile ? profile.level : null} levelPercentage={profile ? profile.levelPercentage : null} />
       </Card>
     </>

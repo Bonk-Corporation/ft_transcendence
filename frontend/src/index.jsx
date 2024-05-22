@@ -60,7 +60,7 @@ export function App() {
 						<Route path="/tournament" component={Menu} />
 						<Route path="/tournament/room" component={Room} />
 						<Route path="/shop" component={() => <Shop profile={profile} setProfile={setProfile} />} />
-						<Route path="/profile" component={() => <Profile fetchProfile={fetchProfile} profile={profile} />} />
+						<Route path="/profile" component={() => <Profile fetchProfile={fetchProfile} profile={profile} setProfile={setProfile} setTriedLog={setTriedLog} />} />
 						<Route path="/signup" component={Signup} />
 						<Route path="/pong" component={Pong} />
 						<Route path="/bonk" component={Bonk} />

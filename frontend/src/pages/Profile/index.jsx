@@ -5,7 +5,7 @@ import { FriendList } from '../../components/Profile/FriendList';
 import { GameHistory } from '../../components/Profile/GameHistory';
 
 
-export function Profile({fetchProfile, profile}) {
+export function Profile({fetchProfile, profile, setProfile, setTriedLog}) {
   const [stats, setStats] = useState([
     {
       title: "Win ratio - Pong",
@@ -50,7 +50,7 @@ export function Profile({fetchProfile, profile}) {
     <div className="flex flex-wrap items-start justify-center md:justify-between w-full md:h-96">
       <div className="pl-2 h-full">
           <h1 className="font-semibold text-lg md:text-xl">Profile</h1>
-            <ProfileCard profile={profile} />
+            <ProfileCard profile={profile} setProfile={setProfile} setTriedLog={setTriedLog}/>
       </div>
 
       {
