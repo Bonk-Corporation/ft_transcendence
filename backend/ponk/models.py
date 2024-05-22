@@ -1,16 +1,27 @@
+from enum import Enum
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 
+DEFAULT_AVATAR = "https://cdn.intra.42.fr/product/image/995/Visuels_newsletter__51_.png"
+
+
+class AuthMethod(models.IntegerChoices):
+    BASIC = 1
+    FT = 2
+
 
 class User(AbstractUser):
-    email = models.EmailField()
     friends = models.ManyToManyField("self", symmetrical=True, blank=True)
     friend_requests = models.ManyToManyField("self", symmetrical=False, blank=True)
-    level = models.PositiveIntegerField()
-    level_percentage = models.PositiveIntegerField()
-    avatar = models.URLField()
-    skins = ArrayField(models.CharField())
+    level = models.PositiveIntegerField(default=0)
+    level_percentage = models.PositiveIntegerField(default=0)
+    avatar = models.URLField(default=DEFAULT_AVATAR)
+    skins = ArrayField(models.CharField(), default=list)
+    auth_method = models.IntegerField(choices=AuthMethod.choices)
+
+    def __str__(self):
+        return f"User(avatar={self.avatar}, auth_method={self.auth_method}, level={self.level})"
 
 
 class GameHistory(models.Model):

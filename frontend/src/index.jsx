@@ -55,13 +55,13 @@ export function App() {
 				<Navbar profile={profile} triedLog={triedLog} />
 				<main className="w-screen h-full z-50 flex-1 flex flex-col justify-center items-center px-10">
 					<Router>
-						<Route path="/" component={() => <Login profile={profile} triedLog={triedLog} setTriedLog={setTriedLog} />} />
+						<Route path="/" component={() => <Login setTriedLog={setTriedLog} />} />
 						<Route path="/play" component={Play} />
 						<Route path="/tournament" component={Menu} />
 						<Route path="/tournament/room" component={Room} />
 						<Route path="/shop" component={() => <Shop profile={profile} setProfile={setProfile} />} />
 						<Route path="/profile" component={() => <Profile fetchProfile={fetchProfile} profile={profile} setProfile={setProfile} setTriedLog={setTriedLog} />} />
-						<Route path="/signup" component={Signup} />
+						<Route path="/signup" component={() => <Signup setTriedLog={setTriedLog} />} />
 						<Route path="/pong" component={Pong} />
 						<Route path="/bonk" component={Bonk} />
 						<Route default component={NotFound} />
