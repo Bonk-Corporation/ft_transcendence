@@ -47,7 +47,7 @@ export function Profile({fetchProfile, profile, setProfile, setTriedLog}) {
 
   return (
   <div className="flex flex-col">
-    <div className="flex flex-wrap items-start justify-center md:justify-between w-full md:h-96">
+    <div className="flex flex-wrap justify-center w-full">
       <div className="pl-2 h-full">
           <h1 className="font-semibold text-lg md:text-xl">Profile</h1>
             <ProfileCard profile={profile} setProfile={setProfile} setTriedLog={setTriedLog}/>
@@ -64,7 +64,7 @@ export function Profile({fetchProfile, profile, setProfile, setTriedLog}) {
 
     </div>
 
-    <div className="flex flex-wrap mt-8 items-center justify-center md:justify-between w-full">
+    <div className="flex flex-wrap mt-8 items-center justify-center w-full">
       {
         stats.map((stat) => (
           <div className="flex flex-col items-center ml-2 mr-2">
