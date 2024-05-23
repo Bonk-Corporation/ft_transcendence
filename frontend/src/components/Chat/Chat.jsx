@@ -2,9 +2,6 @@ import { useState, useEffect } from 'preact/hooks';
 import { Message } from './Message';
 
 function RoomButton({ withSeparator, children, activeRoom, ...rest }) {
-	// bon c'est super moche, je compte sur toi Julian
-	// pour que ce soit joli
-
 	return (
 		<>
 			{ withSeparator &&
@@ -93,7 +90,7 @@ export function Chat({ profile }) {
 			fixed
 			${hover ?
 				"bottom-0 right-0 h-[300px] w-[300px] rounded" :
-				"bottom-[-1.5rem] right-[-1.5rem] w-32 h-32 rounded-full backdrop-blur"}
+				"bottom-[-2rem] right-[-2rem] w-32 h-32 rounded-full backdrop-blur-lg"}
 			bg-gradient-to-br from-white/20 to-white/5
 			transition-all
 		`}
@@ -105,7 +102,7 @@ export function Chat({ profile }) {
 					<div
 						class="m-2 bg-gradient-to-br from-white/30 to-white/15 rounded h-[95%] backdrop-blur"
 					>
-					<div class="overflow-scroll max-h-[15%] whitespace-nowrap">
+					<div class="overflow-x-scroll max-h-1/5 whitespace-nowrap">
 						<RoomButton {...roomOpts}>Lobby</RoomButton>
 						{friends.map(friend =>
 							<RoomButton withSeparator {...roomOpts}>
@@ -114,7 +111,7 @@ export function Chat({ profile }) {
 						)}
 					</div>
 					<hr class="border-black/30" />
-					<div class="flex flex-col h-[70%] w-full overflow-scroll mb-[4px]">
+					<div class="flex flex-col h-[70%] w-full overflow-y-scroll mb-[4px]">
 						<div class="flex flex-col h-[90%]">
 							{ messages[activeRoom]?.map(([ where, message ]) =>
 								<Message where={where}>{message}</Message>
