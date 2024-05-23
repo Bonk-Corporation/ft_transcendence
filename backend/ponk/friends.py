@@ -59,6 +59,7 @@ def accept_friend_request(request, *args, **kwargs):
 
     request.user.friends.add(target_user)
     request.user.friend_requests.remove(target_user)
+    target_user.friend_requests.remove(request.user)
     return JsonResponse({"success": True})
 
 
