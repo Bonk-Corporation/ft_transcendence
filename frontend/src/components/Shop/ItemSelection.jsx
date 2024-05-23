@@ -7,16 +7,10 @@ import { CTA } from '../utils/CTA';
 
 export function ItemSelection(props) {
   function handleClick() {
-    if (!props.possessed)
-      console.log("Buying");
-    else if (!props.selected)
-      console.log("Selecting");
+    if (!props.selected)
+      fetch(`/api/skin/${props.item.name}`).then(props.fetchProfile)
     else
-      console.log("Deselecting");
-    
-    fetch("/api/me").then(res => res.json().then(data => {
-      props.setProfile(data);
-    }));
+      fetch(`/api/skin/default`).then(props.fetchProfile)
   }
 
   return (

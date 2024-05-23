@@ -21,7 +21,7 @@ def me(request, *args, **kwargs):
             "friends": get_friends_info(request.user.username),
             "gameHistory": [],
             "skins": request.user.skins,
-            "selectedSkin": "Jesus",
+            "selectedSkin": request.user.selected_skin,
         }
     )
 
@@ -35,9 +35,26 @@ def shoopa_shoop(request, *args, **kwargs):
     )
 
 
+@authenticated
+def set_selected_skin(request, *args, **kwargs):
+    skin = args[1].get("skin")
+
+    if skin not in request.user.skins and skin != "default":
+        return JsonResponse(
+            {"error": f"User {request.user.username} does not possess the skin {skin}"}
+        )
+    if skin == "default":
+        request.user.selected_skin = ""
+    else:
+        request.user.selected_skin = skin
+    request.user.save()
+    return JsonResponse({"success": True})
+
+
 urls = [
     path("me", me),
     path("friends/", include(ponk.friends.urls)),
     path("shop", shoopa_shoop),
+    path("skin/<str:skin>", set_selected_skin),
     *money_api,
 ]
