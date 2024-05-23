@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '../../components/utils/Card';
 import { Input } from '../../components/utils/Input';
 import { CTA } from '../../components/utils/CTA';
@@ -8,9 +8,13 @@ export function Signup(props) {
 	const password = React.useRef(null);
 	const confirmPassword = React.useRef(null);
 
+	const [error, setError] = useState("");
+
 	function handleSignup() {
 		if (password.current.value != confirmPassword.current.value) {
-			alert("password mismatch !");
+			setError("Password mismatch !");
+			password.current.value = "";
+			confirmPassword.current.value = "";
 			return;
 		}
 
@@ -23,11 +27,19 @@ export function Signup(props) {
 				"username": username.current.value,
 				"password": password.current.value
 			}),
-		}).then(res => res.json()
-			.then(data => {
-				if (data.success)
-					window.location.pathname = "/play";
-			}));
+		}).then(res => {
+			if (!res.ok) {
+				return res.json().then(errData => {
+					throw new Error(errData.error)})
+			}
+		}).then(data => {
+			window.location.pathname = "/play";
+		}).catch(err => {
+			setError(err.message);
+			username.current.value = "";
+			password.current.value = "";
+			confirmPassword.current.value = "";
+		});
 	}
 
 	return (
@@ -38,6 +50,7 @@ export function Signup(props) {
 					<Input className="my-1 w-full" ref={username} placeholder="Username" type="text"/>
 					<Input className="my-1 w-full" ref={password} placeholder="Password" type="password"/>
 					<Input className="my-1 w-full" ref={confirmPassword} placeholder="Confirm password" type="password"/>
+					<p className="mb-2 text-sm text-red-500">{error}</p>
 				</form>
 				<CTA onClick={() => {props.setTriedLog(true); handleSignup()}} className="my-2">Sign up</CTA>
 			</div>
