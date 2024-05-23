@@ -41,6 +41,7 @@ else:
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django_vite",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -79,6 +80,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ponk.wsgi.application"
+ASGI_APPLICATION = "ponk.asgi.application"
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 
 # Database

@@ -18,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.views.generic import TemplateView
+import ponk.chat
 import ponk.auth
 import ponk.api
 
@@ -27,5 +28,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include(ponk.auth.urls)),
     path("api/", include(ponk.api.urls)),
+    *ponk.chat.urls,
     default(TemplateView.as_view(template_name="index.html")),
 ]
