@@ -7,7 +7,11 @@ from django.http.response import (
     JsonResponse,
 )
 from django.contrib.auth.backends import BaseBackend
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import (
+    authenticate,
+    login,
+    logout,
+)
 from ponk.ftapi import oauth_token, user_info, APIException
 from ponk.models import (
     User,
@@ -123,8 +127,27 @@ def basic_register(request, *args, **kwargs):
         )
 
 
+def basic_logout(request, *args, **kwargs):
+    try:
+        logout(request)
+        return JsonResponse(
+            {
+                "success": True,
+            }
+        )
+    except BaseException as e:
+        print(e, file=sys.stderr)
+        return JsonResponse(
+            {
+                "error": "fatal error !",
+            },
+            status=400,
+        )
+
+
 urls = [
     path("42", oauth_login),
     path("login", basic_login),
     path("register", basic_register),
+    path("logout", basic_logout),
 ]
