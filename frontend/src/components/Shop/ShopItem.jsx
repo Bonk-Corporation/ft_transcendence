@@ -13,7 +13,7 @@ export function ShopItem(props) {
     <div>
       {popUp ?
         <PopUp active={popUp} setActive={setPopUp} className='px-20'>
-          <ItemSelection item={props.item} possessed={props.possessed} selected={props.selected} profile={props.profile} setProfile={props.setProfile}/>
+          <ItemSelection item={props.item} possessed={props.possessed} selected={props.selected} profile={props.profile} fetchProfile={props.fetchProfile}/>
         </PopUp> : null
       }
       <div onClick={() => {setPopUp(true)}}>

@@ -1,7 +1,7 @@
 import {ShopItem} from '../../components/Shop/ShopItem';
 import { useEffect, useState } from 'preact/hooks';
 
-export function Shop({ profile, setProfile }) {
+export function Shop({ profile, fetchProfile }) {
   const [page, setPage] = useState(0);
   const [items, setItems] = useState(null);
 
@@ -25,7 +25,7 @@ export function Shop({ profile, setProfile }) {
           <ShopItem item={item}
                     possessed={profile ? profile.skins.includes(item.name) : false}
                     selected={profile ? profile.selectedSkin == item.name : false}
-                    profile={profile} setProfile={setProfile}
+                    profile={profile} fetchProfile={fetchProfile}
           />
         )) : null}
       </div>

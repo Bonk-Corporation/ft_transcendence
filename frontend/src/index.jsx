@@ -59,7 +59,7 @@ export function App() {
 						<Route path="/play" component={Play} />
 						<Route path="/tournament" component={Menu} />
 						<Route path="/tournament/room" component={Room} />
-						<Route path="/shop" component={() => <Shop profile={profile} setProfile={setProfile} />} />
+						<Route path="/shop" component={() => <Shop profile={profile} setProfile={setProfile} fetchProfile={fetchProfile} />} />
 						<Route path="/profile" component={() => <Profile fetchProfile={fetchProfile} profile={profile} setProfile={setProfile} setTriedLog={setTriedLog} />} />
 						<Route path="/signup" component={() => <Signup setTriedLog={setTriedLog} />} />
 						<Route path="/pong" component={Pong} />

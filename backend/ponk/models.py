@@ -18,6 +18,7 @@ class User(AbstractUser):
     level_percentage = models.PositiveIntegerField(default=0)
     avatar = models.URLField(default=DEFAULT_AVATAR)
     skins = ArrayField(models.CharField(), default=list)
+    selected_skin = models.CharField(default="")
     auth_method = models.IntegerField(choices=AuthMethod.choices)
 
     def __str__(self):
