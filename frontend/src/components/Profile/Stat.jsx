@@ -7,8 +7,9 @@ import Chart from "react-apexcharts";
 export function Stat({labels, data, colors}) {
   const [size, setSize] = useState(window.screen.width < 768 ? 150 : 200);
 
+  const percentage = data[0] * 100 / (data[0] + data[1]);
   const opt = {
-	series: [data[0] * 100 / (data[0] + data[1])],
+	series: [isNaN(percentage) ? 50 : percentage],
 	options: {
 	  plotOptions: {
 		radialBar: {
