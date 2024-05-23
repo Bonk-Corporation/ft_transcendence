@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Card } from '../../components/utils/Card';
 import { CTA } from '../../components/utils/CTA';
+import { Chat } from '../../components/Chat/Chat';
 
 export function Bonk() {
 	const [popUp, setPopUp] = useState(true);
 	const [mode, setMode] = useState("bot");
 
 	/*
-	parametres de jeu : jouer contre ennemi ou bot
+	parameters de jeu : jouer contre ennemi ou bot
 	*/
 
   return (
@@ -19,9 +20,10 @@ export function Bonk() {
 				<CTA>Play!</CTA>
 			</Card> : null
 		}
-		<canvas className="w-screen h-screen absolute bg-[#111111]">
-			<h1>Bonk</h1>
-		</canvas>
+			<canvas className="w-screen h-screen absolute bg-[#111111]">
+				<h1>Bonk</h1>
+			</canvas>
+			<Chat />
 		</>
   );
 }
