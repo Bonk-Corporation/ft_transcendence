@@ -20,7 +20,7 @@ def me(request, *args, **kwargs):
             "friendsRequests": get_friends_request_info(request.user.username),
             "friends": get_friends_info(request.user.username),
             "gameHistory": [],
-            "skins": ["Jesus", "Dictionnaire"],
+            "skins": request.user.skins,
             "selectedSkin": "Jesus",
         }
     )
