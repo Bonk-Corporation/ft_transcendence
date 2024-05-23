@@ -12,7 +12,7 @@ class Chat(WebsocketConsumer):
         if self.user.is_authenticated:
             async_to_sync(self.channel_layer.group_add)("Lobby", self.channel_name)
 
-            for friend in self.user.friends:
+            for friend in self.user.friends.all():
                 users = sorted([friend.username, self.user.username])
                 room_name = f"{users[0]}_{users[1]}"
                 async_to_sync(self.channel_layer.group_add)(
@@ -23,7 +23,9 @@ class Chat(WebsocketConsumer):
                 json.dumps(
                     dict(
                         type="friends",
-                        friends=list(map(lambda f: f.username, self.user.friends)),
+                        friends=list(
+                            map(lambda f: f.username, self.user.friends.all())
+                        ),
                     )
                 )
             )
@@ -32,7 +34,7 @@ class Chat(WebsocketConsumer):
         if self.user.is_authenticated:
             async_to_sync(self.channel_layer.group_add)("Lobby", self.channel_name)
 
-            for friend in self.user.friends:
+            for friend in self.user.friends.all():
                 users = sorted([friend.username, self.user.username])
                 room_name = f"{users[0]}_{users[1]}"
                 async_to_sync(self.channel_layer.group_add)(

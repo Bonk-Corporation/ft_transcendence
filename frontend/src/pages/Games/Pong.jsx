@@ -3,7 +3,7 @@ import { Card } from '../../components/utils/Card';
 import { CTA } from '../../components/utils/CTA';
 import { Chat } from '../../components/Chat/Chat';
 
-export function Pong() {
+export function Pong({ profile }) {
 	const [popUp, setPopUp] = useState(true);
 	const [mode, setMode] = useState("bot");
 
@@ -28,7 +28,7 @@ export function Pong() {
 			<canvas className="w-screen h-screen absolute">
 				<h1>Pong</h1>
 			</canvas>
-			<Chat />
+			<Chat profile={profile} />
 		</>
   );
 }

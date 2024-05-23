@@ -25,8 +25,10 @@ function RoomButton({ withSeparator, children, activeRoom, ...rest }) {
 
 let ws;
 
-export function Chat() {
-	const me = "cgodard";
+export function Chat({ profile }) {
+	if (!profile) return;
+
+	const me = profile.name;
 	const [hover, setHover] = useState(false);
 	const [shouldShowChat, setShouldShowChat] = useState(false);
 	const [activeRoom, setActiveRoom] = useState("Lobby");
