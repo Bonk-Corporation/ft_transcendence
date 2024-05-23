@@ -62,8 +62,8 @@ export function App() {
 						<Route path="/shop" component={() => <Shop profile={profile} setProfile={setProfile} fetchProfile={fetchProfile} />} />
 						<Route path="/profile" component={() => <Profile fetchProfile={fetchProfile} profile={profile} setProfile={setProfile} setTriedLog={setTriedLog} />} />
 						<Route path="/signup" component={() => <Signup setTriedLog={setTriedLog} />} />
-						<Route path="/pong" component={Pong} />
-						<Route path="/bonk" component={Bonk} />
+						<Route path="/pong" component={() => <Pong profile={profile} />} />
+						<Route path="/bonk" component={() => <Bonk profile={profile} />} />
 						<Route default component={NotFound} />
 					</Router>
 				</main>

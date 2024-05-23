@@ -3,7 +3,7 @@ import { Card } from '../../components/utils/Card';
 import { CTA } from '../../components/utils/CTA';
 import { Chat } from '../../components/Chat/Chat';
 
-export function Bonk() {
+export function Bonk({ profile }) {
 	const [popUp, setPopUp] = useState(true);
 	const [mode, setMode] = useState("bot");
 
@@ -23,7 +23,7 @@ export function Bonk() {
 			<canvas className="w-screen h-screen absolute bg-[#111111]">
 				<h1>Bonk</h1>
 			</canvas>
-			<Chat />
+			<Chat profile={profile} />
 		</>
   );
 }

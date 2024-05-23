@@ -25,11 +25,13 @@ mkShell {
 		pkgs.glibcLocales
 
 		tmux
-		
+
 		(with fenix; with latest; combine [
 			minimal.toolchain
 			targets.wasm32-unknown-unknown.latest.rust-std
 		])
+
+		wasm-pack
 	];
 
 	shellHook = ''
@@ -47,8 +49,6 @@ mkShell {
 		export NIX_IGNORE_SYMLINK_STORE=1
 		export NIX_ENFORCE_PURITY=0
 		export TERM=xterm
-
-		cargo install wasm-pack
 
 		initdb 2>/dev/null
 		pg_ctl -o "-k /tmp" -l backend/pg.log start
@@ -96,7 +96,7 @@ mkShell {
 				sed -i '/FT_DEBUG/d' .env
 				echo FT_DEBUG=y >> .env
 
-				tmux set-option -ga ' CLIENT_ID CLIENT_SECRET DB_NAME DB_PASS DB_USER VITE_STRIPE_API_KEY FT_DEBUG'
+				tmux set-option -ga ' CLIENT_ID CLIENT_SECRET VITE_STRIPE_API_KEY STRIPE_WEBHOOK_KEY DB_NAME DB_PASS DB_USER FT_DEBUG'
 				tmux new-session -d 'trap : INT; make || $SHELL'
 				tmux set -g mouse on # neat
 				tmux split-window -h 'trap : INT; make fdev || $SHELL'
