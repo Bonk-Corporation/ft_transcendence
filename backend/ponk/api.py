@@ -3,10 +3,23 @@ from django.http.response import JsonResponse
 from ponk.api_decorators import authenticated
 from ponk.money import urls as money_api, skins
 import ponk.friends
-from ponk.models import User
+from ponk.models import User, GameHistory
 from ponk.friends import get_friends_info
 from ponk.friends import get_friends_request_info
 import ponk.private
+
+
+def get_game_history(user):
+    history = []
+    for stat in GameHistory.objects.filter(user=user).all():
+        history.append(
+            {
+                "game": stat.game,
+                "score": stat.score,
+                "win": stat.win,
+            }
+        )
+    return history
 
 
 @authenticated
@@ -20,7 +33,7 @@ def me(request, *args, **kwargs):
             "avatar": request.user.avatar,
             "friendsRequests": get_friends_request_info(request.user.username),
             "friends": get_friends_info(request.user.username),
-            "gameHistory": [],
+            "gameHistory": get_game_history(request.user),
             "skins": request.user.skins,
             "selectedSkin": request.user.selected_skin,
         }
