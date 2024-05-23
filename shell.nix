@@ -33,6 +33,10 @@ mkShell {
 	];
 
 	shellHook = ''
+		if ! grep -q PRIVATE_API_TOKEN .env; then
+			echo PRIVATE_API_TOKEN=`openssl rand 16 | base64` >> .env
+		fi
+
 		set -o allexport
 		source .env
 		set +o allexport
