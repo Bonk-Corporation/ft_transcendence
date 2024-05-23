@@ -33,7 +33,7 @@ class FtAuthBackend(BaseBackend):
                     print(f"GET: {user}")
                     if user.auth_method == AuthMethod.FT:
                         break
-                    info.login = f"{info.login}_"
+                    info.login = f"{info.login}."
             except User.DoesNotExist:
                 user = User.objects.create_user(
                     username=info.login, avatar=info.avatar, auth_method=AuthMethod.FT
