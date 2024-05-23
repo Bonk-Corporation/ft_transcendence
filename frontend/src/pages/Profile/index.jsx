@@ -57,7 +57,7 @@ export function Profile({fetchProfile, profile, setProfile, setTriedLog}) {
         profile ?
         <>
           <FriendList fetchProfile={fetchProfile} friends={profile.friends} friendsRequests={profile.friendsRequests} />
-          <GameHistory gameHistory={profile.gameHistory}/>
+          <GameHistory gameHistory={profile.gameHistory.reverse()}/>
         </>
         : null
       }
