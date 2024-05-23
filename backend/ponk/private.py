@@ -2,24 +2,10 @@ from django.urls import path
 from ponk.models import GameHistory, User
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from ponk.api_decorators import private_api_auth
 import json
 import sys
 import os
-
-
-def private_api_auth(original):
-    def wrapper(request, *args, **kwargs):
-        auth = request.headers.get("Authorization")
-        if auth != os.environ["PRIVATE_API_TOKEN"]:
-            return JsonResponse(
-                {
-                    "error": "no",
-                },
-                status=403,
-            )
-        return original(request, args, kwargs)
-
-    return wrapper
 
 
 @csrf_exempt

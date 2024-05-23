@@ -1,7 +1,5 @@
 from django.http.response import JsonResponse
-
-
-# TODO: move private.py's @private_api_auth here
+import os
 
 
 def authenticated(endpoint):
@@ -14,5 +12,20 @@ def authenticated(endpoint):
             },
             status=401,
         )
+
+    return wrapper
+
+
+def private_api_auth(original):
+    def wrapper(request, *args, **kwargs):
+        auth = request.headers.get("Authorization")
+        if auth != os.environ["PRIVATE_API_TOKEN"]:
+            return JsonResponse(
+                {
+                    "error": "no",
+                },
+                status=403,
+            )
+        return original(request, args, kwargs)
 
     return wrapper
