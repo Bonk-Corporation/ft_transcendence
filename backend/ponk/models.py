@@ -32,6 +32,7 @@ class GameHistory(models.Model):
     game = models.CharField(max_length=32)
     score = ArrayField(models.PositiveIntegerField(), size=2)
     win = models.BooleanField()
+    xp = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.game} - {'Win' if self.win else 'Loss'}"

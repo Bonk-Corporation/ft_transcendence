@@ -13,11 +13,7 @@ def get_game_history(user):
     history = []
     for stat in GameHistory.objects.filter(user=user).all():
         history.append(
-            {
-                "game": stat.game,
-                "score": stat.score,
-                "win": stat.win,
-            }
+            {"game": stat.game, "score": stat.score, "win": stat.win, "xp": stat.xp}
         )
     return history
 

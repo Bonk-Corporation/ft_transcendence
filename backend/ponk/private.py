@@ -19,6 +19,7 @@ def game_stats(request, *args, **kwargs):
             game=data["game"],
             score=data["score"],
             win=data["win"],
+            xp=data["xp"],
         ).save()
 
         return JsonResponse(
