@@ -6,6 +6,7 @@ import ponk.friends
 from ponk.models import User
 from ponk.friends import get_friends_info
 from ponk.friends import get_friends_request_info
+import ponk.private
 
 
 @authenticated
@@ -54,6 +55,7 @@ def set_selected_skin(request, *args, **kwargs):
 urls = [
     path("me", me),
     path("friends/", include(ponk.friends.urls)),
+    path("private/", include(ponk.private.urls)),
     path("shop", shoopa_shoop),
     path("skin/<str:skin>", set_selected_skin),
     *money_api,
