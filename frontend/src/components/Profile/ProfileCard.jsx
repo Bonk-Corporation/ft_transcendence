@@ -3,16 +3,20 @@ import { Card } from '../utils/Card';
 import { Input } from '../utils/Input';
 import { CTA } from '../utils/CTA';
 import { Level } from './Level';
-import { useLocation } from 'preact-iso';
 
 
 export function ProfileCard({ profile, setProfile, setTriedLog }) {
-  const location = useLocation();
 
   function logOut() {
     setProfile(null);
     setTriedLog(false);
-    location.route('/');
+	fetch("/auth/logout", {
+	method: "POST",
+	}).then(res => res.json()
+	.then(data => {
+		if (data.success)
+			window.location.pathname = "/login";
+	}));
   }
 
   return (
