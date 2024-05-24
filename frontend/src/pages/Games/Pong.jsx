@@ -29,7 +29,7 @@ export function Pong({ profile, lang }) {
 				<CTA id="play-button" name={mode}>{language.play[lang]}!</CTA>
 			</Card> : null
 		}
-			<canvas className="w-screen h-screen absolute">
+			<canvas id="canvas" className="w-screen h-screen absolute">
 				<h1>Pong</h1>
 			</canvas>
 			<Chat profile={profile} lang={lang} />
