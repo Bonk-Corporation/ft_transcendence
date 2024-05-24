@@ -1,6 +1,7 @@
 mod render;
 mod game;
 
+use std::panic;
 use std::sync::{Arc, Mutex};
 use wasm_bindgen::prelude::*;
 use web_sys::{
@@ -19,6 +20,8 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn start() -> Result<(), JsValue> {
+    panic::set_hook(Box::new(console_error_panic_hook::hook));
+    //
     //CONST department
    
     let document = web_sys::window().expect("No window element")
