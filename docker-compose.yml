@@ -4,7 +4,7 @@ services:
   django-app:
     build: .
     volumes:
-      - static:/app/frontend/build
+      - static:/app/frontend/static/
       - .:/app
     ports:
       - "8000:8000"

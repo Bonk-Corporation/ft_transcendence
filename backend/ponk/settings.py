@@ -169,11 +169,11 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT = BASE_DIR / "../frontend/build/assets/"
+STATIC_ROOT = BASE_DIR / "../frontend/static/"
+STATICFILES_DIRS = [BASE_DIR / "../frontend/pong-client/pkg"]
 if not DEBUG:
-    STATICFILES_DIRS = [
-        BASE_DIR / "../frontend/build/",
-    ]
+    STATICFILES_DIRS.append(BASE_DIR / "../frontend/build/")
+
 DJANGO_VITE_ASSETS_PATH = BASE_DIR / "../frontend/build/"
 DJANGO_VITE_MANIFEST_PATH = DJANGO_VITE_ASSETS_PATH / "manifest.json"
 
