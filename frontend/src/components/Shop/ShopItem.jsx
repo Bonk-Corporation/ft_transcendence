@@ -12,7 +12,7 @@ export function ShopItem(props) {
   return (
     <div>
       {popUp ?
-        <PopUp active={popUp} setActive={setPopUp} className='px-20'>
+        <PopUp active={popUp} setActive={setPopUp} className='md:px-20 px-10'>
           <ItemSelection item={props.item} possessed={props.possessed} selected={props.selected} profile={props.profile} fetchProfile={props.fetchProfile}/>
         </PopUp> : null
       }
