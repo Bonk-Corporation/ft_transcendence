@@ -16,9 +16,7 @@ export default defineConfig({
         index: resolve("src/index.jsx"),
       },
     },
+    assetsDir: ".", // instead of assets/...
   },
   envDir: "..",
-  headers: {
-    "Access-Control-Allow-Headers": "application/wasm",
-  },
 });
