@@ -15,9 +15,15 @@ impl OnConnectClient {
     pub fn new(document: &Document, id: String) -> OnConnectClient {
 
         //replace with cookie to get username
-        let username = document
-            .get_element_by_id("username").expect("no username")
-            .get_attribute("name").unwrap();
+        let old_username_input = document
+            .get_element_by_id("username");
+
+        let mut username = String::from("bob");
+        if let Some(old_username_input) = old_username_input {
+            username = old_username_input
+                .get_attribute("name").unwrap();
+        }
+
         OnConnectClient {
             id,
             username,
