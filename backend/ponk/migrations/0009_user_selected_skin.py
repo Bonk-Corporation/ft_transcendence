@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("ponk", "0008_alter_user_skins"),
+        ("ponk", "0009_gamehistory_xp"),
     ]
 
     operations = [
