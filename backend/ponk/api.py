@@ -6,7 +6,17 @@ import ponk.friends
 from ponk.models import User, GameHistory
 from ponk.friends import get_friends_info
 from ponk.friends import get_friends_request_info
+from ponk.money import skins
 import ponk.private
+import random
+import json
+import os
+
+DEFAULT_SKINS = [
+    "https://t4.ftcdn.net/jpg/03/03/40/19/360_F_303401956_ufTeSp9EX62zQnJnbed9Q0kEgqaKKL44.jpg",
+    "https://htmlcolorcodes.com/assets/images/colors/bright-green-color-solid-background-1920x1080.png",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Solid_blue.svg/1024px-Solid_blue.svg.png",
+]
 
 
 def get_game_history(user):
@@ -32,6 +42,7 @@ def me(request, *args, **kwargs):
             "gameHistory": get_game_history(request.user),
             "skins": request.user.skins,
             "selectedSkin": request.user.selected_skin,
+            "selectedSkinUrl": get_selected_skin_url(request.user.username),
         }
     )
 
@@ -43,6 +54,19 @@ def shoopa_shoop(request, *args, **kwargs):
             "items": skins,
         }
     )
+
+
+def get_selected_skin_url(username):
+    user = User.objects.get(username=username)
+    if user.selected_skin == "":
+        return random.choice(DEFAULT_SKINS)
+
+    skin = None
+    for item in skins:
+        if item["name"] == user.selected_skin:
+            skin = item
+
+    return random.choice(skin["images"])
 
 
 @authenticated
