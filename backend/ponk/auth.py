@@ -26,14 +26,17 @@ class FtAuthBackend(BaseBackend):
         try:
             token = oauth_token(code)
             info = user_info(token)
+            base_username = info.login
 
             try:
+                num = 0
                 while True:
+                    num += 1
                     user = User.objects.get(username=info.login)
                     print(f"GET: {user}")
                     if user.auth_method == AuthMethod.FT:
                         break
-                    info.login = f"{info.login}."
+                    info.login = f"{base_username}{num}"
             except User.DoesNotExist:
                 user = User.objects.create_user(
                     username=info.login, avatar=info.avatar, auth_method=AuthMethod.FT
