@@ -35,7 +35,7 @@ export function ProfileCard({ profile, setProfile, setTriedLog }) {
           </div>
           <div className="flex flex-col">
             <Input disabled={true} className="my-2" placeholder={`${profile ? profile.name : ''}`} />
-            <Input className="my-2" placeholder={`${profile ? "Something you want to say..." : ''}`} />
+            <Input className="my-2" placeholder={`${profile ? "Something you want to say..." : ''}`} maxlength="256" />
           </div>
         </div>
         <div className="my-4 flex flex-col w-full">
