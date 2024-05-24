@@ -3,7 +3,7 @@ import { Card } from '../../components/utils/Card';
 import { CTA } from '../../components/utils/CTA';
 import { Chat } from '../../components/Chat/Chat';
 import { language } from '../../scripts/languages';
-import {start} from 'http://localhost:5173/static/pong-client/pkg';
+import init, { start } from 'pong-client';
 
 export function Pong({ profile, lang }) {
 	const [popUp, setPopUp] = useState(true);
@@ -12,13 +12,8 @@ export function Pong({ profile, lang }) {
 	/*
 	parameters de jeu : jouer contre ennemi ou bot
 	*/
-	useEffect(() => {
-		/*const loadWasm = async () => {
-			const wasmModule = await import('../../../pong-client/target/wasm32-unknown-unknown/release/pong_client.wasm?init');
-		};
-		loadWasm();*/
-		start();
-	}, [])
+	useEffect(() =>
+		init().then(start), [])
 
   return (
 		<>
