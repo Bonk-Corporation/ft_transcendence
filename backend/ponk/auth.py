@@ -7,11 +7,15 @@ from django.http.response import (
     JsonResponse,
 )
 from django.contrib.auth.backends import BaseBackend
+from django.utils.regex_helper import _lazy_re_compile
 from django.contrib.auth import (
     authenticate,
     login,
     logout,
 )
+from django.contrib.auth.password_validation import validate_password
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 from ponk.ftapi import oauth_token, user_info, APIException
 from ponk.models import (
     User,
@@ -19,6 +23,21 @@ from ponk.models import (
 )
 import json
 import sys
+
+
+def validate_username(username):
+    alpha_symbol = _lazy_re_compile(r"^[a-zA-Z0-9-+@!#]+\Z")
+    validate_alpha_symbol = RegexValidator(
+        alpha_symbol,
+        "Username can only contain letters, numbers or -+@!#",
+        "invalid",
+    )
+    validate_alpha_symbol(username)
+    if username == "Lobby":
+        raise ValidationError(
+            "Lobby is a invalid username",
+            params={"value": username},
+        )
 
 
 class FtAuthBackend(BaseBackend):
@@ -76,7 +95,7 @@ def basic_login(request, *args, **kwargs):
         if not user:
             return JsonResponse(
                 {
-                    "error": "invalid username or password !",
+                    "error": "Invalid username or password !",
                 },
                 status=403,
             )
@@ -84,13 +103,14 @@ def basic_login(request, *args, **kwargs):
         return JsonResponse(
             {
                 "success": True,
-            }
+            },
+            status=200,
         )
     except BaseException as e:
         print(e, file=sys.stderr)
         return JsonResponse(
             {
-                "error": "fatal error !",
+                "error": "Fatal error !",
             },
             status=400,
         )
@@ -103,6 +123,8 @@ def basic_register(request, *args, **kwargs):
         try:
             user = User.objects.get(username=data["username"])
         except User.DoesNotExist:
+            validate_username(data["username"])
+            validate_password(data["password"])
             user = User.objects.create_user(
                 username=data["username"],
                 password=data["password"],
@@ -112,11 +134,19 @@ def basic_register(request, *args, **kwargs):
             return JsonResponse(
                 {
                     "success": True,
-                }
+                },
+                status=200,
             )
         return JsonResponse(
             {
-                "error": "user already exist !",
+                "error": "User already exist !",
+            },
+            status=409,
+        )
+    except ValidationError as e:
+        return JsonResponse(
+            {
+                "error": e.messages[0],
             },
             status=403,
         )
@@ -124,7 +154,7 @@ def basic_register(request, *args, **kwargs):
         print(e, file=sys.stderr)
         return JsonResponse(
             {
-                "error": "fatal error !",
+                "error": "Fatal error !",
             },
             status=400,
         )
@@ -136,13 +166,14 @@ def basic_logout(request, *args, **kwargs):
         return JsonResponse(
             {
                 "success": True,
-            }
+            },
+            status=200,
         )
     except BaseException as e:
         print(e, file=sys.stderr)
         return JsonResponse(
             {
-                "error": "fatal error !",
+                "error": "Fatal error !",
             },
             status=400,
         )
