@@ -60,6 +60,44 @@ def game_stats(request, *args, **kwargs):
         )
 
 
+def get_bonk_events(request, *args, **kwargs):
+    try:
+        last_event = BonkEvent.objects.earliest("created_at")
+        last_event.delete()
+        return JsonResponse({"game_id": last_event.game_id, "users": last_event.users})
+    except BaseException as e:
+        print(e, file=sys.stderr)
+        return JsonResponse(
+            {
+                "error": "no events",
+            },
+            status=400,
+        )
+
+
+def set_bonk_events(request, *args, **kwargs):
+    try:
+        data = json.loads(request.body)
+
+        BonkEvent(game_id=data["game_id"], users=data["users"]).save()
+
+        return JsonResponse(
+            {
+                "success": True,
+            }
+        )
+    except BaseException as e:
+        print(e, file=sys.stderr)
+        return JsonResponse(
+            {
+                "error": "missing fields!!!!",
+            },
+            status=400,
+        )
+
+
 urls = [
     path("game_stats", game_stats),
+    path("get_bonk_event", get_bonk_events),
+    path("set_bonk_event", set_bonk_events),
 ]
