@@ -1,6 +1,6 @@
 .vscode
 db.sqlite3
-.*.swp
+*.sw*
 __pycache__
 node_modules
 venv
