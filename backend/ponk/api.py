@@ -93,6 +93,37 @@ def ping(request, *args, **kwargs):
     return JsonResponse({"success": True})
 
 
+def set_new_profile(request, *args, **kwargs):
+    try:
+        data = json.loads(request.body)
+
+        if data["citation"]:
+            request.user.citation = data["citation"]
+            request.user.save()
+        return JsonResponse({"success": True})
+    except BaseException as e:
+        print(e, file=sys.stderr)
+        return JsonResponse(
+            {
+                "error": "missing fields!!!!",
+            },
+            status=400,
+        )
+
+
+@authenticated
+def get_random_citation(request, *args, **kwargs):
+    users = User.objects.exclude(citation__exact="")
+    if not len(users):
+        return JsonResponse(
+            {
+                "error": "Nobody published a citation yet.",
+            }
+        )
+    citation = random.choice(users)
+    return JsonResponse({"citation": citation.citation, "username": citation.username})
+
+
 urls = [
     path("me", me),
     path("friends/", include(ponk.friends.urls)),
@@ -100,5 +131,7 @@ urls = [
     path("shop", shoopa_shoop),
     path("skin/<str:skin>", set_selected_skin),
     path("ping", ping),
+    path("update_profile", set_new_profile),
+    path("citation", get_random_citation),
     *money_api,
 ]

@@ -22,6 +22,7 @@ class User(AbstractUser):
     selected_skin = models.CharField(default="")
     auth_method = models.IntegerField(choices=AuthMethod.choices)
     last_online = models.DateTimeField(default=timezone.now)
+    citation = models.CharField(default="", max_length=256)
 
     def __str__(self):
         return f"User(avatar={self.avatar}, auth_method={self.auth_method}, level={self.level})"
