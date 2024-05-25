@@ -13,6 +13,7 @@ import { NotFound } from './pages/_404.jsx';
 import { BVAmbient } from './scripts/bvambient.js';
 import { Profile } from './pages/Profile/index.jsx';
 import { Signup } from './pages/Auth/Signup';
+import { Ping } from './components/utils/Ping.jsx';
 import { Pong } from './pages/Games/Pong';
 import { Bonk } from './pages/Games/Bonk';
 import { useEffect, useState } from 'preact/hooks';
@@ -67,6 +68,7 @@ export function App() {
 						<Route default component={NotFound} />
 					</Router>
 				</main>
+				<Ping />
 			</LocationProvider>
 		</div>
 	);

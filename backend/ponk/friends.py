@@ -116,6 +116,7 @@ def get_friends_info(username):
             "name": friend.username,
             "avatar": friend.avatar,
             "level": friend.level,
+            "online": friend.is_online,
         }
         friends_info.append(friend_info)
 

@@ -44,3 +44,4 @@ typing_extensions==4.11.0
 urllib3==2.2.1
 virtualenv==20.24.5
 zope.interface==6.4.post0
+django-q2==1.6.2

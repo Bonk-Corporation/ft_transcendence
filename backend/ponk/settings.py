@@ -43,6 +43,7 @@ else:
 INSTALLED_APPS = [
     "daphne",
     "django_vite",
+    "django_q",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -51,6 +52,15 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "ponk",
 ]
+
+Q_CLUSTER = {
+    'orm': 'default',
+    'workers': 4,
+    'timeout': 30,
+    'retry': 60,
+    'queue_limit': 50,
+    'bulk': 10,
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

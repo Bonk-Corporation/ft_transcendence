@@ -18,6 +18,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.views.generic import TemplateView
+from django_q.tasks import schedule
+from django_q.models import Schedule
+from .ping import ping
 import ponk.chat
 import ponk.auth
 import ponk.api
@@ -28,6 +31,14 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include(ponk.auth.urls)),
     path("api/", include(ponk.api.urls)),
+    path('ping/', ping, name='ping'),
     *ponk.chat.urls,
     default(TemplateView.as_view(template_name="index.html")),
 ]
+
+from django_q.models import Schedule
+Schedule.objects.create(
+    func='ponk.tasks.check_user_activity',
+    minutes=1,
+    repeats=-1
+)
