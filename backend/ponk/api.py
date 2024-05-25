@@ -6,6 +6,8 @@ import ponk.friends
 from ponk.models import User, GameHistory
 from ponk.friends import get_friends_info
 from ponk.friends import get_friends_request_info
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from ponk.money import skins
 from django.utils import timezone
 import ponk.private
@@ -97,17 +99,35 @@ def set_new_profile(request, *args, **kwargs):
     try:
         data = json.loads(request.body)
 
-        if data["citation"]:
+        print(data)
+        if "citation" in data:
             request.user.citation = data["citation"]
             request.user.save()
+        if "password" in data:
+            validate_password(data["password"])
+            request.user.set_password(data["password"])
+            request.user.save()
+        if not "citation" in data and not "password" in data:
+            return JsonResponse(
+                {
+                    "error": "missing fields!!!!",
+                },
+                status=400,
+            )
         return JsonResponse({"success": True})
     except BaseException as e:
-        print(e, file=sys.stderr)
         return JsonResponse(
             {
-                "error": "missing fields!!!!",
+                "error": "invalid syntax",
             },
             status=400,
+        )
+    except ValidationError as e:
+        return JsonResponse(
+            {
+                "error": e.messages[0],
+            },
+            status=403,
         )
 
 
