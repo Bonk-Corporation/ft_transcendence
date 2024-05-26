@@ -47,8 +47,3 @@ class Image(models.Model):
 
     def __str__(self):
         return self.name
-class BonkEvent(models.Model):
-    game_id = models.PositiveIntegerField(default=0)
-    users = ArrayField(models.CharField())
-    created_at = models.DateTimeField(auto_now_add=True)
-    

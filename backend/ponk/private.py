@@ -1,5 +1,5 @@
 from django.urls import path
-from ponk.models import GameHistory, User, BonkEvent
+from ponk.models import GameHistory, User
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from ponk.api_decorators import private_api_auth
@@ -10,6 +10,10 @@ import json
 import sys
 import os
 import secrets
+
+
+events = []
+tokens = {}
 
 
 @csrf_exempt
@@ -65,18 +69,16 @@ def game_stats(request, *args, **kwargs):
 @csrf_exempt
 @private_api_auth
 def get_bonk_events(request, *args, **kwargs):
-    try:
-        last_event = BonkEvent.objects.earliest("created_at")
-        last_event.delete()
-        return JsonResponse({"game_id": last_event.game_id, "users": last_event.users})
-    except BaseException as e:
-        print(e, file=sys.stderr)
+    if len(events):
         return JsonResponse(
-            {
-                "error": "no events",
-            },
-            status=400,
+            events.pop(0),
         )
+    return JsonResponse(
+        {
+            "error": "no events",
+        },
+        status=400,
+    )
 
 
 @csrf_exempt
@@ -85,12 +87,12 @@ def set_bonk_events(request, *args, **kwargs):
     try:
         data = json.loads(request.body)
 
-        BonkEvent(game_id=data["game_id"], users=data["users"]).save()
+        events.append({"game_id": data["game_id"], "users": data["users"]})
 
         return JsonResponse(
             {
                 "success": True,
-            }
+            },
         )
     except BaseException as e:
         print(e, file=sys.stderr)
@@ -107,7 +109,8 @@ def set_bonk_events(request, *args, **kwargs):
 def get_player_token(request, *args, **kwargs):
     try:
         token = args[1].get("token")
-        user = User.objects.get(bonk_token=token)
+        username = {value: key for key, value in tokens.items()}.get(token)
+        user = User.objects.get(username=username)
         return JsonResponse(
             {
                 "name": user.username,
@@ -130,11 +133,10 @@ def set_player_token(request, *args, **kwargs):
     try:
         username = args[1].get("user")
         user = User.objects.get(username=username)
-        user.bonk_token = secrets.token_urlsafe(32)
-        user.save()
+        tokens.update({user.username: secrets.token_urlsafe(32)})
         return JsonResponse(
             {
-                "success": user.bonk_token,
+                "success": tokens[user.username],
             },
             status=200,
         )
