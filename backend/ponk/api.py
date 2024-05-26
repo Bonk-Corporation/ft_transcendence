@@ -14,7 +14,6 @@ from django.utils import timezone
 from ponk.tournament import rooms
 from ponk.utils import get_selected_skin_url
 import ponk.private
-import random
 import json
 import os
 

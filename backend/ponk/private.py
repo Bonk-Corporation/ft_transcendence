@@ -1,5 +1,5 @@
 from django.urls import path
-from ponk.models import GameHistory, User
+from ponk.models import GameHistory, User, BonkEvent
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from ponk.api_decorators import private_api_auth
@@ -9,6 +9,7 @@ from ponk.utils import get_selected_skin_url
 import json
 import sys
 import os
+import secrets
 
 
 @csrf_exempt
@@ -106,7 +107,7 @@ def set_bonk_events(request, *args, **kwargs):
 def get_player_token(request, *args, **kwargs):
     try:
         token = args[1].get("token")
-        user = User.objects.filter(bonk_token=token).all()[0]
+        user = User.objects.get(bonk_token=token)
         return JsonResponse(
             {
                 "name": user.username,
@@ -123,9 +124,34 @@ def get_player_token(request, *args, **kwargs):
         )
 
 
+@csrf_exempt
+@private_api_auth
+def set_player_token(request, *args, **kwargs):
+    try:
+        username = args[1].get("user")
+        user = User.objects.get(username=username)
+        user.bonk_token = secrets.token_urlsafe(32)
+        user.save()
+        return JsonResponse(
+            {
+                "success": user.bonk_token,
+            },
+            status=200,
+        )
+    except BaseException as e:
+        print(e, file=sys.stderr)
+        return JsonResponse(
+            {
+                "error": "Invalid user",
+            },
+            status=400,
+        )
+
+
 urls = [
     path("game_stats", game_stats),
     path("get_bonk_event", get_bonk_events),
     path("set_bonk_event", set_bonk_events),
-    path("bonk_player/<str:token>", get_player_token),
+    path("get_bonk_player/<str:token>", get_player_token),
+    path("set_token/<str:user>", set_player_token),
 ]
