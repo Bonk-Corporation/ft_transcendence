@@ -12,6 +12,7 @@ from django.core.exceptions import ValidationError
 from ponk.money import skins
 from django.utils import timezone
 from ponk.tournament import rooms
+from ponk.utils import get_selected_skin_url
 import ponk.private
 import random
 import json
@@ -60,19 +61,6 @@ def shoopa_shoop(request, *args, **kwargs):
             "items": skins,
         }
     )
-
-
-def get_selected_skin_url(username):
-    user = User.objects.get(username=username)
-    if user.selected_skin == "":
-        return random.choice(DEFAULT_SKINS)
-
-    skin = None
-    for item in skins:
-        if item["name"] == user.selected_skin:
-            skin = item
-
-    return random.choice(skin["images"])
 
 
 @authenticated
