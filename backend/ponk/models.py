@@ -23,6 +23,7 @@ class User(AbstractUser):
     auth_method = models.IntegerField(choices=AuthMethod.choices)
     last_online = models.DateTimeField(default=timezone.now)
     citation = models.CharField(default="", max_length=256)
+    bonk_token = models.CharField(default="")
 
     def __str__(self):
         return f"User(avatar={self.avatar}, auth_method={self.auth_method}, level={self.level})"
@@ -46,3 +47,8 @@ class Image(models.Model):
 
     def __str__(self):
         return self.name
+class BonkEvent(models.Model):
+    game_id = models.PositiveIntegerField(default=0)
+    users = ArrayField(models.CharField())
+    created_at = models.DateTimeField(auto_now_add=True)
+    
