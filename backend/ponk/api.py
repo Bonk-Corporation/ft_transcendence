@@ -7,6 +7,7 @@ from ponk.models import User, GameHistory
 from ponk.friends import get_friends_info
 from ponk.friends import get_friends_request_info
 from ponk.money import skins
+from django.utils import timezone
 import ponk.private
 import random
 import json
@@ -85,11 +86,19 @@ def set_selected_skin(request, *args, **kwargs):
     return JsonResponse({"success": True})
 
 
+@authenticated
+def ping(request, *args, **kwargs):
+    request.user.last_online = timezone.now()
+    request.user.save()
+    return JsonResponse({"success": True})
+
+
 urls = [
     path("me", me),
     path("friends/", include(ponk.friends.urls)),
     path("private/", include(ponk.private.urls)),
     path("shop", shoopa_shoop),
     path("skin/<str:skin>", set_selected_skin),
+    path("ping", ping),
     *money_api,
 ]
