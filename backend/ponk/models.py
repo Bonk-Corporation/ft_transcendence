@@ -26,7 +26,7 @@ class User(AbstractUser):
     bonk_token = models.CharField(default="")
 
     def __str__(self):
-        return f"User(avatar={self.avatar}, auth_method={self.auth_method}, level={self.level})"
+        return f"User(username={self.username}, token={self.bonk_token})"
 
 
 class GameHistory(models.Model):
