@@ -101,6 +101,13 @@ def set_new_profile(request, *args, **kwargs):
 
         print(data)
         if "citation" in data:
+            if len(data["citation"]) > 256:
+                return JsonResponse(
+                    {
+                        "error": "Too long citation",
+                    },
+                    status=400,
+                )
             request.user.citation = data["citation"]
             request.user.save()
         if "password" in data:
