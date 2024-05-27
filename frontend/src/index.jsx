@@ -16,6 +16,7 @@ import { Signup } from './pages/Auth/Signup';
 import { Pong } from './pages/Games/Pong';
 import { Bonk } from './pages/Games/Bonk';
 import { useEffect, useState } from 'preact/hooks';
+import { LegalNotice } from './pages/LegalNotice/LegalNotice';
 
 export function App() {
 	const [profile, setProfile] = useState(null);
@@ -69,6 +70,7 @@ export function App() {
 						<Route path="/signup" component={() => <Signup setTriedLog={setTriedLog} />} />
 						<Route path="/pong" component={() => <Pong profile={profile} />} />
 						<Route path="/bonk" component={() => <Bonk profile={profile} />} />
+						<Route path="/legal-notice" component={LegalNotice} />
 						<Route default component={NotFound} />
 					</Router>
 				</main>
