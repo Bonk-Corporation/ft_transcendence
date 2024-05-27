@@ -19,7 +19,7 @@ export function Pong({ profile, lang }) {
 		<>
 		{
 			popUp ? 
-			<Card className="absolute z-50 p-4 px-16 flex flex-col items-center">
+			<Card id="popup" className="absolute z-50 p-4 px-16 flex flex-col items-center">
 				<h1 className="font-semibold text-4xl mb-4">PONG</h1>
 				<p className="mb-2">{language.play_against[lang]}</p>
 				<div className="flex mb-4">

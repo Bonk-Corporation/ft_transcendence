@@ -20,8 +20,10 @@ version = "0.3.4"
 features = [
   'Location',
   'Crypto',
+  'CssStyleDeclaration',
   'MouseEvent',
   'HtmlButtonElement',
+  'HtmlElement',
   'Document',
   'Element',
   'HtmlCanvasElement',
