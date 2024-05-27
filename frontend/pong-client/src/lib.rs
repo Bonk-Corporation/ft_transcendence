@@ -5,7 +5,7 @@ use std::panic;
 use std::sync::{Arc, Mutex};
 use wasm_bindgen::prelude::*;
 use web_sys::{
-    MouseEvent, Event, ErrorEvent, KeyboardEvent, MessageEvent, WebGl2RenderingContext, WebSocket, HtmlButtonElement
+    HtmlElement, MouseEvent, Event, ErrorEvent, KeyboardEvent, MessageEvent, WebGl2RenderingContext, WebSocket, HtmlButtonElement
 };
 
 macro_rules! console_log {
@@ -28,7 +28,7 @@ pub fn start() -> Result<(), JsValue> {
         .document().expect("No document element");
     
     let play_button: HtmlButtonElement = document.get_element_by_id("play-button").expect("No element solo").dyn_into::<HtmlButtonElement>()?;
-    
+    let popup: HtmlElement = document.get_element_by_id("popup").expect("No element popup").dyn_into::<HtmlElement>()?; 
     let context = render::get_context(&document)?;
 	let _ = context.clear_color(0.0, 0.0, 0.0, 1.0);
     let _ = context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
@@ -76,6 +76,7 @@ pub fn start() -> Result<(), JsValue> {
     // Callbacks
     
     let cloned_game_id = Arc::clone(&game_id);
+    let cloned_pu = popup.clone();
     //let cloned_score = score.clone();
     let onmessage_callback = Closure::<dyn FnMut(_)>::new(move |event: MessageEvent| {
         if let Ok(txt) = event.data().dyn_into::<js_sys::JsString>() {
@@ -94,6 +95,7 @@ pub fn start() -> Result<(), JsValue> {
 							render::EndGame::Draw => cloned_score.set_inner_html("Draw"),
 							render::EndGame::Undecided => cloned_score.set_inner_html("Undecided"),
 						}*/
+                        cloned_pu.style().set_property("display", "flex");
 						let _ = &context.clear_color(0.0, 0.0, 0.0, 1.0);
     					let _ = &context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
 					} else {
@@ -125,7 +127,9 @@ pub fn start() -> Result<(), JsValue> {
     let cloned_data = client_data.clone();
     let cloned_ws = web_socket.clone();
     let cloned_pb = play_button.clone();
+    let cloned_pu = popup.clone();
     let onclick_play = Closure::<dyn FnMut(_)>::new(move |_event: MouseEvent| {
+        cloned_pu.style().set_property("display", "none");
         if &cloned_pb.name() == "player" {
             match cloned_ws.send_with_str(("MULTI".to_owned() + &serde_json::to_string(&cloned_data).unwrap()).as_str()) {
                 Ok(_) => console_log!("messages sent"),
@@ -184,7 +188,7 @@ pub fn start() -> Result<(), JsValue> {
                     game_id,
                     movement: "UP".to_string()
                 };
-                match cloned_ws.send_with_str(("SMOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
+                match cloned_ws.send_with_str(("MOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
                     Ok(_) => console_log!("up sent"),
                     Err(err) => console_log!("up failed: {:?}", err)
                 }
@@ -196,7 +200,7 @@ pub fn start() -> Result<(), JsValue> {
                     game_id,
                     movement: "DOWN".to_string()
                 };
-                match cloned_ws.send_with_str(("SMOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
+                match cloned_ws.send_with_str(("MOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
                     Ok(_) => console_log!("down sent"),
                     Err(err) => console_log!("down failed: {:?}", err)
                 }
