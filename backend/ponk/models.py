@@ -23,10 +23,9 @@ class User(AbstractUser):
     auth_method = models.IntegerField(choices=AuthMethod.choices)
     last_online = models.DateTimeField(default=timezone.now)
     citation = models.CharField(default="", max_length=256)
-    bonk_token = models.CharField(default="")
 
     def __str__(self):
-        return f"User(username={self.username}, token={self.bonk_token})"
+        return f"User(username={self.username}"
 
 
 class GameHistory(models.Model):

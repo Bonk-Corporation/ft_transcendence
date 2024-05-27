@@ -13,9 +13,12 @@ from ponk.money import skins
 from django.utils import timezone
 from ponk.tournament import rooms
 from ponk.utils import get_selected_skin_url
+from ponk.private import tokens
 import ponk.private
 import json
 import os
+import secrets
+import random
 
 DEFAULT_SKINS = [
     "/assets/skins/red.png",
@@ -85,11 +88,11 @@ def ping(request, *args, **kwargs):
     return JsonResponse({"success": True})
 
 
+@authenticated
 def set_new_profile(request, *args, **kwargs):
     try:
         data = json.loads(request.body)
 
-        print(data)
         if "citation" in data:
             if len(data["citation"]) > 256:
                 return JsonResponse(
@@ -123,6 +126,25 @@ def set_new_profile(request, *args, **kwargs):
         return JsonResponse(
             {
                 "error": "Fatal error",
+            },
+            status=400,
+        )
+
+
+@authenticated
+def set_player_token(request, *args, **kwargs):
+    try:
+        tokens.update({request.user.username: secrets.token_urlsafe(32)})
+        return JsonResponse(
+            {
+                "success": tokens[request.user.username],
+            },
+            status=200,
+        )
+    except BaseException as e:
+        return JsonResponse(
+            {
+                "error": "Invalid user",
             },
             status=400,
         )
@@ -181,5 +203,6 @@ urls = [
     path("citation", get_random_citation),
     path("delete_myself", delete_user),
     path("upload", upload_image),
+    path("set_token", set_player_token),
     *money_api,
 ]
