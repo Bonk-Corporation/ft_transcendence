@@ -127,33 +127,9 @@ def get_player_token(request, *args, **kwargs):
         )
 
 
-@csrf_exempt
-@private_api_auth
-def set_player_token(request, *args, **kwargs):
-    try:
-        username = args[1].get("user")
-        user = User.objects.get(username=username)
-        tokens.update({user.username: secrets.token_urlsafe(32)})
-        return JsonResponse(
-            {
-                "success": tokens[user.username],
-            },
-            status=200,
-        )
-    except BaseException as e:
-        print(e, file=sys.stderr)
-        return JsonResponse(
-            {
-                "error": "Invalid user",
-            },
-            status=400,
-        )
-
-
 urls = [
     path("game_stats", game_stats),
     path("get_bonk_event", get_bonk_events),
     path("set_bonk_event", set_bonk_events),
     path("get_bonk_player/<str:token>", get_player_token),
-    path("set_token/<str:user>", set_player_token),
 ]
