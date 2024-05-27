@@ -10,18 +10,17 @@ use serde::{
     Serialize,
     Deserialize,
 };
+use glam::Vec2;
 
-const SCREEN_WIDTH: f32 = 1920.;
-const SCREEN_HEIGHT: f32 = 1440.;
-const SCREEN_CENTER_X: f32 = SCREEN_WIDTH / 2.;
-const SCREEN_CENTER_Y: f32 = SCREEN_HEIGHT / 2.;
+const WINDOWS_WIDTH      : f32 = 1920.;
+const WINDOWS_HEIGHT     : f32 = 1440.;
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Entity {
-   pub width: f32,
-   pub height: f32,
-   pub position:(f32, f32),
-   pub velocity:(f32, f32),
+    pub width       : f32,
+    pub height      : f32,
+    pub position    : Vec2,
+    pub velocity    : Vec2,
 }
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -34,12 +33,25 @@ pub enum EndGame {
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct GameState {
-  pub player1_ent  : Entity,
-  pub player2_ent  : Entity,
-  pub ball_ent     : Entity,
-  pub score    : (i16, i16),
-  pub winner: EndGame,
-  pub finished: bool,
+  pub player1_ent   : Entity,
+  pub player2_ent   : Entity,
+  pub ball_ent      : Entity,
+  pub score         : (i16, i16),
+  pub winner        : EndGame,
+  pub finished      : bool,
+}
+
+pub struct Circle {
+    pub center      : Vec2,
+    pub rayon       : Vec2
+}
+
+pub fn normalize_coord(c: Vec2) -> Vec2 {
+    c / Vec2::new(WINDOWS_WIDTH, WINDOWS_HEIGHT)
+}
+
+pub fn view_coord(c: Vec2) -> Vec2 {
+    normalize_coord(c) * 2. - 1.
 }
 
 pub fn render(
@@ -51,38 +63,38 @@ pub fn render(
 
     let program = link_program(context, vertex_shader, fragment_shader)?;
     context.use_program(Some(&program));
-    let (x1, y1) = game_state.player1_ent.position;
-    let x1 = (x1 - SCREEN_CENTER_X) / SCREEN_CENTER_X + 0.05;
-    let y1 = (y1 - SCREEN_CENTER_Y) / SCREEN_CENTER_Y;
-    let width = game_state.player1_ent.width / SCREEN_WIDTH;
-    let height = game_state.player1_ent.height / SCREEN_HEIGHT * 2.;
+
+    let c1 = view_coord(game_state.player1_ent.position);
+    let c2 = view_coord(game_state.player1_ent.position + Vec2::new(game_state.player1_ent.width, game_state.player1_ent.height));
     let player1_vertices: [f32; 12] = [
-		x1, y1, 0.0,
-		x1 + width, y1, 0.0,
-		x1, y1 + height, 0.0,
-		x1 + width, y1 + height, 0.0
+		c1.x, c1.y, 0.0,
+		c2.x, c1.y, 0.0,
+		c1.x, c2.y, 0.0,
+		c2.x, c2.y, 0.0
 	];
-    let (x2, y2) = game_state.player2_ent.position; 
-    let x2 = (x2 - SCREEN_CENTER_X) / SCREEN_CENTER_X + 0.05;
-    let y2 = (y2 - SCREEN_CENTER_Y) / SCREEN_CENTER_Y;
+
+    let c1 = view_coord(game_state.player2_ent.position);
+    let c2 = view_coord(game_state.player2_ent.position + Vec2::new(game_state.player2_ent.width, game_state.player2_ent.height));
     let player2_vertices: [f32; 12] = [
-		x2, y2, 0.0,
-		x2 + width, y2, 0.0,
-		x2, y2 + height, 0.0,
-		x2 + width, y2 + height, 0.0
+		c1.x, c1.y, 0.0,
+		c2.x, c1.y, 0.0,
+		c1.x, c2.y, 0.0,
+		c2.x, c2.y, 0.0
 	];
-    
 
 	let vector_vertices = vec![player1_vertices, player2_vertices];
 
+    let rayon = Vec2::new(game_state.ball_ent.width, game_state.ball_ent.height) / 2.;
+    let circle = Circle {
+        center  : view_coord(game_state.ball_ent.position + rayon),
+        rayon   : view_coord(game_state.ball_ent.position + rayon) - view_coord(game_state.ball_ent.position)
+
+    };
+
 	context.clear_color(0.0, 0.0, 0.0, 1.0);
     context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
-
-    let (x3, y3) = game_state.ball_ent.position; 
-    let x3 = (x3 - SCREEN_CENTER_X) / SCREEN_CENTER_X;
-    let y3 = (y3 - SCREEN_CENTER_Y) / SCREEN_CENTER_Y;
 	display_rectangles(context, vector_vertices, &program)?;
-	display_circles(context, vec![[x3, y3]] , &program)?;
+	display_circles(context, vec![circle], &program)?;
 
     Ok(())
 
@@ -99,22 +111,20 @@ pub fn get_context(document: &Document) -> Result<WebGl2RenderingContext, JsValu
 	Ok(context)
 }
 
-fn display_circles(context: &WebGl2RenderingContext, centers: Vec<[f32; 2]>, program: &WebGlProgram) -> Result<(), JsValue> {
-	for center in centers {
+fn display_circles(context: &WebGl2RenderingContext, circles: Vec<Circle>, program: &WebGlProgram) -> Result<(), JsValue> {
+	for circle in circles {
 	
     	let position_attribute_location = context.get_attrib_location(program, "position");
     	let buffer = context.create_buffer().ok_or("Failed to create buffer")?;
     	context.bind_buffer(WebGl2RenderingContext::ARRAY_BUFFER, Some(&buffer));
 		let vert_count = 2;
 		let mut circle_vertices = vec![];
-		circle_vertices.extend_from_slice(&center);
-		let r_h = 0.04;
-		let r_w = 0.05;
+		circle_vertices.extend_from_slice(&vec![circle.center.x, circle.center.y]);
 
-		for i in 0..=2000 {
-			let j: f32 = i as f32 * 2. * std::f32::consts::PI / 2000.;
-			let vert1 = [center[0] + r_h * j.sin(), center[1] + r_w * j.cos()];
-			let vert2 = [center[0], center[1]];
+		for i in 0..=32 {
+			let j: f32 = i as f32 * 2. * std::f32::consts::PI / 32.;
+			let vert1 = [circle.center.x + circle.rayon.x * j.cos(), circle.center.y + circle.rayon.y * j.sin()];
+			let vert2 = [circle.center.x, circle.center.y];
 			circle_vertices.extend_from_slice(&vert1);
 			circle_vertices.extend_from_slice(&vert2);
 		}

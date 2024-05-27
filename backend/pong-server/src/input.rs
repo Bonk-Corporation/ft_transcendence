@@ -10,20 +10,24 @@ use futures::lock::Mutex;
 pub const WINDOW_WIDTH      : f32   = 1920.;
 pub const WINDOW_HEIGHT     : f32   = 1440.;
 
-pub const PLAYER_WIDTH      : f32   = WINDOW_WIDTH * 0.1;
-pub const PLAYER_HEIGHT     : f32   = WINDOW_HEIGHT * 0.32;
+pub const PLAYER_WIDTH      : f32   = WINDOW_WIDTH * 0.04;
+pub const PLAYER_HEIGHT     : f32   = WINDOW_HEIGHT * 0.3;
+pub const PLAYER_MARGIN     : f32   = PLAYER_WIDTH;
+
+pub const BALL_WIDTH        : f32   = PLAYER_WIDTH;
+pub const BALL_HEIGHT       : f32   = BALL_WIDTH;
 
 pub const PLAYER_SPEED      : f32   = WINDOW_HEIGHT / 100.;
 pub const PLAYER_SPIN       : f32   = WINDOW_HEIGHT / 100.;
 
 pub const BALL_SPEED        : f32   = WINDOW_WIDTH / 100.;
 pub const BALL_ACCELERTION  : f32   = BALL_SPEED / 32.;
-pub const MAX_BALL_SPEED    : f32   = BALL_SPEED * 4.;
+pub const MAX_BALL_SPEED    : f32   = BALL_SPEED * 2.;
 
 pub const MAX_SCORE         : u8    = 5;
 
 pub const BOT_MARGIN        : f32   = PLAYER_WIDTH;
-pub const BOT_INACCURACY    : f32   = 0.1;
+pub const BOT_INACCURACY    : f32   = 4.0;
 pub const BOT_PAUSE         : u8    = 2;
 
 #[derive(Clone, Debug)]
@@ -46,29 +50,12 @@ pub struct Move {
     pub movement: String,
 }
 
-struct Rectangle {
-    pub x: f32,
-    pub y: f32,
-    width: f32,
-    height: f32,
-}
-
-impl Rectangle {
-    pub fn intersects(&self, other: &Rectangle) -> bool
-    {
-        self.x <= other.x + other.width
-            && self.x + self.width >= other.x
-            && self.y <= other.y + other.height
-            && self.y + self.height >= other.y
-    }
-}
-
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Entity {
-    pub width: f32,
-    pub height: f32,
-    pub position: Vec2,
-    pub velocity: Vec2,
+    pub width       : f32,
+    pub height      : f32,
+    pub position    : Vec2,
+    pub velocity    : Vec2,
 }
 
 impl Entity {
@@ -77,26 +64,24 @@ impl Entity {
     }
 
     pub fn default() -> Self {
-    Entity {
-        width       : 0.0,
-        height      : 0.0,
-        position    : Vec2::new(0.0, 0.0),
-        velocity    : Vec2::new(0.0, 0.0)
+        Entity {
+            width       : 0.0,
+            height      : 0.0,
+            position    : Vec2::new(0.0, 0.0),
+            velocity    : Vec2::new(0.0, 0.0)
+        }
     }
-    }
-
     
     pub fn with_velocity(width: f32, height: f32, position: Vec2, velocity: Vec2) -> Entity {
         Entity {width, height, position, velocity}
     }
 
-    fn bounds(&self) -> Rectangle {
-        Rectangle {
-            x: self.position.x,
-            y: self.position.y,
-            width: self.width,
-            height: self.height,
-        }
+    pub fn intersects(&self, other: &Entity) -> bool
+    {
+        self.position.x <= other.position.x + other.width
+            && self.position.x + self.width >= other.position.x
+            && self.position.y <= other.position.y + other.height
+            && self.position.y + self.height >= other.position.y
     }
 
     fn center(&self) -> Vec2 {
@@ -137,32 +122,19 @@ pub fn hit_top(entity: &Entity) -> bool {
     entity.position.y + entity.height >= WINDOW_HEIGHT
 }
 
-
 impl GameState {
     pub fn new() -> GameState {
-        let player1_pos = Vec2 {
-            x: 16.,
-            y: (WINDOW_HEIGHT - PLAYER_HEIGHT) / 2.,
-        };
-        let player2_pos = Vec2 {
-            x: WINDOW_WIDTH - PLAYER_WIDTH - 16.,
-            y: (WINDOW_HEIGHT - PLAYER_HEIGHT) / 2.,
-        };
-        let ball_pos = Vec2 {
-            x: (WINDOW_WIDTH - 0.05) / 2.,
-            y: (WINDOW_HEIGHT - 0.05) / 2.,
-        };
-        let ball_velocity = Vec2 {
-            x: -BALL_SPEED,
-            y: 0.,
-        };
+        let player1_pos     = Vec2::new(PLAYER_MARGIN, (WINDOW_HEIGHT - PLAYER_HEIGHT) / 2.);
+        let player2_pos     = Vec2::new(WINDOW_WIDTH - PLAYER_WIDTH - PLAYER_MARGIN, (WINDOW_HEIGHT - PLAYER_HEIGHT) / 2.);
+        let ball_pos        = Vec2::new((WINDOW_WIDTH - BALL_WIDTH) / 2., (WINDOW_HEIGHT - BALL_HEIGHT) / 2.);
+        let ball_velocity   = Vec2::new(-BALL_SPEED, 0.);
         GameState {
             player1_ent : Entity::new(PLAYER_WIDTH, PLAYER_HEIGHT, player1_pos),
             player2_ent : Entity::new(PLAYER_WIDTH, PLAYER_HEIGHT, player2_pos),
-            ball_ent    : Entity::with_velocity(0.05, 0.05, ball_pos, ball_velocity),
+            ball_ent    : Entity::with_velocity(BALL_WIDTH, BALL_HEIGHT, ball_pos, ball_velocity),
             score       : (0, 0),
-            winner: EndGame::Undecided,
-            finished: false,
+            winner      : EndGame::Undecided,
+            finished    : false,
         }
     }
 
@@ -172,9 +144,20 @@ impl GameState {
             player2_ent : Entity::new(0.,0.,Vec2{x: 0., y: 0.}),
             ball_ent    : Entity::new(0.,0.,Vec2{x: 0., y: 0.}),
             score       : (0,0),
-            winner: EndGame::Undecided,
-            finished: false,
+            winner      : EndGame::Undecided,
+            finished    : false,
         }
+    }
+
+    pub fn reset(&mut self) -> &mut Self {
+        let player1_pos     = Vec2::new(PLAYER_MARGIN, (WINDOW_HEIGHT - PLAYER_HEIGHT) / 2.);
+        let player2_pos     = Vec2::new(WINDOW_WIDTH - PLAYER_WIDTH - PLAYER_MARGIN, (WINDOW_HEIGHT - PLAYER_HEIGHT) / 2.);
+        let ball_pos        = Vec2::new((WINDOW_WIDTH - BALL_WIDTH) / 2., (WINDOW_HEIGHT - BALL_HEIGHT) / 2.);
+        let ball_velocity   = Vec2::new(-BALL_SPEED, 0.);
+        self.player1_ent    = Entity::new(PLAYER_WIDTH, PLAYER_HEIGHT, player1_pos);
+        self.player2_ent    = Entity::new(PLAYER_WIDTH, PLAYER_HEIGHT, player2_pos);
+        self.ball_ent       = Entity::with_velocity(BALL_WIDTH, BALL_HEIGHT, ball_pos, ball_velocity);
+        self
     }
 
     fn update_player(&mut self, player_num: u8, input: String) {
@@ -197,12 +180,12 @@ impl GameState {
         self.ball_ent.position.x += self.ball_ent.velocity.x;
         self.ball_ent.position.y += self.ball_ent.velocity.y;
 
-        let paddle_hit = if self.ball_ent.bounds().intersects(&self.player1_ent.bounds()) {
+        let paddle_hit = if self.ball_ent.intersects(&self.player1_ent) {
             if self.ball_ent.velocity.x <= 0. {
                 self.ball_ent.velocity.x = -(self.ball_ent.velocity.x + (BALL_ACCELERTION * self.ball_ent.velocity.x.signum()));
             }
             Some(&self.player1_ent)
-        } else if self.ball_ent.bounds().intersects(&self.player2_ent.bounds()) {
+        } else if self.ball_ent.intersects(&self.player2_ent) {
             if self.ball_ent.velocity.x >= 0. {
                 self.ball_ent.velocity.x = -(self.ball_ent.velocity.x + (BALL_ACCELERTION * self.ball_ent.velocity.x.signum()));
             }
@@ -240,30 +223,22 @@ impl GameState {
             EndGame::Undecided
         };
         if self.ball_ent.position.x < 0. {
-            let (player1_score, player2_score) = self.score;
-            self.score = (player1_score, player2_score + 1);
-            self.player1_ent.position = Vec2::new(16., (WINDOW_HEIGHT - PLAYER_HEIGHT) / 2.);
-            self.player2_ent.position = Vec2::new(WINDOW_WIDTH - PLAYER_WIDTH - 16., (WINDOW_HEIGHT - PLAYER_HEIGHT) / 2.);
-            self.ball_ent.position = Vec2::new((WINDOW_WIDTH - 0.05) / 2., (WINDOW_HEIGHT - 0.05) / 2.);
-            self.ball_ent.velocity = Vec2::new(-BALL_SPEED, 0.);
+            self.score.1 += 1;
+            self.reset();
         } else if self.ball_ent.position.x > WINDOW_WIDTH {
-            let (player1_score, player2_score) = self.score;
-            self.score = (player1_score + 1, player2_score);
-            self.player1_ent.position = Vec2::new(16., (WINDOW_HEIGHT - PLAYER_HEIGHT) / 2.);
-            self.player2_ent.position = Vec2::new(WINDOW_WIDTH - PLAYER_WIDTH - 16., (WINDOW_HEIGHT - PLAYER_HEIGHT) / 2.);
-            self.ball_ent.position = Vec2::new((WINDOW_WIDTH - 0.05) / 2., (WINDOW_HEIGHT - 0.05) / 2.);
-            self.ball_ent.velocity = Vec2::new(-BALL_SPEED, 0.);
+            self.score.0 += 1;
+            self.reset();
         }
     }
 }
 
 #[derive(Clone, Debug)]
 pub struct Game {
-    pub player1: Option<Client>,
-    pub player2: Option<Client>,
-    pub id: String,
-    pub tx: broadcast::Sender<String>,
-    pub state: Arc<Mutex<GameState>>,
+    pub player1 : Option<Client>,
+    pub player2 : Option<Client>,
+    pub id      : String,
+    pub tx      : broadcast::Sender<String>,
+    pub state   : Arc<Mutex<GameState>>,
 }
 
 #[derive(Debug, PartialEq)]
@@ -337,12 +312,12 @@ impl Game {
         }));
         while let Ok(msg) = rx.recv().await {
             let movement: Result<Move, serde_json::Error> = serde_json::from_str(&msg[5..]);
-            let move = "MOVE" == &msg[0..5];
+            let smove = "SMOVE" == &msg[0..5];
             if let Ok(movement) = movement {
                 match (self.player1.clone(), self.player2.clone()) {
                     (_, None) | (None, _) => break, //a player has left the game
                     (Some(player1), Some(player2)) => {
-                        match move {
+                        match smove {
                             true => if movement.id == player1.id {
                                 *p1_moves.lock().await = Movement::Static;
                             } else {
