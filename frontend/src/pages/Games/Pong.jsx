@@ -20,7 +20,7 @@ export function Pong({ profile, lang }) {
 		<>
 		{
 			popUpPlay ? 
-			<Card id="popup" className="absolute z-50 p-4 px-16 flex flex-col items-center">
+			<Card id="popUpPlay" className="absolute z-50 p-4 px-16 flex flex-col items-center">
 				<h1 className="font-semibold text-4xl mb-4">PONG</h1>
 				<p className="mb-2">{language.play_against[lang]}</p>
 				<div className="flex mb-4">
@@ -32,11 +32,11 @@ export function Pong({ profile, lang }) {
 		}
 		{
 			popUpScore ? 
-			<Card id="popup" className="absolute z-50 p-4 px-8 hidden flex-col items-center">
-				<h1 className="font-semibold text-4xl">BOLVIC WIN</h1>
+			<Card id="popUpScore" className="absolute z-50 p-4 px-8 hidden flex-col items-center">
+				<h1 id="winner" className="font-semibold text-4xl">BOLVIC WIN</h1>
 				<hr className="w-4/5 my-2" />
-				<p className="mb-2 font-semibold text-2xl">4 - 1</p>
-				<CTA id="play-button" name={mode}>Play again</CTA>
+				<p id="final-score" className="mb-2 font-semibold text-2xl">4 - 1</p>
+				<CTA id="replay-button" name={mode}>Play again</CTA>
 			</Card> : null
 		}
 			<canvas id="canvas" width="1920px" height="1440px" className="h-screen object-scale-down flex items-center justify-center">

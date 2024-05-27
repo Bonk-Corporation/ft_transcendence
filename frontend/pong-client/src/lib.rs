@@ -28,7 +28,8 @@ pub fn start() -> Result<(), JsValue> {
         .document().expect("No document element");
     
     let play_button: HtmlButtonElement = document.get_element_by_id("play-button").expect("No element solo").dyn_into::<HtmlButtonElement>()?;
-    let popup: HtmlElement = document.get_element_by_id("popup").expect("No element popup").dyn_into::<HtmlElement>()?; 
+    let pop_up_play: HtmlElement = document.get_element_by_id("popUpPlay").expect("No element popup").dyn_into::<HtmlElement>()?; 
+    let pop_up_score: HtmlElement = document.get_element_by_id("popUpScore").expect("No element popup").dyn_into::<HtmlElement>()?; 
     let context = render::get_context(&document)?;
 	let _ = context.clear_color(0.0, 0.0, 0.0, 1.0);
     let _ = context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
@@ -61,7 +62,9 @@ pub fn start() -> Result<(), JsValue> {
         "##,
     )?;
    
-    //let score = document.get_element_by_id("score").expect("no element score");
+    let winner = document.get_element_by_id("winner").expect("no element winner");
+    let final_score = document.get_element_by_id("final-score").expect("no element final score");
+    let replay: HtmlButtonElement = document.get_element_by_id("replay-button").expect("no element replay-button").dyn_into::<HtmlButtonElement>()?;
     let client_data = game::OnConnectClient::new(&document, uuid::Uuid::new_v4().to_string());
     let game_id = Arc::new(Mutex::new(String::new()));
  
@@ -74,10 +77,19 @@ pub fn start() -> Result<(), JsValue> {
     web_socket.set_binary_type(web_sys::BinaryType::Arraybuffer);
     
     // Callbacks
-    
+   
+    let cloned_pus = pop_up_score.clone();
+    let cloned_pup = pop_up_play.clone();
+    let onclick_replay_callback = Closure::<dyn FnMut(_)>::new(move |_event: MouseEvent| {
+        cloned_pus.style().set_property("display", "none");
+        cloned_pup.style().set_property("display", "flex");
+    });
+
+
     let cloned_game_id = Arc::clone(&game_id);
-    let cloned_pu = popup.clone();
-    //let cloned_score = score.clone();
+    let cloned_pu = pop_up_score.clone();
+    let cloned_winner = winner.clone();
+    let cloned_fs = final_score.clone();
     let onmessage_callback = Closure::<dyn FnMut(_)>::new(move |event: MessageEvent| {
         if let Ok(txt) = event.data().dyn_into::<js_sys::JsString>() {
             match &txt.as_string().unwrap()[0..6] {
@@ -88,20 +100,20 @@ pub fn start() -> Result<(), JsValue> {
                 "UPDATE" => {
 					console_log!("Update received");
                     let game_state: render::GameState = serde_json::from_str(&txt.as_string().unwrap()[6..]).unwrap();
-					if game_state.finished {/*
+                    let (p1, p2) = game_state.score;
+                    let score_str = p1.to_string() + " - " + &p2.to_string();
+					if game_state.finished {
 						match game_state.winner {
-							render::EndGame::Player1 => cloned_score.set_inner_html("Player 1 won"),
-							render::EndGame::Player2 => cloned_score.set_inner_html("Player 2 won"),
-							render::EndGame::Draw => cloned_score.set_inner_html("Draw"),
-							render::EndGame::Undecided => cloned_score.set_inner_html("Undecided"),
-						}*/
+							render::EndGame::Player1 => cloned_winner.set_inner_html("Player 1 won"),
+							render::EndGame::Player2 => cloned_winner.set_inner_html("Player 2 won"),
+							render::EndGame::Draw => cloned_winner.set_inner_html("Draw"),
+							render::EndGame::Undecided => cloned_winner.set_inner_html("Undecided"),
+						}
                         cloned_pu.style().set_property("display", "flex");
+                    	cloned_fs.set_inner_html(score_str.as_str());
 						let _ = &context.clear_color(0.0, 0.0, 0.0, 1.0);
     					let _ = &context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
 					} else {
-                    	let (p1, p2) = game_state.score;
-                    	let score_str = "Player 1: ".to_owned() + &p1.to_string() + " Player 2: " + &p2.to_string();
-                    	//cloned_score.set_inner_html(score_str.as_str());
 	                	render::render(game_state, &context, &vertex_shader, &fragment_shader).expect("Rendering failed");
 					}
                 },
@@ -127,7 +139,7 @@ pub fn start() -> Result<(), JsValue> {
     let cloned_data = client_data.clone();
     let cloned_ws = web_socket.clone();
     let cloned_pb = play_button.clone();
-    let cloned_pu = popup.clone();
+    let cloned_pu = pop_up_play.clone();
     let onclick_play = Closure::<dyn FnMut(_)>::new(move |_event: MouseEvent| {
         cloned_pu.style().set_property("display", "none");
         if &cloned_pb.name() == "player" {
@@ -210,6 +222,7 @@ pub fn start() -> Result<(), JsValue> {
     });
     // Setting web_socket with callbacks
     
+    replay.set_onclick(Some(onclick_replay_callback.as_ref().unchecked_ref()));
     play_button.set_onclick(Some(onclick_play.as_ref().unchecked_ref()));
     document.add_event_listener_with_callback("keydown", onkey_down_callback.as_ref().unchecked_ref())?;
     document.add_event_listener_with_callback("keyup", onkey_up_callback.as_ref().unchecked_ref())?;
@@ -217,6 +230,7 @@ pub fn start() -> Result<(), JsValue> {
     web_socket.set_onerror(Some(onerror_callback.as_ref().unchecked_ref()));
     web_socket.set_onopen(Some(onopen_callback.as_ref().unchecked_ref()));
 
+    onclick_replay_callback.forget();
     onopen_callback.forget();
     onmessage_callback.forget();
     onerror_callback.forget();
