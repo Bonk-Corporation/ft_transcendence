@@ -104,7 +104,7 @@ mkShell {
 				tmux new-session -d 'trap : INT; make || $SHELL'
 				tmux set -g mouse on # neat
 				tmux split-window -h 'trap : INT; make fdev || $SHELL'
-				tmux split-window '$SHELL'
+				tmux split-window -v -c backend/pong-server 'trap : INT; cargo run -r || $SHELL'
 				tmux attach
 			''
 		 }
