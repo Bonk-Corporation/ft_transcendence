@@ -16,7 +16,7 @@ export function Pong({ profile, lang }) {
 
   return (
 		<div className="bg-black flex flex-col w-screen h-screen justify-center items-center absolute overflow-hidden">
-			<h1 className="z-50 absolute top-4 text-6xl font-semibold">4 - 1</h1>
+			<h1 id="current-score" className="z-50 hidden absolute top-4 text-6xl font-semibold">4 - 1</h1>
 			<Card id="popUpPlay" className="absolute z-50 p-4 px-16 flex flex-col items-center">
 				<h1 className="font-semibold text-4xl mb-4">PONG</h1>
 				<p className="mb-2">{language.play_against[lang]}</p>

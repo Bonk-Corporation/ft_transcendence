@@ -64,6 +64,7 @@ pub fn start() -> Result<(), JsValue> {
    
     let winner = document.get_element_by_id("winner").expect("no element winner");
     let final_score = document.get_element_by_id("final-score").expect("no element final score");
+    let current_score = document.get_element_by_id("current-score").expect("no element current score").dyn_into::<HtmlElement>()?;
     let replay: HtmlButtonElement = document.get_element_by_id("replay-button").expect("no element replay-button").dyn_into::<HtmlButtonElement>()?;
     let client_data = game::OnConnectClient::new(&document, uuid::Uuid::new_v4().to_string());
     let game_id = Arc::new(Mutex::new(String::new()));
@@ -90,6 +91,7 @@ pub fn start() -> Result<(), JsValue> {
     let cloned_pu = pop_up_score.clone();
     let cloned_winner = winner.clone();
     let cloned_fs = final_score.clone();
+    let cloned_cs = current_score.clone();
     let onmessage_callback = Closure::<dyn FnMut(_)>::new(move |event: MessageEvent| {
         if let Ok(txt) = event.data().dyn_into::<js_sys::JsString>() {
             match &txt.as_string().unwrap()[0..6] {
@@ -111,9 +113,12 @@ pub fn start() -> Result<(), JsValue> {
 						}
                         cloned_pu.style().set_property("display", "flex");
                     	cloned_fs.set_inner_html(score_str.as_str());
+                        cloned_cs.style().set_property("display", "none");
 						let _ = &context.clear_color(0.0, 0.0, 0.0, 1.0);
     					let _ = &context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
 					} else {
+                        cloned_cs.style().set_property("display", "flex");
+                    	cloned_cs.set_inner_html(score_str.as_str());
 	                	render::render(game_state, &context, &vertex_shader, &fragment_shader).expect("Rendering failed");
 					}
                 },
