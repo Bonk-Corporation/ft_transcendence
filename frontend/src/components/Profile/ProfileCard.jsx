@@ -18,7 +18,7 @@ export function ProfileCard({ profile, setProfile, setTriedLog }) {
       method: "POST",
     }).then(res => res.json().then(data => {
       if (data.success)
-        window.location.pathname = "/login";
+        window.location.pathname = "/";
     }));
   }
 
@@ -57,6 +57,14 @@ export function ProfileCard({ profile, setProfile, setTriedLog }) {
 		});
   }
 
+  function deleteAccount() {
+    fetch("/api/delete_myself", {
+      method: "POST",
+    }).then(res => res.json().then(data => {
+      window.location.pathname = "/";
+    }));
+  }
+
   return (
     <>
       <Card className='flex flex-col items-center justify-center p-6 h-full'>
@@ -82,8 +90,9 @@ export function ProfileCard({ profile, setProfile, setTriedLog }) {
 					<p className="mt-1 text-sm text-red-500">{error}</p>
         </div>
         <div className="flex mb-4">
-          <CTA onClick={updateProfile} className='mr-4'>Update</CTA>
-          <CTA onClick={logOut} className='ml-4 border-red-500 border-2 text-red-500 hover:bg-red-500 hover:text-white' transparent={true}>Log out</CTA>
+          <CTA onClick={updateProfile} className='mr-2'>Update</CTA>
+          <CTA onClick={logOut} className='ml-2 mr-2 border-red-500 border-2 text-red-500 hover:bg-red-500 hover:text-white' transparent={true}>Log out</CTA>
+          <CTA onClick={deleteAccount} className='ml-2 border-red-500 border-2 text-red-500 hover:bg-red-500 hover:text-white' transparent={true}>Delete Account</CTA>
         </div>
         <Level level={profile ? profile.level : null} levelPercentage={profile ? profile.levelPercentage : null} />
       </Card>
