@@ -151,6 +151,24 @@ def get_random_citation(request, *args, **kwargs):
     return JsonResponse({"citation": citation.citation, "username": citation.username})
 
 
+@authenticated
+def delete_user(request, *args, **kwargs):
+    try:
+        request.user.delete()
+        return JsonResponse(
+            {
+                "success": True,
+            },
+        )
+    except BaseException as e:
+        return JsonResponse(
+            {
+                "error": "Fatal error",
+            },
+            status=400,
+        )
+
+
 urls = [
     path("me", me),
     path("friends/", include(ponk.friends.urls)),
@@ -160,5 +178,6 @@ urls = [
     path("ping", ping),
     path("update_profile", set_new_profile),
     path("citation", get_random_citation),
+    path("delete_myself", delete_user),
     *money_api,
 ]
