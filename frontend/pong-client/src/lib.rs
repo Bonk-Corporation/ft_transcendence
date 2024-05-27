@@ -220,7 +220,7 @@ pub fn start() -> Result<(), JsValue> {
             _ => (),
         }
     });
-    // Setting web_socket with callbacks
+    // Setting callbacks
     
     replay.set_onclick(Some(onclick_replay_callback.as_ref().unchecked_ref()));
     play_button.set_onclick(Some(onclick_play.as_ref().unchecked_ref()));
