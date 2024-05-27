@@ -82,8 +82,8 @@ pub fn start() -> Result<(), JsValue> {
     let cloned_pus = pop_up_score.clone();
     let cloned_pup = pop_up_play.clone();
     let onclick_replay_callback = Closure::<dyn FnMut(_)>::new(move |_event: MouseEvent| {
-        cloned_pus.style().set_property("display", "none");
-        cloned_pup.style().set_property("display", "flex");
+        cloned_pus.style().set_property("display", "none").unwrap();
+        cloned_pup.style().set_property("display", "flex").unwrap();
     });
 
 
@@ -111,13 +111,13 @@ pub fn start() -> Result<(), JsValue> {
 							render::EndGame::Draw => cloned_winner.set_inner_html("Draw"),
 							render::EndGame::Undecided => cloned_winner.set_inner_html("Undecided"),
 						}
-                        cloned_pu.style().set_property("display", "flex");
+                        cloned_pu.style().set_property("display", "flex").unwrap();
                     	cloned_fs.set_inner_html(score_str.as_str());
-                        cloned_cs.style().set_property("display", "none");
+                        cloned_cs.style().set_property("display", "none").unwrap();
 						let _ = &context.clear_color(0.0, 0.0, 0.0, 1.0);
     					let _ = &context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
 					} else {
-                        cloned_cs.style().set_property("display", "flex");
+                        cloned_cs.style().set_property("display", "flex").unwrap();
                     	cloned_cs.set_inner_html(score_str.as_str());
 	                	render::render(game_state, &context, &vertex_shader, &fragment_shader).expect("Rendering failed");
 					}
@@ -146,7 +146,7 @@ pub fn start() -> Result<(), JsValue> {
     let cloned_pb = play_button.clone();
     let cloned_pu = pop_up_play.clone();
     let onclick_play = Closure::<dyn FnMut(_)>::new(move |_event: MouseEvent| {
-        cloned_pu.style().set_property("display", "none");
+        cloned_pu.style().set_property("display", "none").unwrap();
         if &cloned_pb.name() == "player" {
             match cloned_ws.send_with_str(("MULTI".to_owned() + &serde_json::to_string(&cloned_data).unwrap()).as_str()) {
                 Ok(_) => console_log!("messages sent"),
@@ -205,7 +205,7 @@ pub fn start() -> Result<(), JsValue> {
                     game_id,
                     movement: "UP".to_string()
                 };
-                match cloned_ws.send_with_str(("MOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
+                match cloned_ws.send_with_str(("SMOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
                     Ok(_) => console_log!("up sent"),
                     Err(err) => console_log!("up failed: {:?}", err)
                 }
@@ -217,7 +217,7 @@ pub fn start() -> Result<(), JsValue> {
                     game_id,
                     movement: "DOWN".to_string()
                 };
-                match cloned_ws.send_with_str(("MOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
+                match cloned_ws.send_with_str(("SMOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
                     Ok(_) => console_log!("down sent"),
                     Err(err) => console_log!("down failed: {:?}", err)
                 }
