@@ -214,7 +214,7 @@ pub fn start() -> Result<(), JsValue> {
                     game_id,
                     movement: "UP".to_string()
                 };
-                match cloned_ws.send_with_str(("SMOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
+                match cloned_ws.send_with_str(("MOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
                     Ok(_) => console_log!("up sent"),
                     Err(err) => console_log!("up failed: {:?}", err)
                 }
@@ -226,7 +226,7 @@ pub fn start() -> Result<(), JsValue> {
                     game_id,
                     movement: "DOWN".to_string()
                 };
-                match cloned_ws.send_with_str(("SMOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
+                match cloned_ws.send_with_str(("MOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
                     Ok(_) => console_log!("down sent"),
                     Err(err) => console_log!("down failed: {:?}", err)
                 }
