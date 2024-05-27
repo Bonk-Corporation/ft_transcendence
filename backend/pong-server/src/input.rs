@@ -73,7 +73,6 @@ impl Entity {
             velocity    : Vec2::new(0.0, 0.0)
         }
     }
-
     
     pub fn with_velocity(width: f32, height: f32, position: Vec2, velocity: Vec2) -> Entity {
         Entity {width, height, position, velocity}
