@@ -11,10 +11,10 @@ use serde::{
     Deserialize,
 };
 
-const SCREEN_CENTER_X: f32 = 320.; 
-const SCREEN_CENTER_Y: f32 = 240.;
-const SCREEN_WIDTH: f32 = 640.;
-const SCREEN_HEIGHT: f32 = 480. / 2.;
+const SCREEN_WIDTH: f32 = 1920.;
+const SCREEN_HEIGHT: f32 = 1440.;
+const SCREEN_CENTER_X: f32 = SCREEN_WIDTH / 2.;
+const SCREEN_CENTER_Y: f32 = SCREEN_HEIGHT / 2.;
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct Entity {
@@ -55,7 +55,7 @@ pub fn render(
     let x1 = (x1 - SCREEN_CENTER_X) / SCREEN_CENTER_X + 0.05;
     let y1 = (y1 - SCREEN_CENTER_Y) / SCREEN_CENTER_Y;
     let width = game_state.player1_ent.width / SCREEN_WIDTH;
-    let height = game_state.player1_ent.height / SCREEN_HEIGHT;
+    let height = game_state.player1_ent.height / SCREEN_HEIGHT * 2.;
     let player1_vertices: [f32; 12] = [
 		x1, y1, 0.0,
 		x1 + width, y1, 0.0,

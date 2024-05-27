@@ -1,6 +1,6 @@
 mod input;
 
-use std::sync::Arc;
+use std::{sync::Arc, time::SystemTime};
 use futures::{sink::SinkExt, stream::StreamExt};
 use axum::{
     extract::{WebSocketUpgrade, ws::{Message, WebSocket}, State},
@@ -8,19 +8,13 @@ use axum::{
     Router,
     routing::get,
 };
-use input::{
-    Client, Game, GameState, Move, OnConnectClient, EndGame
-};
+use input::*;
 use tokio::sync::RwLock;
-use futures::lock::Mutex;
-
-const AI_ID: &str = "ROBOCOP"; 
 
 #[derive(Debug)]
 struct Clients {
     poll: Vec<Client>,
     games: Vec<Game>,
-    bot_games: Vec<Client>,
 }
 
 impl Clients {
@@ -88,40 +82,34 @@ impl Clients {
         }
     }
 
-    async fn start_solo(&mut self, client_id: String) -> Result<String, String> {
-        let mut game_id = None;
+    async fn start_solo_game(&mut self, client_id: String) -> String {
+        println!("Solo game start");
+        let game_id = uuid::Uuid::new_v4().to_string();
         for client in self.poll.as_mut_slice() {
-            match client.id.as_str() {
-                num if num == client_id => {
-                    if let Some(_) = client.id_game {
-                        return Err("Client already in game".to_string());
+            if client.id.as_str() == client_id {
+                client.id_game = Some(game_id.clone());
+                let mut game = Game::new(client.clone(), game_id.clone());
+                let bot = Client {
+                    id: uuid::Uuid::new_v4().to_string(),
+                    name: "Bot".to_string(),
+                    id_game: Some(game_id.to_string()),
+                };
+                game.add_player(bot.clone());
+                self.games.push(game.clone());
+                tokio::spawn(async move {
+                    let winner = game.start().await;
+                    match winner {
+                        EndGame::Player1 => println!("Player won"),
+                        EndGame::Player2 => println!("Bot won"),
+                        EndGame::Draw => println!("Draw"),
+                        EndGame::Undecided => println!("Undecided"),
                     }
-                    game_id = Some(uuid::Uuid::new_v4().to_string());
-                    let new_ai_game = Client {
-                        id: AI_ID.to_string(),
-                        name: "AI".to_string(),
-                        id_game: game_id.clone(),
-                    };
-                    let mut new_solo = Game::new_solo(client.clone(), new_ai_game.clone(), game_id.as_ref().unwrap().clone());
-                    self.games.push(new_solo.clone());
-                    self.bot_games.push(new_ai_game);
-                    tokio::spawn(async move {
-                        let winner = new_solo.start().await;
-                        match winner {
-                            EndGame::Player1 => println!("Player 1 won"),
-                            EndGame::Player2 => println!("Player 2 won"),
-                            EndGame::Draw => println!("Draw"),
-                            EndGame::Undecided => println!("Undecided"),
-                        }
-                    });
-                    client.id_game = Some(game_id.as_ref().unwrap().clone());
-                },
-                _ => (),
+                });
             }
         }
-        Ok(game_id.unwrap())
+        game_id
     }
-
+    
     async fn receive_move(&self, movement: Move) -> Result<(), Box<dyn std::error::Error>> {
         for game in self.games.as_slice() {
             if movement.game_id == game.id {
@@ -143,7 +131,7 @@ impl Clients {
                 match (game.player1.clone(), game.player2.clone()) {
                     (_, None) | (None, _) => return Err("Error: Missing at least a player".into()),
                     (Some(_player1), Some(_player2)) => {
-                        game.tx.send("SMOVE".to_owned() + &serde_json::to_string_pretty(&movement).unwrap())
+                        game.tx.send("MOVE".to_owned() + &serde_json::to_string_pretty(&movement).unwrap())
                     },
                 }?;
                 break;
@@ -160,18 +148,125 @@ impl Clients {
         }
         Err("No game found".to_string())
     }
+}
 
-    fn get_game_states(&self) -> Vec<Arc<Mutex<GameState>>> {
-        let mut game_states = vec![];
-        for game in self.games.as_slice() {
-            if let Some(ai) = &game.player2 {
-                if &ai.name == AI_ID {
-                    game_states.push(Arc::clone(&game.game_state));
+#[derive(Debug)]
+struct BotGame {
+    pub player          : Entity,
+    pub bot             : Entity,
+    pub ball            : Entity,
+    pub last_move       : Movement,
+    pub move_time       : SystemTime,
+    pub update_time     : SystemTime,
+    pub pause_counter   : u8,
+    pub inaccuracy      : f32,
+}
+
+impl BotGame {
+    fn new() -> Self {
+        BotGame {
+            player          : Entity::default(),
+            bot             : Entity::default(),
+            ball            : Entity::default(),
+            last_move       : Movement::Static,
+            move_time       : SystemTime::now(),
+            update_time     : SystemTime::UNIX_EPOCH,
+            pause_counter   : 0,
+            inaccuracy      : 0.0,
+        }
+    }
+
+    async fn bot_turn(&mut self, game: Game) {
+        if 1000 < self.update_time.elapsed().unwrap().as_millis() {
+            self.player         = game.state.lock().await.player1_ent.clone();
+            self.bot            = game.state.lock().await.player2_ent.clone();
+            self.ball           = game.state.lock().await.ball_ent.clone();
+            self.update_time    = SystemTime::now();
+        } else {
+            let mut time_elapsed = self.move_time.elapsed().unwrap().as_millis();
+
+            while 8 < time_elapsed {
+                if self.last_move == Movement::Up && !hit_top(&self.bot) {
+                    self.bot.position.y += PLAYER_SPEED;
+                } else if self.last_move == Movement::Down && !hit_bot(&self.bot) {
+                    self.bot.position.y -= PLAYER_SPEED;
                 }
+                time_elapsed -= 8;
+            }
+            self.ball.position += self.ball.velocity * 2.0;
+            if hit_bounds(&self.ball) {
+                self.ball.velocity.y = -self.ball.velocity.y;
             }
         }
+        self.inaccuracy += rand::random::<f32>() * 2.0 - 1.0;
 
-        game_states
+        let mut ball_touch = (self.bot.position.x - self.ball.position.x - self.ball.width) / self.ball.velocity.x * self.ball.velocity.y + self.ball.position.y;
+        let rebound_count = (ball_touch / WINDOW_HEIGHT).ceil();
+
+        if rebound_count as i32 % 2 == 0 {
+            ball_touch = WINDOW_HEIGHT - ball_touch;
+        }
+        ball_touch = ball_touch.rem_euclid(WINDOW_HEIGHT);
+        ball_touch += self.inaccuracy * (rebound_count + 1.0) * BOT_INACCURACY;
+
+        if self.ball.velocity.x < 0.0 {
+            if 0.0 < self.ball.position.x {
+                self.bot_move(None, game).await;
+            } else {
+                self.bot_move(Some(WINDOW_HEIGHT / 2.0), game).await;
+            }
+        } else {
+            self.bot_move(Some(ball_touch), game).await;
+        }
+    }
+
+    async fn    bot_move(&mut self, y_target: Option<f32>, game: Game)
+    {
+        let mut ai_move = Move {
+            id          : game.player2.unwrap().id.clone(),
+            game_id     : game.id.clone(),
+            movement    : String::new()
+        };
+
+        let target_diff =   if let Some(y_target) = y_target {
+                                y_target - self.bot.position.y - self.bot.height / 2.0
+                            } else {
+                                0.0
+                            };
+
+        if self.pause_counter == 0 && target_diff < -BOT_MARGIN && self.last_move != Movement::Down
+        {
+            if self.last_move == Movement::Static {
+                ai_move.movement = String::from("DOWN");
+                game.tx.send("MOVE ".to_owned() + &serde_json::to_string_pretty(&ai_move).unwrap()).unwrap();
+                self.last_move = Movement::Down;
+            } else {
+                self.pause_counter = 1;
+            }
+        }
+        if self.pause_counter == 0 && BOT_MARGIN < target_diff && self.last_move != Movement::Up
+        {
+            if self.last_move == Movement::Static {
+                ai_move.movement = String::from("UP");
+                game.tx.send("MOVE ".to_owned() + &serde_json::to_string_pretty(&ai_move).unwrap()).unwrap();
+                self.last_move = Movement::Up;
+            } else {
+                self.pause_counter = 1;
+            }
+        }
+        if 0 < self.pause_counter || (target_diff.abs() <= BOT_MARGIN && self.last_move != Movement::Static)
+        {
+            if self.pause_counter == BOT_PAUSE {
+                self.pause_counter = 0;
+            }
+            ai_move.movement = self.last_move.to_string();
+            game.tx.send("MOVE".to_owned() + &serde_json::to_string_pretty(&ai_move).unwrap()).unwrap();
+            self.last_move = Movement::Static;
+            if 0 < self.pause_counter {
+               self.pause_counter += 1;
+            }
+        }
+        self.move_time = SystemTime::now();
     }
 }
 
@@ -211,7 +306,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                             println!("move succeeded");
                         }
                     },
-                    "SMOVE" => {
+                    "MOVE" => {
                         let movement: Move = serde_json::from_str(&text[5..]).unwrap();
                         if let Ok(_) = state.read().await.stop_move(movement).await {
                             println!("stop move succeeded");
@@ -222,7 +317,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                         let client = Client {
                             id: on_connect.id,
                             name: "Player".to_string(),
-                            id_game: None,
+                            id_game: None
                         };
                         let game_id: Option<String> = match state.write().await.start_game(client.id).await {
                             Ok(game_id) => {
@@ -247,20 +342,16 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                     break;
                                 }
                                 tokio::time::sleep(tokio::time::Duration::from_millis(33)).await;
-                                let game_state = if let Ok(game) = cl_state.read().await.get_game(game_id.clone().unwrap()).await {
-                                    game.game_state
-                                } else {
-                                    break;
-                                };
-                                if game_state.lock().await.ball_ent.velocity.x != 0. {
-                                    game_state.lock().await.update_ball();
-                                    game_state.lock().await.update_score();
-                                    match ptr_ws.write().await.send(Message::Text("UPDATE".to_owned() + &serde_json::to_string(&(*game_state.lock().await)).unwrap())).await {
+                                let game = cl_state.read().await.get_game(game_id.clone().unwrap()).await.unwrap();
+                                if game.state.lock().await.ball_ent.velocity.x != 0. {
+                                    game.state.lock().await.update_ball();
+                                    game.state.lock().await.update_score();
+                                    match ptr_ws.write().await.send(Message::Text("UPDATE".to_owned() + &serde_json::to_string(&(*game.state.lock().await)).unwrap())).await {
                                         Ok(_) => (),
                                         Err(_) => return,
                                     };
                                 }
-                                if game_state.lock().await.finished {
+                                if game.state.lock().await.finished {
                                     let player1_id = if let Ok(game) = cl_state.read().await.get_game(game_id.clone().unwrap()).await {
                                         game.player1.unwrap().id
                                     } else {
@@ -289,62 +380,63 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                             }
                         }));
                     },
-                    "SOLO" => {
+                    "SOLO " => {
                         let on_connect: OnConnectClient = serde_json::from_str(&text[5..]).unwrap();
                         let client = Client {
                             id: on_connect.id,
                             name: "Player".to_string(),
                             id_game: None,
                         };
-                        let game_id: Option<String> = match state.write().await.start_solo(client.id).await {
-                            Ok(game_id) => {
-                                sender.write().await.send(Message::Text("GAMEID".to_owned() + &game_id))
-                                            .await
-                                            .unwrap();
-                                Some(game_id)
-                            },
-                            Err(err) => {
-                                println!("{}", err);
-                                None
-                            },
-                        };
+                        let game_id = state.write().await.start_solo_game(client.id).await;
+                        sender.write().await.send(Message::Text("GAMEID".to_owned() + &game_id)).await.unwrap();
                         let cl_state = Arc::clone(&state);
                         let ptr_ws = Arc::clone(&sender);
                         join_handler.push(tokio::spawn(async move {
-                            if game_id == None {
-                                return;
-                            }
-                            loop {
+                            let mut botgame = BotGame::new();
+
+                            loop  {
+                                if let Err(_) = cl_state.read().await.get_game(game_id.clone()).await {
+                                    break;
+                                }
                                 tokio::time::sleep(tokio::time::Duration::from_millis(33)).await;
-                                let game_state = cl_state.read().await.get_game(game_id.clone().unwrap()).await.unwrap().game_state;
-                                if game_state.lock().await.ball_ent.velocity.x != 0. {
-                                    game_state.lock().await.update_ball();
-                                    game_state.lock().await.update_score();
-                                    match ptr_ws.write().await.send(Message::Text("UPDATE".to_owned() + &serde_json::to_string(&(*game_state.lock().await)).unwrap())).await {
+                                let game = cl_state.read().await.get_game(game_id.clone()).await.unwrap();
+                                if game.state.lock().await.ball_ent.velocity.x != 0. {
+                                    game.state.lock().await.update_ball();
+                                    game.state.lock().await.update_score();
+                                    match ptr_ws.write().await.send(Message::Text("UPDATE".to_owned() + &serde_json::to_string(&(*game.state.lock().await)).unwrap())).await {
                                         Ok(_) => (),
                                         Err(_) => return,
                                     };
                                 }
-                            }
-                        }));
-                    }
-                    "OURAI" => {
-                        let cl_state = Arc::clone(&state);
-                        let ptr_ws = Arc::clone(&sender);
-                        join_handler.push(tokio::spawn(async move {
-                            loop {
-                                tokio::time::sleep(tokio::time::Duration::from_millis(33)).await;
-                                let game_states = cl_state.read().await.get_game_states();
-                                for game_state in game_states {
-                                    if game_state.lock().await.ball_ent.velocity.x != 0. {
-                                        game_state.lock().await.update_ball();
-                                        game_state.lock().await.update_score();
-                                        match ptr_ws.write().await.send(Message::Text("UPDATE".to_owned() + &serde_json::to_string(&(*game_state.lock().await)).unwrap())).await {
-                                            Ok(_) => (),
-                                            Err(_) => return,
-                                        };
+
+                                if game.state.lock().await.finished {
+                                    let player1_id = if let Ok(game) = cl_state.read().await.get_game(game_id.clone()).await {
+                                        game.player1.unwrap().id
+                                    } else {
+                                        return;
+                                    };
+                                    let player2_id = if let Ok(game) = cl_state.read().await.get_game(game_id.clone()).await {
+                                        game.player2.unwrap().id
+                                    } else {
+                                        return;
+                                    };
+                                    let mut count = 0;
+                                    for client in cl_state.write().await.poll.as_mut_slice() {
+                                        if client.id == player1_id {
+                                            client.id_game = None;
+                                            count += 1;
+                                        } else if client.id == player2_id {
+                                            client.id_game = None;
+                                        }
+                                        if count >= 2 {
+                                            break;
+                                        }
                                     }
+                                    println!("quitting thread");
+                                    return;
                                 }
+
+                                botgame.bot_turn(game).await;
                             }
                         }));
                     }
@@ -390,7 +482,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                     }
                                 }
                             }
-                            game.game_state.lock().await.finished = true;
+                            game.state.lock().await.finished = true;
                             let _ = game.tx.send("finish_him".to_owned());
                         }
                     }
@@ -415,7 +507,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
 #[tokio::main]
 async fn main() {
 
-    let clients_poll = Arc::new(RwLock::new(Clients {poll: vec![], games: vec![], bot_games: vec![]}));
+    let clients_poll = Arc::new(RwLock::new(Clients {poll: vec![], games: vec![]}));
 
     let app = Router::new()
         .route("/", get(websocket_handler))
