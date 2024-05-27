@@ -122,19 +122,19 @@ def set_new_profile(request, *args, **kwargs):
                 status=400,
             )
         return JsonResponse({"success": True})
-    except BaseException as e:
-        return JsonResponse(
-            {
-                "error": "invalid syntax",
-            },
-            status=400,
-        )
     except ValidationError as e:
         return JsonResponse(
             {
                 "error": e.messages[0],
             },
             status=403,
+        )
+    except BaseException as e:
+        return JsonResponse(
+            {
+                "error": "Fatal error",
+            },
+            status=400,
         )
 
 
