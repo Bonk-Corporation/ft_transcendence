@@ -18,7 +18,6 @@ export function FriendCard({fetchProfile, profile, request = false}) {
   const time = new Date();
   const isOnline = time.getTime() - new Date(profile.last_online).getTime() < 60000;
 
-  console.log(profile)
   return (
     <>
     {deleted ? null :
