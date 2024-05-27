@@ -6,7 +6,8 @@ import { language } from '../../scripts/languages';
 import init, { start } from 'pong-client';
 
 export function Pong({ profile, lang }) {
-	const [popUp, setPopUp] = useState(true);
+	const [popUpPlay, setPopUpPlay] = useState(true);
+	const [popUpScore, setPopUpScore] = useState(true);
 	const [mode, setMode] = useState("bot");
 
 	/*
@@ -18,7 +19,7 @@ export function Pong({ profile, lang }) {
   return (
 		<>
 		{
-			popUp ? 
+			popUpPlay ? 
 			<Card id="popup" className="absolute z-50 p-4 px-16 flex flex-col items-center">
 				<h1 className="font-semibold text-4xl mb-4">PONG</h1>
 				<p className="mb-2">{language.play_against[lang]}</p>
@@ -27,6 +28,15 @@ export function Pong({ profile, lang }) {
 					<div onClick={() => setMode("player")} className={`${mode == "player" ? "bg-white text-black font-semibold" : ""} ml-2 rounded px-4 py-2 border-2 border-white transition-all cursor-pointer`}>{language.player[lang]}</div>
 				</div>
 				<CTA id="play-button" name={mode}>{language.play[lang]}!</CTA>
+			</Card> : null
+		}
+		{
+			popUpScore ? 
+			<Card id="popup" className="absolute z-50 p-4 px-8 hidden flex-col items-center">
+				<h1 className="font-semibold text-4xl">BOLVIC WIN</h1>
+				<hr className="w-4/5 my-2" />
+				<p className="mb-2 font-semibold text-2xl">4 - 1</p>
+				<CTA id="play-button" name={mode}>Play again</CTA>
 			</Card> : null
 		}
 			<canvas id="canvas" width="1920px" height="1440px" className="h-screen object-scale-down flex items-center justify-center">
