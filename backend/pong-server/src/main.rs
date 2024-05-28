@@ -131,7 +131,7 @@ impl Clients {
                 match (game.player1.clone(), game.player2.clone()) {
                     (_, None) | (None, _) => return Err("Error: Missing at least a player".into()),
                     (Some(_player1), Some(_player2)) => {
-                        game.tx.send("SMOVE".to_owned() + &serde_json::to_string_pretty(&movement).unwrap())
+                        game.tx.send("MOVE".to_owned() + &serde_json::to_string_pretty(&movement).unwrap())
                     },
                 }?;
                 break;
@@ -261,7 +261,7 @@ impl BotGame {
                 self.pause_counter = 0;
             }
             ai_move.movement = self.last_move.to_string();
-            game.tx.send("SMOVE".to_owned() + &serde_json::to_string_pretty(&ai_move).unwrap()).unwrap();
+            game.tx.send("MOVE".to_owned() + &serde_json::to_string_pretty(&ai_move).unwrap()).unwrap();
             self.last_move = Movement::Static;
             if 0 < self.pause_counter {
                self.pause_counter += 1;
@@ -307,7 +307,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                             println!("move succeeded");
                         }
                     },
-                    "SMOVE" => {
+                    "MOVE" => {
                         let movement: Move = serde_json::from_str(&text[5..]).unwrap();
                         if let Ok(_) = state.read().await.stop_move(movement).await {
                             println!("stop move succeeded");
