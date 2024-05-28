@@ -17,10 +17,12 @@ import { Pong } from './pages/Games/Pong';
 import { Bonk } from './pages/Games/Bonk';
 import { useEffect, useState } from 'preact/hooks';
 import { LegalNotice } from './pages/LegalNotice/LegalNotice';
+import { language } from './scripts/languages';
 
 export function App() {
 	const [profile, setProfile] = useState(null);
 	const [triedLog, setTriedLog] = useState(false);
+	const [language, setLanguage] = useState('en');
 
 	function fetchProfile() {
 		fetch("/api/me").then(res => res.json().then(data => {
@@ -58,7 +60,7 @@ export function App() {
 	return (
 		<div id="ambient" className="w-screen h-full min-h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center overflow-hidden">
 			<LocationProvider>
-				<Navbar profile={profile} triedLog={triedLog} />
+				<Navbar language={language} setLanguage={setLanguage} profile={profile} triedLog={triedLog} />
 				<main className="w-screen h-full z-50 flex-1 flex flex-col justify-center items-center px-10">
 					<Router>
 						<Route path="/" component={() => <Login setTriedLog={setTriedLog} />} />
