@@ -50,14 +50,18 @@ export function Navbar(props) {
 				
 				{logged ? <LogCard lang={props.lang} user={props.profile}/> : null}
 			</header>
-			<p className={`${AUTHORIZED_LOCATIONS.includes(location.url) ? "" : "hidden"} flex absolute bottom-2 text-sm z-50`}>
-				<a href="/legal-notice" className="hover:underline cursor-pointer mx-1">
-					{language.legal_notice[props.lang]}
-				</a>
-				· PonkCorp 2024 |
-				<div onClick={() => props.setLang('br')} className={`ml-2 ${props.lang == 'br' ? "border-2" : "" } w-5 h-5 rounded-full bg-[url(https://upload.wikimedia.org/wikipedia/commons/c/c8/Gwenn_ha_Du_%2811_mouchetures%29.svg)] bg-center bg-cover`}></div>
-				<div onClick={() => props.setLang('fr')} className={`ml-2 ${props.lang == 'fr' ? "border-2" : "" } w-5 h-5 rounded-full bg-[url(https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/255px-Flag_of_France.svg.png)] bg-center bg-cover`}></div>
-				<div onClick={() => props.setLang('en')} className={`ml-2 ${props.lang == 'en' ? "border-2" : "" } w-5 h-5 rounded-full bg-[url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/1200px-Flag_of_the_United_Kingdom_%283-5%29.svg.png)] bg-center bg-cover`}></div>
+			<p className={`${AUTHORIZED_LOCATIONS.includes(location.url) || LOG_LOCATIONS.includes(location.url) ? "" : "hidden"} flex absolute bottom-2 text-sm z-50`}>
+				{AUTHORIZED_LOCATIONS.includes(location.url) ?
+				<>
+					<a href="/legal-notice" className="hover:underline cursor-pointer mx-1">
+						{language.legal_notice[props.lang]}
+					</a>
+					· PonkCorp 2024 |
+				</> : null
+				}
+				<div onClick={() => props.setLang('br')} className={`ml-2 ${props.lang == 'br' ? "border-2" : "" } w-5 h-5 rounded-full cursor-pointer bg-[url(https://upload.wikimedia.org/wikipedia/commons/c/c8/Gwenn_ha_Du_%2811_mouchetures%29.svg)] bg-center bg-cover`}></div>
+				<div onClick={() => props.setLang('en')} className={`ml-2 ${props.lang == 'en' ? "border-2" : "" } w-5 h-5 rounded-full cursor-pointer bg-[url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/1200px-Flag_of_the_United_Kingdom_%283-5%29.svg.png)] bg-center bg-cover`}></div>
+				<div onClick={() => props.setLang('fr')} className={`ml-2 ${props.lang == 'fr' ? "border-2" : "" } w-5 h-5 rounded-full cursor-pointer bg-[url(https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/255px-Flag_of_France.svg.png)] bg-center bg-cover`}></div>
 			</p>
 		</>
 	);
