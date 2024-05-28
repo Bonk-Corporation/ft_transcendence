@@ -183,9 +183,9 @@ impl BotGame {
             self.ball           = game.state.lock().await.ball_ent.clone();
             self.update_time    = SystemTime::now();
         } else {
-            let mut time_elapsed = self.move_time.elapsed().unwrap().as_millis();
+            let mut time_elapsed = self.move_time.elapsed().unwrap().as_millis() as u64;
 
-            while 8 < time_elapsed {
+            while PLAYER_MOVE_TIME < time_elapsed {
                 if self.last_move == Movement::Up && !hit_top(&self.bot) {
                     self.bot.position.y += PLAYER_SPEED;
                 } else if self.last_move == Movement::Down && !hit_bot(&self.bot) {
@@ -348,7 +348,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                 println!("error");
                             }
                             loop  {
-                                tokio::time::sleep(tokio::time::Duration::from_millis(16)).await;
+                                tokio::time::sleep(tokio::time::Duration::from_millis(1000 / FPS)).await;
                                 let game = cl_state.read().await.get_game(game_id.clone().unwrap()).await.unwrap();
                                 if game.state.lock().await.ball_ent.velocity.x != 0. {
                                     game.state.lock().await.update_ball();
@@ -405,7 +405,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                 if let Err(_) = cl_state.read().await.get_game(game_id.clone()).await {
                                     break;
                                 }
-                                tokio::time::sleep(tokio::time::Duration::from_millis(33)).await;
+                                tokio::time::sleep(tokio::time::Duration::from_millis(1000 / FPS)).await;
                                 let game = cl_state.read().await.get_game(game_id.clone()).await.unwrap();
                                 if game.state.lock().await.ball_ent.velocity.x != 0. {
                                     game.state.lock().await.update_ball();
