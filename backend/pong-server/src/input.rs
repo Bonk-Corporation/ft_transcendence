@@ -312,12 +312,12 @@ impl Game {
         }));
         while let Ok(msg) = rx.recv().await {
             let movement: Result<Move, serde_json::Error> = serde_json::from_str(&msg[5..]);
-            let move = "MOVE" == &msg[0..5];
+            let r#move = "SMOVE" == &msg[0..5];
             if let Ok(movement) = movement {
                 match (self.player1.clone(), self.player2.clone()) {
                     (_, None) | (None, _) => break, //a player has left the game
                     (Some(player1), Some(player2)) => {
-                        match move {
+                        match r#move {
                             true => if movement.id == player1.id {
                                 *p1_moves.lock().await = Movement::Static;
                             } else {

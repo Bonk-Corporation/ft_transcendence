@@ -1,6 +1,5 @@
 {
 	"*.js": "prettier --write",
 	"*.py": "black",
-	"*": "codespell -i 3 -w",
 	"*.gd": "gdformat"
 }
