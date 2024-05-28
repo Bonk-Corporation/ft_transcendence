@@ -7,12 +7,14 @@ use glam::Vec2;
 use std::sync::Arc;
 use futures::lock::Mutex;
 
+pub const FPS               : u64   = 60;
 pub const WINDOW_WIDTH      : f32   = 1920.;
 pub const WINDOW_HEIGHT     : f32   = 1440.;
 
 pub const PLAYER_WIDTH      : f32   = WINDOW_WIDTH * 0.04;
 pub const PLAYER_HEIGHT     : f32   = WINDOW_HEIGHT * 0.3;
 pub const PLAYER_MARGIN     : f32   = PLAYER_WIDTH;
+pub const PLAYER_MOVE_TIME  : u64   = 8;
 
 pub const BALL_WIDTH        : f32   = PLAYER_WIDTH;
 pub const BALL_HEIGHT       : f32   = BALL_WIDTH;
@@ -27,7 +29,7 @@ pub const MAX_BALL_SPEED    : f32   = BALL_SPEED * 2.;
 pub const MAX_SCORE         : u8    = 5;
 
 pub const BOT_MARGIN        : f32   = PLAYER_WIDTH;
-pub const BOT_INACCURACY    : f32   = 4.0;
+pub const BOT_INACCURACY    : f32   = 2.0;
 pub const BOT_PAUSE         : u8    = 2;
 
 #[derive(Clone, Debug)]
@@ -289,7 +291,7 @@ impl Game {
         let cl_state = self.state.clone();
         player_moves.push(tokio::spawn(async move {
             while *game_on_cl.lock().await {
-                tokio::time::sleep(tokio::time::Duration::from_millis(8)).await;
+                tokio::time::sleep(tokio::time::Duration::from_millis(PLAYER_MOVE_TIME)).await;
                 match  *p1_moves_cl.lock().await {
                     Movement::Static  => (),
                     Movement::Up => cl_state.lock().await.update_player(1, "UP".to_owned()),
@@ -302,7 +304,7 @@ impl Game {
         let cl_state = self.state.clone();
         player_moves.push(tokio::spawn(async move {
             while *game_on_cl.lock().await {
-                tokio::time::sleep(tokio::time::Duration::from_millis(8)).await;
+                tokio::time::sleep(tokio::time::Duration::from_millis(PLAYER_MOVE_TIME)).await;
                 match  *p2_moves_cl.lock().await {
                     Movement::Static  => (),
                     Movement::Up => cl_state.lock().await.update_player(2, "UP".to_owned()),
