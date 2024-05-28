@@ -20,7 +20,7 @@ pub const BALL_HEIGHT       : f32   = BALL_WIDTH;
 pub const PLAYER_SPEED      : f32   = WINDOW_HEIGHT / 100.;
 pub const PLAYER_SPIN       : f32   = WINDOW_HEIGHT / 100.;
 
-pub const BALL_SPEED        : f32   = WINDOW_WIDTH / 100.;
+pub const BALL_SPEED        : f32   = WINDOW_WIDTH / 200.;
 pub const BALL_ACCELERTION  : f32   = BALL_SPEED / 32.;
 pub const MAX_BALL_SPEED    : f32   = BALL_SPEED * 2.;
 
@@ -312,12 +312,12 @@ impl Game {
         }));
         while let Ok(msg) = rx.recv().await {
             let movement: Result<Move, serde_json::Error> = serde_json::from_str(&msg[5..]);
-            let smove = "SMOVE" == &msg[0..5];
+            let move = "MOVE" == &msg[0..5];
             if let Ok(movement) = movement {
                 match (self.player1.clone(), self.player2.clone()) {
                     (_, None) | (None, _) => break, //a player has left the game
                     (Some(player1), Some(player2)) => {
-                        match smove {
+                        match move {
                             true => if movement.id == player1.id {
                                 *p1_moves.lock().await = Movement::Static;
                             } else {
