@@ -1,4 +1,5 @@
 import React from 'react';
+import { language } from '../../scripts/languages';
 
 
 export function LogCard(props) {
@@ -7,7 +8,7 @@ export function LogCard(props) {
         <div className={`h-12 aspect-square mr-4 rounded-full border-2 border-white bg-[url(${props.user ? props.user.avatar : null})] bg-center bg-cover`}></div>
         <div>
           <h1 className="group-hover:text-black transition-all">{props.user ? props.user.name : null}</h1>
-          <h1 className="group-hover:text-black font-medium text-sm transition-all">{props.user ? `Level ${props.user.level}` : null}</h1>
+          <h1 className="group-hover:text-black font-medium text-sm transition-all">{props.user ? `${language.level[props.lang]} ${props.user.level}` : null}</h1>
         </div>
       </a>
   );

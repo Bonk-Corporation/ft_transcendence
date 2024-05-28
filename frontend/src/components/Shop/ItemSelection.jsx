@@ -3,6 +3,7 @@ import { BallPresentation } from './BallPresentation';
 import { Price } from './Price';
 import { Input } from '../utils/Input';
 import { CTA } from '../utils/CTA';
+import { language } from '../../scripts/languages';
 
 
 export function ItemSelection(props) {
@@ -31,7 +32,7 @@ export function ItemSelection(props) {
           target="_blank" className="mt-4 flex flex-col justify-center items-center">
           {
             props.possessed ?
-            <CTA className='w-72 h-11 font-normal' black={props.selected}>{props.selected ? "Deselect" : "Select"}</CTA> :
+            <CTA className='w-72 h-11 font-normal' black={props.selected}>{props.selected ? language.deselect[props.lang] : language.select[props.lang]}</CTA> :
             // @ts-ignore
             <stripe-buy-button
               buy-button-id="buy_btn_1PIBt8KG666poqhFwKbTAzAp"

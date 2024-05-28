@@ -1,7 +1,7 @@
 import {ShopItem} from '../../components/Shop/ShopItem';
 import { useEffect, useState } from 'preact/hooks';
 
-export function Shop({ profile, fetchProfile }) {
+export function Shop({ lang, profile, fetchProfile }) {
   const [page, setPage] = useState(0);
   const [items, setItems] = useState(null);
 
@@ -22,7 +22,7 @@ export function Shop({ profile, fetchProfile }) {
     <div className={`flex flex-col items-center transition-all duration-300 ${items ? 'opacity-100' : 'opacity-0'}`}>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 my-4">
         {items ? items.slice(page * factor, (page + 1) * factor).map((item, idx) => (
-          <ShopItem item={item}
+          <ShopItem item={item} lang={lang}
                     possessed={profile ? profile.skins.includes(item.name) : false}
                     selected={profile ? profile.selectedSkin == item.name : false}
                     profile={profile} fetchProfile={fetchProfile}
