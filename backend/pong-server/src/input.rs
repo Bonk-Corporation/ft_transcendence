@@ -29,7 +29,7 @@ pub const MAX_BALL_SPEED    : f32   = BALL_SPEED * 2.;
 pub const MAX_SCORE         : u8    = 5;
 
 pub const BOT_MARGIN        : f32   = PLAYER_WIDTH;
-pub const BOT_INACCURACY    : f32   = 2.0;
+pub const BOT_DELAY         : f32   = 2000.0;
 pub const BOT_PAUSE         : u8    = 2;
 
 #[derive(Clone, Debug)]

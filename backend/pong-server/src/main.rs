@@ -159,7 +159,7 @@ struct BotGame {
     pub move_time       : SystemTime,
     pub update_time     : SystemTime,
     pub pause_counter   : u8,
-    pub inaccuracy      : f32,
+    pub delay           : f32,
 }
 
 impl BotGame {
@@ -172,33 +172,33 @@ impl BotGame {
             move_time       : SystemTime::now(),
             update_time     : SystemTime::UNIX_EPOCH,
             pause_counter   : 0,
-            inaccuracy      : 0.0,
+            delay           : 0.0,
         }
     }
 
     async fn bot_turn(&mut self, game: Game) {
+        let time_elapsed = self.move_time.elapsed().unwrap().as_millis() as u64;
+
         if 1000 < self.update_time.elapsed().unwrap().as_millis() {
             self.player         = game.state.lock().await.player1_ent.clone();
             self.bot            = game.state.lock().await.player2_ent.clone();
             self.ball           = game.state.lock().await.ball_ent.clone();
             self.update_time    = SystemTime::now();
         } else {
-            let mut time_elapsed = self.move_time.elapsed().unwrap().as_millis() as u64;
-
-            while PLAYER_MOVE_TIME < time_elapsed {
+            let mut time_credit = time_elapsed;
+            while PLAYER_MOVE_TIME <  time_credit{
                 if self.last_move == Movement::Up && !hit_top(&self.bot) {
                     self.bot.position.y += PLAYER_SPEED;
                 } else if self.last_move == Movement::Down && !hit_bot(&self.bot) {
                     self.bot.position.y -= PLAYER_SPEED;
                 }
-                time_elapsed -= 8;
+                time_credit -= PLAYER_MOVE_TIME;
             }
             self.ball.position += self.ball.velocity * 2.0;
             if hit_bounds(&self.ball) {
                 self.ball.velocity.y = -self.ball.velocity.y;
             }
         }
-        self.inaccuracy += rand::random::<f32>() * 2.0 - 1.0;
 
         let mut ball_touch = (self.bot.position.x - self.ball.position.x - self.ball.width) / self.ball.velocity.x * self.ball.velocity.y + self.ball.position.y;
         let rebound_count = (ball_touch / WINDOW_HEIGHT).ceil();
@@ -207,14 +207,15 @@ impl BotGame {
             ball_touch = WINDOW_HEIGHT - ball_touch;
         }
         ball_touch = ball_touch.rem_euclid(WINDOW_HEIGHT);
-        ball_touch += self.inaccuracy * (rebound_count + 1.0) * BOT_INACCURACY;
 
-        if self.ball.velocity.x < 0.0 {
-            if 0.0 < self.ball.position.x {
-                self.bot_move(None, game).await;
-            } else {
-                self.bot_move(Some(WINDOW_HEIGHT / 2.0), game).await;
+        if self.ball.velocity.x < 0.0 && 0.0 < self.ball.position.x {
+            if self.delay <= 0.0 {
+                self.delay = rand::random::<f32>() * BOT_DELAY;
             }
+            self.bot_move(None, game).await;
+        } else if 0.0 < self.delay {
+            self.delay -= time_elapsed as f32;
+            self.bot_move(None, game).await;
         } else {
             self.bot_move(Some(ball_touch), game).await;
         }
