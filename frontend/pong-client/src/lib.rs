@@ -63,6 +63,7 @@ pub fn start() -> Result<(), JsValue> {
     )?;
    
     let winner = document.get_element_by_id("winner").expect("no element winner");
+    let which_side: HtmlElement = document.get_element_by_id("popup-start-play").expect("no element popup-start-play").dyn_into::<HtmlElement>()?;
     let final_score = document.get_element_by_id("final-score").expect("no element final score");
     let current_score = document.get_element_by_id("current-score").expect("no element current score").dyn_into::<HtmlElement>()?;
     let replay: HtmlButtonElement = document.get_element_by_id("replay-button").expect("no element replay-button").dyn_into::<HtmlButtonElement>()?;
@@ -92,6 +93,7 @@ pub fn start() -> Result<(), JsValue> {
     let cloned_winner = winner.clone();
     let cloned_fs = final_score.clone();
     let cloned_cs = current_score.clone();
+    let cloned_cd = client_data.clone();
     let onmessage_callback = Closure::<dyn FnMut(_)>::new(move |event: MessageEvent| {
         if let Ok(txt) = event.data().dyn_into::<js_sys::JsString>() {
             match &txt.as_string().unwrap()[0..6] {
@@ -99,11 +101,18 @@ pub fn start() -> Result<(), JsValue> {
                     *cloned_game_id.lock().unwrap() = txt.as_string().unwrap()[6..].to_string();
 					console_log!("Game Id received");
                 },
+                "PLYONE" => {
+                    let side = if &txt.as_string().unwrap()[6..] == &cloned_cd.id {"Left"} else {"Right"};
+                    which_side.set_inner_text(format!("{} Side", side).as_str());
+                    which_side.style().set_property("display", "flex");
+					console_log!("Player 1 received: {} vs {} = {}",&txt.as_string().unwrap()[6..], &cloned_cd.id,&txt.as_string().unwrap()[6..] == &cloned_cd.id);
+                },
                 "UPDATE" => {
 					console_log!("Update received");
                     let game_state: render::GameState = serde_json::from_str(&txt.as_string().unwrap()[6..]).unwrap();
                     let (p1, p2) = game_state.score;
                     let score_str = p1.to_string() + " - " + &p2.to_string();
+                    which_side.style().set_property("display", "none");
 					if game_state.finished {
 						match game_state.winner {
 							render::EndGame::Player1 => cloned_winner.set_inner_html("Player 1 won"),
@@ -122,7 +131,7 @@ pub fn start() -> Result<(), JsValue> {
 	                	render::render(game_state, &context, &vertex_shader, &fragment_shader).expect("Rendering failed");
 					}
                 },
-                _ => (),
+                _ => console_log!("{txt}"),
             }
         }
     });
@@ -205,7 +214,7 @@ pub fn start() -> Result<(), JsValue> {
                     game_id,
                     movement: "UP".to_string()
                 };
-                match cloned_ws.send_with_str(("SMOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
+                match cloned_ws.send_with_str(("MOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
                     Ok(_) => console_log!("up sent"),
                     Err(err) => console_log!("up failed: {:?}", err)
                 }
@@ -217,7 +226,7 @@ pub fn start() -> Result<(), JsValue> {
                     game_id,
                     movement: "DOWN".to_string()
                 };
-                match cloned_ws.send_with_str(("SMOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
+                match cloned_ws.send_with_str(("MOVE".to_owned() + &serde_json::to_string(&movement).unwrap()).as_str()) {
                     Ok(_) => console_log!("down sent"),
                     Err(err) => console_log!("down failed: {:?}", err)
                 }

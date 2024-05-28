@@ -26,6 +26,7 @@ export function Pong({ profile, lang }) {
 				</div>
 				<CTA id="play-button" name={mode}>Play!</CTA>
 			</Card>
+			<h1 id="popup-start-play" className="z-50 hidden absolute top-10 text-6xl font-semibold">Right Side</h1>
 			<Card id="popUpScore" className="absolute z-50 p-4 px-8 hidden flex-col items-center">
 				<h1 id="winner" className="font-semibold text-4xl">BOLVIC WIN</h1>
 				<hr className="w-4/5 my-2" />
