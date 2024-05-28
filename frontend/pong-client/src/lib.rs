@@ -1,12 +1,24 @@
 mod render;
 mod game;
 
+use std::{rc::Rc, cell::RefCell};
 use std::panic;
 use std::sync::{Arc, Mutex};
 use wasm_bindgen::prelude::*;
 use web_sys::{
-    HtmlElement, MouseEvent, Event, ErrorEvent, KeyboardEvent, MessageEvent, WebGl2RenderingContext, WebSocket, HtmlButtonElement
+    WebGlTexture,
+    HtmlElement,
+    MouseEvent,
+    Event,
+    ErrorEvent,
+    KeyboardEvent,
+    MessageEvent,
+    WebGl2RenderingContext,
+    WebSocket,
+    Response,
+    HtmlButtonElement,
 };
+use serde::{Serialize, Deserialize};
 
 macro_rules! console_log {
     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
@@ -19,13 +31,12 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn start() -> Result<(), JsValue> {
+pub async fn start() -> Result<(), JsValue> {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
     //
     //CONST department
-   
-    let document = web_sys::window().expect("No window element")
-        .document().expect("No document element");
+    let window = web_sys::window().expect("No window element");
+    let document = window.document().expect("No document element");
     
     let play_button: HtmlButtonElement = document.get_element_by_id("play-button").expect("No element solo").dyn_into::<HtmlButtonElement>()?;
     let pop_up_play: HtmlElement = document.get_element_by_id("popUpPlay").expect("No element popup").dyn_into::<HtmlElement>()?; 
@@ -33,6 +44,13 @@ pub fn start() -> Result<(), JsValue> {
     let context = render::get_context(&document)?;
 	let _ = context.clear_color(0.0, 0.0, 0.0, 1.0);
     let _ = context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
+    let me: Response = wasm_bindgen_futures::JsFuture::from(window.fetch_with_str("/api/me"))
+        .await?
+        .dyn_into::<Response>()?; 
+    let me = wasm_bindgen_futures::JsFuture::from(me.json()?).await?;
+    let me: Me = serde_wasm_bindgen::from_value(me)?;
+    console_log!("{:?}", me.selectedSkinUrl);
+    let texture = load_texture(&context, &me.selectedSkinUrl)?;
     let vertex_shader = render::compile_shader(
         &context,
         WebGl2RenderingContext::VERTEX_SHADER,
@@ -58,6 +76,38 @@ pub fn start() -> Result<(), JsValue> {
         
         void main() {
         	outColor = vec4(1, 1, 1, 1);
+		}
+        "##,
+    )?;
+    let circle_vertex_shader = render::compile_shader(
+        &context,
+        WebGl2RenderingContext::VERTEX_SHADER,
+        r##"#version 300 es
+ 
+		precision highp float;
+        
+		in vec4			position;
+        in vec2 texcoord;
+        out vec2 v_texcoord;
+
+        void main() {
+            gl_Position = position;
+            v_texcoord = texcoord;
+        }
+        "##,
+    )?;
+    let circle_fragment_shader = render::compile_shader(
+        &context,
+        WebGl2RenderingContext::FRAGMENT_SHADER,
+        r##"#version 300 es
+    
+		precision highp float;
+		in vec2 v_texcoord;
+        uniform sampler2D u_texture;
+        out vec4		outColor;
+        
+        void main() {
+        	outColor = texture(u_texture, v_texcoord);
 		}
         "##,
     )?;
@@ -128,7 +178,7 @@ pub fn start() -> Result<(), JsValue> {
 					} else {
                         cloned_cs.style().set_property("display", "flex").unwrap();
                     	cloned_cs.set_inner_html(score_str.as_str());
-	                	render::render(game_state, &context, &vertex_shader, &fragment_shader).expect("Rendering failed");
+	                	render::render(game_state, &context, &vertex_shader, &fragment_shader, &circle_vertex_shader, &circle_fragment_shader, &texture).expect("Rendering failed");
 					}
                 },
                 _ => console_log!("{txt}"),
@@ -252,4 +302,75 @@ pub fn start() -> Result<(), JsValue> {
     onkey_up_callback.forget();
     onclick_play.forget();
 	Ok(())
+}
+
+fn load_texture(context: &WebGl2RenderingContext, url: &str) -> Result<Rc<WebGlTexture>, JsValue> {
+    let texture = context.create_texture().ok_or("Failed to create texture")?;
+    context.bind_texture(WebGl2RenderingContext::TEXTURE_2D, Some(&texture));
+
+    // Initialize the texture with a 1x1 blue pixel
+    let blue_pixel = [0, 0, 255, 255];
+    context.tex_image_2d_with_i32_and_i32_and_i32_and_format_and_type_and_opt_u8_array(
+        WebGl2RenderingContext::TEXTURE_2D,
+        0,
+        WebGl2RenderingContext::RGBA as i32,
+        1,
+        1,
+        0,
+        WebGl2RenderingContext::RGBA,
+        WebGl2RenderingContext::UNSIGNED_BYTE,
+        Some(&blue_pixel),
+    )?;
+
+    // Shared ownership of the texture and context
+    let texture = Rc::new(texture);
+    let context = Rc::new(context.clone());
+
+    // Load the image
+    let image = Rc::new(RefCell::new(web_sys::HtmlImageElement::new()?));
+    let texture_clone = Rc::clone(&texture);
+    let context_clone = Rc::clone(&context);
+    let image_clone: Rc<RefCell<web_sys::HtmlImageElement>> = Rc::clone(&image);
+    let closure = Closure::wrap(Box::new(move || {
+        context_clone.bind_texture(WebGl2RenderingContext::TEXTURE_2D, Some(&texture_clone));
+        context_clone.tex_image_2d_with_u32_and_u32_and_html_image_element(
+            WebGl2RenderingContext::TEXTURE_2D,
+            0,
+            WebGl2RenderingContext::RGBA as i32,
+            WebGl2RenderingContext::RGBA,
+            WebGl2RenderingContext::UNSIGNED_BYTE,
+            &image_clone.borrow(),
+        ).unwrap();
+
+        context_clone.generate_mipmap(WebGl2RenderingContext::TEXTURE_2D);
+    }) as Box<dyn Fn()>);
+    
+    image.borrow().set_onload(Some(closure.as_ref().unchecked_ref()));
+    closure.forget();
+    image.borrow().set_src(url);
+
+    Ok(texture)
+}
+
+#[derive(Serialize, Deserialize)]
+struct Me {
+    name: String,
+    email: String,
+    level: u32,
+    levelPercentage: f32,
+    avatar: String,
+    friendsRequests: Vec<String>,
+    friends: Vec<Friend>,
+    gameHistory: Vec<String>,
+    skins: Vec<String>,
+    selectedSkin: String,
+    pub selectedSkinUrl: String,
+}
+
+#[derive(Serialize, Deserialize)]
+struct Friend {
+    name: String,
+    avatar: String,
+    level: u32,
+    last_online: String,
 }
