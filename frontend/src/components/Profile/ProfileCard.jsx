@@ -3,9 +3,10 @@ import { Card } from '../utils/Card';
 import { Input } from '../utils/Input';
 import { CTA } from '../utils/CTA';
 import { Level } from './Level';
+import { language } from '../../scripts/languages';
 
 
-export function ProfileCard({ profile, setProfile, setTriedLog }) {
+export function ProfileCard({ lang, profile, setProfile, setTriedLog }) {
   const citation = useRef(null);
   const password = useRef(null);
   const confirmPassword = useRef(null);
@@ -81,20 +82,20 @@ export function ProfileCard({ profile, setProfile, setTriedLog }) {
           </div>
           <div className="flex flex-col">
             <Input disabled={true} className="my-2" placeholder={`${profile ? profile.name : ''}`} />
-            <Input ref={citation} className="my-2" placeholder={`${profile ? "Something you want to say..." : ''}`} maxlength="256" />
+            <Input ref={citation} className="my-2" placeholder={language.citation[lang]} maxlength="256" />
           </div>
         </div>
         <div className="mt-4 mb-2 flex flex-col w-full items-center">
-          <Input ref={password} className="w-full mb-2" placeholder="New password" type="password" />
-          <Input ref={confirmPassword} className="w-full mt-2" placeholder="Confirm password" type="password" />
+          <Input ref={password} className="w-full mb-2" placeholder={language.new_password[lang]} type="password" />
+          <Input ref={confirmPassword} className="w-full mt-2" placeholder={language.confirm_password[lang]} type="password" />
 					<p className="mt-1 text-sm text-red-500">{error}</p>
         </div>
         <div className="flex mb-4">
-          <CTA onClick={updateProfile} className='mr-2'>Update</CTA>
-          <CTA onClick={logOut} className='ml-2 mr-2 border-red-500 border-2 text-red-500 hover:bg-red-500 hover:text-white' transparent={true}>Log out</CTA>
-          <CTA onClick={deleteAccount} className='ml-2 border-red-500 border-2 text-red-500 hover:bg-red-500 hover:text-white' transparent={true}>Delete Account</CTA>
+          <CTA onClick={updateProfile} className='mr-2'>{language.update[lang]}</CTA>
+          <CTA onClick={logOut} className='ml-2 mr-2 border-red-500 border-2 text-red-500 hover:bg-red-500 hover:text-white' transparent={true}>{language.log_out[lang]}</CTA>
+          <CTA onClick={deleteAccount} className='ml-2 border-red-500 border-2 text-red-500 hover:bg-red-500 hover:text-white' transparent={true}>{language.delete_account[lang]}</CTA>
         </div>
-        <Level level={profile ? profile.level : null} levelPercentage={profile ? profile.levelPercentage : null} />
+        <Level lang={lang} level={profile ? profile.level : null} levelPercentage={profile ? profile.levelPercentage : null} />
       </Card>
     </>
   );

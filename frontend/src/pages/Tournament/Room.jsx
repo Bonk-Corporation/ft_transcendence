@@ -3,8 +3,9 @@ import { CTA } from '../../components/utils/CTA';
 import { PlayerCard } from '../../components/Tournament/PlayerCard';
 import { PopUp } from '../../components/utils/PopUp';
 import { Input } from '../../components/utils/Input';
+import { language } from '../../scripts/languages';
 
-export function Room() {
+export function Room(props) {
   const [active, setActive] = useState("");
   const inputRef = useRef(null);
   const admin = "DinoMalin";
@@ -76,9 +77,9 @@ export function Room() {
   return (
     <div className="w-full flex justify-center h-[40rem]">
       <PopUp clear={clear} active={popUp} setActive={setPopUp} className="flex flex-col items-center">
-        <h1 className="font-semibold text-xl">Add an user</h1>
-        <Input ref={inputRef} className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder="Search someone..." />
-        <CTA onClick={handleClick}>Invite</CTA>
+        <h1 className="font-semibold text-xl">{language.add_user[props.lang]}</h1>
+        <Input ref={inputRef} className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder={language.search_someone[props.lang]} />
+        <CTA onClick={handleClick}>{language.invite[props.lang]}</CTA>
       </PopUp>
       <div className="h-full w-4/6 flex flex-col items-center">
         <div className="h-full w-full flex overflow-hidden rounded">
@@ -87,13 +88,13 @@ export function Room() {
           <div onClick={() => setActive("Bonk")} className={`${active == "Bonk" ? "border-4 border-white" : ""} h-full w-1/3 hover:w-1/2 bg-green-500 transition-all ease-in-out flex justify-center py-4 text-xl`}>Bonk</div>
         </div>
         <div className="my-4 flex items-center justify-center">
-          <button onClick={() => {setPopUp(true)}} className='mr-2 px-12 py-3 bg-transparent border-2 border-white rounded-lg hover:bg-white hover:text-black transition-all ease-in-out'><i className="fa-solid fa-link mr-2"></i>Invite</button>
-          <CTA className='ml-2 px-12 py-3 border-2 border-white hover:border-gray-300'><i className="fa-solid fa-play mr-2"></i>Play</CTA>
+          <button onClick={() => {setPopUp(true)}} className='mr-2 px-12 py-3 bg-transparent border-2 border-white rounded-lg hover:bg-white hover:text-black transition-all ease-in-out'><i className="fa-solid fa-link mr-2"></i>{language.invite[props.lang]}</button>
+          <CTA className='ml-2 px-12 py-3 border-2 border-white hover:border-gray-300'><i className="fa-solid fa-play mr-2"></i>{language.play[props.lang]}</CTA>
         </div>
       </div>
 
       <div className="ml-4 down-gradient overflow-auto h-full px-2 overflow-x-hidden">
-        {players.map((player) => <PlayerCard profile={player} admin={player.name == admin}/>)}
+        {players.map((player) => <PlayerCard lang={props.lang} profile={player} admin={player.name == admin}/>)}
       </div>
     </div>
   );

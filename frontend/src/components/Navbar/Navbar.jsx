@@ -38,26 +38,26 @@ export function Navbar(props) {
 
 				<nav className="md:flex hidden">
 					<a href="/tournament" className={`mx-10 text-xl text-shadow ${location.url == '/tournament' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
-						{language.tournament[props.language]}
+						{language.tournament[props.lang]}
 					</a>
 					<a href="/play" className={`mx-10 text-xl text-shadow ${location.url == '/play' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
-						{language.play[props.language]}
+						{language.play[props.lang]}
 					</a>
 					<a href="/shop" className={`mx-10 text-xl text-shadow ${location.url == '/shop' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
-						{language.shop[props.language]}
+						{language.shop[props.lang]}
 					</a>
 				</nav>
 				
-				{logged ? <LogCard user={props.profile}/> : null}
+				{logged ? <LogCard lang={props.lang} user={props.profile}/> : null}
 			</header>
 			<p className={`${AUTHORIZED_LOCATIONS.includes(location.url) ? "" : "hidden"} flex absolute bottom-2 text-sm z-50`}>
 				<a href="/legal-notice" className="hover:underline cursor-pointer mx-1">
-					{language.legal_notice[props.language]}
+					{language.legal_notice[props.lang]}
 				</a>
 				· PonkCorp 2024 |
-				<div onClick={() => props.setLanguage('br')} className={`ml-2 ${props.language == 'br' ? "border-2" : "" } w-5 h-5 rounded-full bg-[url(https://upload.wikimedia.org/wikipedia/commons/c/c8/Gwenn_ha_Du_%2811_mouchetures%29.svg)] bg-center bg-cover`}></div>
-				<div onClick={() => props.setLanguage('fr')} className={`ml-2 ${props.language == 'fr' ? "border-2" : "" } w-5 h-5 rounded-full bg-[url(https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/255px-Flag_of_France.svg.png)] bg-center bg-cover`}></div>
-				<div onClick={() => props.setLanguage('en')} className={`ml-2 ${props.language == 'en' ? "border-2" : "" } w-5 h-5 rounded-full bg-[url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/1200px-Flag_of_the_United_Kingdom_%283-5%29.svg.png)] bg-center bg-cover`}></div>
+				<div onClick={() => props.setLang('br')} className={`ml-2 ${props.lang == 'br' ? "border-2" : "" } w-5 h-5 rounded-full bg-[url(https://upload.wikimedia.org/wikipedia/commons/c/c8/Gwenn_ha_Du_%2811_mouchetures%29.svg)] bg-center bg-cover`}></div>
+				<div onClick={() => props.setLang('fr')} className={`ml-2 ${props.lang == 'fr' ? "border-2" : "" } w-5 h-5 rounded-full bg-[url(https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/255px-Flag_of_France.svg.png)] bg-center bg-cover`}></div>
+				<div onClick={() => props.setLang('en')} className={`ml-2 ${props.lang == 'en' ? "border-2" : "" } w-5 h-5 rounded-full bg-[url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/1200px-Flag_of_the_United_Kingdom_%283-5%29.svg.png)] bg-center bg-cover`}></div>
 			</p>
 		</>
 	);

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Card } from '../utils/Card';
+import { language } from '../../scripts/languages';
 
-export function FriendCard({fetchProfile, profile, request = false}) {
+export function FriendCard({lang, fetchProfile, profile, request = false}) {
   const [deleted, setDeleted] = useState(false);
   function handleClick(call) {
     fetch(`/api/friends/${call}/${profile.name}`, {
@@ -27,7 +28,7 @@ export function FriendCard({fetchProfile, profile, request = false}) {
                   <div className={`bg-[url(${profile.avatar})] border-2 ${isOnline ? "border-green-500" : "border-white"} bg-cover bg-center bg-no-repeat rounded-full w-14 aspect-square`} />
                   <div className="ml-4 mr-16 flex flex-col leading-tight w-36 overflow-hidden">
                       <h1 className="font-semibold text-lg overflow-hidden text-ellipsis">{profile.name}</h1>
-                      <h1>Level {profile.level}</h1>
+                      <h1>{language.level[lang]} {profile.level}</h1>
                   </div>
               </div>
               {
