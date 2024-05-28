@@ -3,6 +3,7 @@ use web_sys::{
     WebGl2RenderingContext,
     WebGlProgram,
     WebGlShader,
+    WebGlTexture,
     HtmlCanvasElement,
     Document,
 };
@@ -58,7 +59,10 @@ pub fn render(
     game_state: GameState,
     context: &WebGl2RenderingContext,
     vertex_shader: &WebGlShader,
-    fragment_shader: &WebGlShader
+    fragment_shader: &WebGlShader,
+    circle_vertex_shader: &WebGlShader,
+    circle_fragment_shader: &WebGlShader,
+    texture: &WebGlTexture,
 ) -> Result<(), JsValue> {
 
     let program = link_program(context, vertex_shader, fragment_shader)?;
@@ -94,7 +98,9 @@ pub fn render(
 	context.clear_color(0.0, 0.0, 0.0, 1.0);
     context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
 	display_rectangles(context, vector_vertices, &program)?;
-	display_circles(context, vec![circle], &program)?;
+    let program = link_program(context, circle_vertex_shader, circle_fragment_shader)?;
+    context.use_program(Some(&program));
+	display_circles(context, vec![circle], &program, &texture)?;
 
     Ok(())
 
@@ -111,10 +117,11 @@ pub fn get_context(document: &Document) -> Result<WebGl2RenderingContext, JsValu
 	Ok(context)
 }
 
-fn display_circles(context: &WebGl2RenderingContext, circles: Vec<Circle>, program: &WebGlProgram) -> Result<(), JsValue> {
+fn display_circles<'a>(context: &'a WebGl2RenderingContext, circles: Vec<Circle>, program: &WebGlProgram, texture: &WebGlTexture) -> Result<(), JsValue> {
 	for circle in circles {
 	
     	let position_attribute_location = context.get_attrib_location(program, "position");
+        let texcoord_attribute_location = context.get_attrib_location(program, "texcoord");
     	let buffer = context.create_buffer().ok_or("Failed to create buffer")?;
     	context.bind_buffer(WebGl2RenderingContext::ARRAY_BUFFER, Some(&buffer));
 		let vert_count = 2;
@@ -149,17 +156,32 @@ fn display_circles(context: &WebGl2RenderingContext, circles: Vec<Circle>, progr
         	2,
         	WebGl2RenderingContext::FLOAT,
         	false,
-        	0,
+        	4 * std::mem::size_of::<f32>() as i32,
         	0,
     	);
     	context.enable_vertex_attrib_array(position_attribute_location as u32);
-    	context.bind_vertex_array(Some(&vertex_array_object));
+        
+        context.vertex_attrib_pointer_with_i32(
+            texcoord_attribute_location as u32,
+            2,
+            WebGl2RenderingContext::FLOAT,
+            false,
+            4 * std::mem::size_of::<f32>() as i32,
+            2 * std::mem::size_of::<f32>() as i32,
+        );
+        context.enable_vertex_attrib_array(texcoord_attribute_location as u32);
+
+        context.active_texture(WebGl2RenderingContext::TEXTURE0);
+        context.bind_texture(WebGl2RenderingContext::TEXTURE_2D, Some(texture));
+        context.uniform1i(context.get_uniform_location(&program, "u_texture").as_ref(), 0);
 
     	draw(context, (circle_vertices.len() / vert_count) as i32);
 	}
 	Ok(())
 	
 }
+
+
 
 fn display_rectangles(context: &WebGl2RenderingContext, vector_vertices: Vec<[f32; 12]>, program: &WebGlProgram) -> Result<(), JsValue> {
 	for vertices in vector_vertices {
