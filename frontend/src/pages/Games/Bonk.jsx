@@ -24,7 +24,7 @@ export function Bonk({ profile, lang }) {
 			<canvas className="w-screen h-screen absolute bg-[#111111]">
 				<h1>Bonk</h1>
 			</canvas>
-			<Chat profile={profile} />
+			<Chat profile={profile} lang={lang} />
 		</>
   );
 }

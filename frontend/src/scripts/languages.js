@@ -184,4 +184,9 @@ export const language = {
     fr: "Mentions Légales",
     br: "Menegoù lezennel",
   },
+  your_message: {
+    en: "Your message...",
+    fr: "Votre message...",
+    br: "Da gemennadenn...",
+  },
 };
