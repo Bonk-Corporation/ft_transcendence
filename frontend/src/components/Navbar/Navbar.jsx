@@ -1,8 +1,8 @@
 import { useLocation } from 'preact-iso';
 import { LogCard } from './LogCard';
-import { useEffect } from 'preact/hooks';
 import { language } from '../../scripts/languages';
 import init, { stop } from 'pong-client';
+import { useEffect, useState } from 'preact/hooks';
 
 
 export function Navbar(props) {
@@ -11,6 +11,7 @@ export function Navbar(props) {
 
 	const AUTHORIZED_LOCATIONS = ["/play", "/tournament", "/shop", "/profile", "/legal-notice"];
 	const LOG_LOCATIONS = ["/", "/signup"]
+	const [showLegalNotice, setShowLegalNotice] = useState(false);
 
 	useEffect(() => {
 		if (!LOG_LOCATIONS.includes(location.url) && props.triedLog && props.profile && props.profile.error && location.url) {
@@ -35,7 +36,9 @@ export function Navbar(props) {
 				w-full pl-8 pr-4 py-4 z-50 mb-8
 				flex justify-between items-center rounded-full
 				angle-gradient border-gradient nav font-semibold transition-all backdrop-blur-lg
-				`}>
+				`}
+				onClick={() => setShowLegalNotice(!showLegalNotice)}
+				>
 				<a href={window.screen.width < 768 ? '/shop' : '/play'}>
 					<svg width="80" height="36" viewBox="0 0 95 36" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path fill-rule="evenodd" clip-rule="evenodd" d="M22.0945 11.7447C22.0945 17.6921 17.2732 22.5134 11.3258 22.5134C9.79429 22.5134 8.33743 22.1937 7.01835 21.6174V35.4359H0.557129V11.7447C0.557129 5.79732 5.37844 0.976013 11.3258 0.976013C17.2732 0.976013 22.0945 5.79732 22.0945 11.7447ZM7.01835 11.7447C7.01835 14.1237 8.94687 16.0522 11.3258 16.0522C13.7048 16.0522 15.6333 14.1237 15.6333 11.7447C15.6333 9.36576 13.7048 7.43723 11.3258 7.43723C8.94687 7.43723 7.01835 9.36576 7.01835 11.7447Z" fill="white"/>
@@ -61,7 +64,7 @@ export function Navbar(props) {
 				
 				{logged ? <LogCard lang={props.lang} user={props.profile}/> : null}
 			</header>
-			<p className={`${AUTHORIZED_LOCATIONS.includes(location.url) || LOG_LOCATIONS.includes(location.url) ? "" : "hidden"} flex absolute bottom-2 text-sm z-50`}>
+			<p className={`${AUTHORIZED_LOCATIONS.includes(location.url) ? "" : "hidden"} ${showLegalNotice ? "flex" : "hidden"} min-[1343px]:flex absolute top-2 min-[1343px]:bottom-2 min-[1343px]:top-auto text-sm z-50`}>
 				{AUTHORIZED_LOCATIONS.includes(location.url) ?
 				<>
 					<a href="/legal-notice" className="hover:underline cursor-pointer mx-1">
