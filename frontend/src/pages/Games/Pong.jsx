@@ -29,7 +29,7 @@ export function Pong({ profile, lang }) {
 			<canvas className="w-screen h-screen absolute">
 				<h1>Pong</h1>
 			</canvas>
-			<Chat profile={profile} />
+			<Chat profile={profile} lang={lang} />
 		</>
   );
 }

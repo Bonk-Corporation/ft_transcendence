@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Message } from './Message';
+import { language } from '../../scripts/languages';
 
 function RoomButton({ withSeparator, children, activeRoom, ...rest }) {
 	return (
@@ -22,7 +23,7 @@ function RoomButton({ withSeparator, children, activeRoom, ...rest }) {
 
 let ws;
 
-export function Chat({ profile }) {
+export function Chat({ profile, lang }) {
 	if (!profile) return;
 
 	const me = profile.name;
@@ -119,7 +120,7 @@ export function Chat({ profile }) {
 						</div>
 					</div>
 					<form action="" onSubmit={sendChat}>
-						<input placeholder="Your message..." class="self-end w-full p-2 outline-none ml-0 w-full relative b-[5px] rounded-b" />
+						<input placeholder={language.your_message[lang]} class="self-end w-full p-2 outline-none ml-0 relative b-[5px] rounded-b" />
 					</form>
 				</div>
 				</> : <div class="flex h-full items-center justify-center">
