@@ -49,11 +49,6 @@ export function App() {
 			particle_background: "#331e4b",
 			refresh_onfocus: false,
 		});
-
-		const intervalId = setInterval(() => {
-			fetch("/api/ping");
-		}, 60000);
-		return () => clearInterval(intervalId);
 	}, []);
 
 	const baseUrl = import.meta.env.BASE_URL || '/';

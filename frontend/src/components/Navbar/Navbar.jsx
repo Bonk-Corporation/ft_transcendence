@@ -21,6 +21,13 @@ export function Navbar(props) {
 		}
 	}, [props.profile, location, props.triedLog]);
 
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			if (!LOG_LOCATIONS.includes(location.url))
+				fetch("/api/ping");
+		}, 60000);
+		return () => clearInterval(intervalId);
+	}, [])
 	return (
 		<>
 			<header className={`
