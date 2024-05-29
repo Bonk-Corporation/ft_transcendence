@@ -19,6 +19,28 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name="BonkEvent",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("game_id", models.PositiveIntegerField(default=0)),
+                (
+                    "users",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(), size=None
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+            ],
+        ),
+        migrations.CreateModel(
             name="Image",
             fields=[
                 (
