@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Message } from './Message';
 import { language } from '../../scripts/languages';
+import { createRef } from 'preact';
 
 function RoomButton({ withSeparator, children, activeRoom, ...rest }) {
 	return (
@@ -26,6 +27,8 @@ let ws;
 export function Chat({ profile, lang }) {
 	if (!profile) return;
 
+	const ref = createRef();
+
 	const me = profile.name;
 	const [hover, setHover] = useState(false);
 	const [shouldShowChat, setShouldShowChat] = useState(false);
@@ -43,6 +46,7 @@ export function Chat({ profile, lang }) {
 			let actualRoomName = "Lobby";
 			if (activeRoom != actualRoomName)
 				actualRoomName = `${users[0]}_${users[1]}`;
+			if (input.value.trim() == "") return;
 
 			ws.send(JSON.stringify({
 				room: actualRoomName,
@@ -55,6 +59,9 @@ export function Chat({ profile, lang }) {
 		}
 	}
 
+	useEffect(() => {
+		ref?.current?.scrollTo(0, 100000);
+	}, [messages, hover]);
 
 	useEffect(() => {
 		const url = (location.protocol == "https:" ? "wss:" : "ws:")
@@ -112,7 +119,7 @@ export function Chat({ profile, lang }) {
 						)}
 					</div>
 					<hr class="border-black/30" />
-					<div class="flex flex-col h-[70%] w-full overflow-y-scroll mb-[4px]">
+					<div ref={ref} class="flex flex-col h-[70%] w-full overflow-y-scroll mb-[4px]">
 						<div class="flex flex-col h-[90%]">
 							{ messages[activeRoom]?.map(([ where, message ]) =>
 								<Message where={where}>{message}</Message>

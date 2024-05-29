@@ -32,7 +32,7 @@ class Chat(WebsocketConsumer):
 
     def disconnect(self, _):
         if self.user.is_authenticated:
-            async_to_sync(self.channel_layer.group_add)("Lobby", self.channel_name)
+            async_to_sync(self.channel_layer.group_discard)("Lobby", self.channel_name)
 
             for friend in self.user.friends.all():
                 users = sorted([friend.username, self.user.username])
@@ -51,6 +51,9 @@ class Chat(WebsocketConsumer):
 
     def chat_message(self, event):
         message = event["message"]
+
+        if message["content"].strip() == "":
+            return
 
         # ew ew ew ew ew ew
         if "_" in message["room"]:
