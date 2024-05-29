@@ -54,7 +54,7 @@ export function App() {
 	const baseUrl = import.meta.env.BASE_URL || '/';
 
 	return (
-		<div id="ambient" className="w-screen h-full min-h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center overflow-hidden">
+		<div id="ambient" className="w-screen min-h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center overflow-hidden">
 			<LocationProvider>
 				<Navbar lang={lang} setLang={setLang} profile={profile} triedLog={triedLog} />
 				<main className="w-screen h-full z-50 flex-1 flex flex-col justify-center items-center px-10">
