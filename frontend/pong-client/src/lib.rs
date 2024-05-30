@@ -383,9 +383,9 @@ struct Me {
     level: u32,
     levelPercentage: f32,
     avatar: String,
-    friendsRequests: Vec<String>,
+    friendsRequests: Vec<FriendRequests>,
     friends: Vec<Friend>,
-    gameHistory: Vec<String>,
+    gameHistory: Vec<GameHistory>,
     skins: Vec<String>,
     selectedSkin: String,
     pub selectedSkinUrl: String,
@@ -397,4 +397,19 @@ struct Friend {
     avatar: String,
     level: u32,
     last_online: String,
+}
+
+#[derive(Serialize, Deserialize)]
+struct FriendRequests {
+    name: String,
+    avatar: String,
+    level: u32,
+}
+
+#[derive(Serialize, Deserialize)]
+struct GameHistory {
+    game: String,
+    score: Vec<u32>,
+    win: bool,
+    xp: u32,
 }
