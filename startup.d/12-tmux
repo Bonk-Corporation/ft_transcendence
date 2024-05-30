@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ "$prod" = false ]; then
+	tmux set-option -ga ' CLIENT_ID CLIENT_SECRET VITE_STRIPE_API_KEY STRIPE_WEBHOOK_KEY DB_NAME DB_PASS DB_USER FT_DEBUG'
+	tmux new-session -d 'trap : INT; make || $SHELL'
+	tmux split-window -vb 'trap : INT; $SHELL'
+	tmux set -g mouse on # neat
+	tmux split-window -h 'trap : INT; make fdev || $SHELL'
+	tmux split-window -v -c backend/pong-server 'trap : INT; cargo run -r || $SHELL'
+	tmux attach
+fi

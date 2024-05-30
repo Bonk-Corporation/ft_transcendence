@@ -1,0 +1,4 @@
+#!/bin/sh
+
+caddy stop
+exec pg_ctl stop

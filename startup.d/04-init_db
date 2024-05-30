@@ -1,0 +1,10 @@
+#!/bin/sh
+
+initdb 2>/dev/null
+pg_ctl -o "-k /tmp" -l backend/pg.log start
+createdb -h /tmp "$DB_NAME" 2>/dev/null
+psql -h /tmp -c "
+	CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';
+	GRANT ALL ON DATABASE $DB_NAME TO $DB_USER;
+	ALTER DATABASE $DB_NAME OWNER TO $DB_USER;" \
+	"$DB_NAME"

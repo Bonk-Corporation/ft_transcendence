@@ -1,0 +1,9 @@
+#!/bin/sh
+
+prod=$1
+
+if [ "$prod" = true ]; then
+	export FT_DEBUG=n
+else
+	export FT_DEBUG=y
+fi
