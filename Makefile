@@ -3,7 +3,7 @@ PYTHON = python3
 PNPM = pnpm
 
 run:
-	$(PYTHON) backend/manage.py runserver 0.0.0.0:8000
+	$(PYTHON) backend/manage.py runserver 0.0.0.0:8001
 
 fdev:
 	$(PNPM) -C frontend run dev

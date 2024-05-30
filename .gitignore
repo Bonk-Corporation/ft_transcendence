@@ -11,3 +11,5 @@ venv
 pg.log
 target
 pkg
+.static
+backend/media/images

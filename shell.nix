@@ -13,6 +13,8 @@ mkShell {
 		virtualenv
 		gnused
 
+		caddy
+
 		nodejs
 		nodePackages.pnpm
 
@@ -84,6 +86,34 @@ mkShell {
 			python3 backend/manage.py migrate
 			touch .initial_migration_done
 		fi
+
+		export ${if prod then
+			"port=8443"
+		  else
+			"port=8000"
+		        }
+		export ${if prod then
+			"srv_root=/srv/static" # hardcoded in docker
+		  else
+			"srv_root=$PWD/.static"
+		        }
+
+		yes yes | python backend/manage.py collectstatic
+
+		caddy start --adapter caddyfile --config <( cat <<-EOF
+			http://localhost:$port
+
+			handle_path /static/* {
+				root * $srv_root
+				file_server
+			}
+
+			handle {
+				reverse_proxy localhost:8001
+			}
+		EOF
+		)
+		trap "caddy stop" EXIT
 
 		${if prod then
 			''
