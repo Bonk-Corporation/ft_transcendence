@@ -169,15 +169,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+FRONTEND_DIR = BASE_DIR.parent / "frontend"
+
+STATIC_ROOT = BASE_DIR.parent / ".static"
 STATIC_URL = "/static/"
 
-STATIC_ROOT = BASE_DIR / "../frontend/static/"
-STATICFILES_DIRS = [BASE_DIR / "../frontend/pong-client/pkg"]
-if not DEBUG:
-    STATICFILES_DIRS.append(BASE_DIR / "../frontend/build/")
-
-DJANGO_VITE_ASSETS_PATH = BASE_DIR / "../frontend/build/"
+DJANGO_VITE_ASSETS_PATH = FRONTEND_DIR / "build"
 DJANGO_VITE_MANIFEST_PATH = DJANGO_VITE_ASSETS_PATH / "manifest.json"
+
+STATICFILES_DIRS = [
+    FRONTEND_DIR / "pong-client/pkg",
+    FRONTEND_DIR / "bonk-client",
+    DJANGO_VITE_ASSETS_PATH,
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
