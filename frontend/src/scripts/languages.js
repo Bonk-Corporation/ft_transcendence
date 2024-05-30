@@ -87,7 +87,7 @@ export const language = {
   no_friends: {
     en: "No friends yet. Click on + to add a friend.",
     fr: "Aucun ami. Cliquez sur + pour ajouter un ami.",
-    br: "",
+    br: "Mignon ebet. Klikit war + da ouzhpennañ ur mignon.",
   },
   game_history: {
     en: "Game History",
