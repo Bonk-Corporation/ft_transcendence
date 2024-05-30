@@ -3,7 +3,7 @@ from django.http.response import JsonResponse
 from ponk.api_decorators import authenticated
 from ponk.money import urls as money_api, skins
 import ponk.friends
-from ponk.models import User, GameHistory
+from ponk.models import User, GameHistory, Image
 from ponk.friends import get_friends_info
 from ponk.friends import get_friends_request_info
 from django.contrib.auth.password_validation import validate_password
@@ -169,6 +169,16 @@ def delete_user(request, *args, **kwargs):
         )
 
 
+def upload_image(request, *args, **kwargs):
+    if request.method == "POST":
+        img = Image(image=request.FILES["image"])
+        img.save()
+        request.user.avatar = img.image.url
+        request.user.save()
+        return JsonResponse({"success": True})
+    return JsonResponse({"error": "Fatal error"})
+
+
 urls = [
     path("me", me),
     path("friends/", include(ponk.friends.urls)),
@@ -179,5 +189,6 @@ urls = [
     path("update_profile", set_new_profile),
     path("citation", get_random_citation),
     path("delete_myself", delete_user),
+    path("upload", upload_image),
     *money_api,
 ]

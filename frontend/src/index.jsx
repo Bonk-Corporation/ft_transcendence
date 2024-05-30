@@ -56,6 +56,8 @@ export function App() {
 		return () => clearInterval(intervalId);
 	}, []);
 
+	const baseUrl = import.meta.env.BASE_URL || '/';
+
 	return (
 		<div id="ambient" className="w-screen h-full min-h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center overflow-hidden">
 			<LocationProvider>
