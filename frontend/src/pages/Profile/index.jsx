@@ -67,10 +67,10 @@ export function Profile({lang, fetchProfile, profile, setProfile, setTriedLog}) 
 
     <div className="flex flex-wrap mt-8 items-center justify-center w-full">
       {
-        stats.map((stat) => (
+        stats.map((stat, index) => (
           <div className="flex flex-col items-center ml-2 mr-2">
             <h1 className="font-semibold text-lg md:text-xl">{stat.title}</h1>
-            <Stat labels={stat.labels} data={stat.data} colors={stat.colors}/>
+            <Stat labels={stat.labels} data={stat.data} colors={stat.colors} duration={700 + index * 200}/>
           </div>
         ))
       }

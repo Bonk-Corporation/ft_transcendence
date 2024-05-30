@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FriendCard } from './FriendCard';
 import { PopUp } from '../utils/PopUp';
 import { Input } from '../utils/Input';
@@ -10,6 +10,11 @@ export function FriendList({lang, fetchProfile, friends, friendsRequests}) {
   const [popUp, setPopUp] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, [])
 
   function handleClick() {
     if (inputRef.current.value.trim().length) {
@@ -49,7 +54,7 @@ export function FriendList({lang, fetchProfile, friends, friendsRequests}) {
           <h1 className="font-semibold text-lg md:text-xl">{language.friends[lang]}</h1>
           <i onClick={() => {setPopUp(true)}} className="fa-solid fa-circle-plus mr-2 hover:text-gray-300 cursor-pointer"></i>
         </div>
-        <div className={`overflow-auto ${friends.length && friendsRequests.length ? "down-gradient" : ""}  max-h-96 pr-2 backdrop-blur-lg`}>
+        <div className={`overflow-auto ${friends.length && friendsRequests.length ? "down-gradient" : ""}  max-h-96 pr-2 backdrop-blur-lg ${loaded ? "opacity-100" : "opacity-0"} transition-all duration-500`}>
           {
             friendsRequests.map((friend) => (
             <FriendCard lang={lang} fetchProfile={fetchProfile} profile={friend} request={true}></FriendCard>

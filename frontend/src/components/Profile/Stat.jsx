@@ -4,7 +4,7 @@ import { Card } from '../utils/Card';
 import Chart from "react-apexcharts";
 
 
-export function Stat({labels, data, colors}) {
+export function Stat({labels, data, colors, duration}) {
   const [size, setSize] = useState(window.screen.width < 768 ? 150 : 200);
 
   const percentage = Math.floor((data[0] * 100 / (data[0] + data[1])));
@@ -48,13 +48,16 @@ export function Stat({labels, data, colors}) {
 	},
   };
 
+  const [loaded, setLoaded] = useState(false);
+
   useEffect(() => {
+	setLoaded(true);
 	window.addEventListener('resize', () => {setSize(window.screen.width < 768 ? 150 : 200)})
     return () => {window.removeEventListener('resize', () => {setSize(window.screen.width < 768 ? 150 : 200)})}
   }, [])
 
   return (
-    <Card className="flex items-center justify-center h-32 md:h-52">
+    <Card className={`flex items-center justify-center h-32 md:h-52 ${loaded ? "opacity-100" : "opacity-0"} transition-all duration-[${duration}ms]`}>
 		<Chart options={opt.options} series={opt.series} type="radialBar" height={size} />
     </Card>
   );
