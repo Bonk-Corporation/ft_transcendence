@@ -1,0 +1,5 @@
+#!/bin/sh
+
+if [ "$prod" = true ]; then
+	pnpm -C frontend build
+fi

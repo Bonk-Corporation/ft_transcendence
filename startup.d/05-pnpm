@@ -1,0 +1,4 @@
+#!/bin/sh
+
+yes | pnpm install
+yes | pnpm install -C frontend

@@ -1,0 +1,33 @@
+#!/bin/sh
+
+prod=$1
+
+if [ "$prod" = true ]; then
+	export "port=8443"
+else
+	export "port=8000"
+fi
+
+if [ "$prod" = true ]; then
+	export "srv_root=/srv/static" # hardcoded in docker
+else
+	export "srv_root=$PWD/.static"
+fi
+
+# copy all static files to .static, to be served by caddy
+# since serving them by django is strongly discouraged
+yes yes | python backend/manage.py collectstatic
+
+caddy start --adapter caddyfile --config <( cat <<-EOF
+	http://localhost:$port
+
+	handle_path /static/* {
+		root * $srv_root
+		file_server
+	}
+
+	handle {
+		reverse_proxy localhost:8001 # django
+	}
+EOF
+)

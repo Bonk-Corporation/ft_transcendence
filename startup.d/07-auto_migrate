@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if [ ! -e .initial_migration_done ]; then
+	python3 backend/manage.py migrate
+	touch .initial_migration_done
+fi

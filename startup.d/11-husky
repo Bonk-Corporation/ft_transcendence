@@ -1,0 +1,6 @@
+#!/bin/sh
+
+if [ "$prod" = false ]; then
+	# install git commit hooks
+	pnpx husky install >/dev/null 2>&1
+fi
