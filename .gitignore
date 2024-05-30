@@ -13,3 +13,4 @@ target
 pkg
 .static
 backend/media/images
+frontend/public
