@@ -30,6 +30,18 @@ extern "C" {
     fn log(s: &str);
 }
 
+static mut WEBSOCKET: Option<WebSocket> = None;
+
+#[wasm_bindgen]
+pub fn stop() {
+	unsafe {
+		if let Some(ws) = &WEBSOCKET {
+			ws.close().unwrap();
+			WEBSOCKET = None;
+		}
+	}
+}
+
 #[wasm_bindgen]
 pub async fn start() -> Result<(), JsValue> {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
@@ -50,7 +62,7 @@ pub async fn start() -> Result<(), JsValue> {
     let me = wasm_bindgen_futures::JsFuture::from(me.json()?).await?;
     let me: Me = serde_wasm_bindgen::from_value(me)?;
     console_log!("{:?}", me.selectedSkinUrl);
-    let texture = load_texture(&context, &me.selectedSkinUrl)?;
+    let (_image, texture) = load_texture(&context, "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/1920px-Flag_of_France.svg.png")?;
     let vertex_shader = render::compile_shader(
         &context,
         WebGl2RenderingContext::VERTEX_SHADER,
@@ -86,13 +98,19 @@ pub async fn start() -> Result<(), JsValue> {
  
 		precision highp float;
         
-		in vec4			position;
-        in vec2 texcoord;
-        out vec2 v_texcoord;
+		in vec4     position;
+        out vec2    v_texcoord;
 
         void main() {
+
             gl_Position = position;
-            v_texcoord = texcoord;
+            if (gl_VertexID % 2 == 0)
+                v_texcoord = vec2(0.5, 0.5);
+            else
+            {
+                float j = float((gl_VertexID - 1) / 2) * 2.0 * 3.14159 / 32.0;
+                v_texcoord = vec2((cos(j) + 1.0) / 2.0 , (sin(j) + 1.0) / 2.0);
+            }
         }
         "##,
     )?;
@@ -102,9 +120,9 @@ pub async fn start() -> Result<(), JsValue> {
         r##"#version 300 es
     
 		precision highp float;
-		in vec2 v_texcoord;
-        uniform sampler2D u_texture;
-        out vec4		outColor;
+		in vec2             v_texcoord;
+        uniform sampler2D   u_texture;
+        out vec4		    outColor;
         
         void main() {
         	outColor = texture(u_texture, v_texcoord);
@@ -117,7 +135,7 @@ pub async fn start() -> Result<(), JsValue> {
     let final_score = document.get_element_by_id("final-score").expect("no element final score");
     let current_score = document.get_element_by_id("current-score").expect("no element current score").dyn_into::<HtmlElement>()?;
     let replay: HtmlButtonElement = document.get_element_by_id("replay-button").expect("no element replay-button").dyn_into::<HtmlButtonElement>()?;
-    let client_data = game::OnConnectClient::new(&document, uuid::Uuid::new_v4().to_string());
+    let client_data = game::OnConnectClient::new(&document, me.name);
     let game_id = Arc::new(Mutex::new(String::new()));
  
     // WebSocket department
@@ -301,10 +319,15 @@ pub async fn start() -> Result<(), JsValue> {
     onkey_down_callback.forget();
     onkey_up_callback.forget();
     onclick_play.forget();
+
+	unsafe {
+		WEBSOCKET = Some(web_socket);
+	}
+
 	Ok(())
 }
 
-fn load_texture(context: &WebGl2RenderingContext, url: &str) -> Result<Rc<WebGlTexture>, JsValue> {
+fn load_texture(context: &WebGl2RenderingContext, url: &str) -> Result<(Rc<RefCell<web_sys::HtmlImageElement>>, Rc<WebGlTexture>), JsValue> {
     let texture = context.create_texture().ok_or("Failed to create texture")?;
     context.bind_texture(WebGl2RenderingContext::TEXTURE_2D, Some(&texture));
 
@@ -340,21 +363,22 @@ fn load_texture(context: &WebGl2RenderingContext, url: &str) -> Result<Rc<WebGlT
             WebGl2RenderingContext::RGBA,
             WebGl2RenderingContext::UNSIGNED_BYTE,
             &image_clone.borrow(),
-        ).unwrap();
+        );
 
         context_clone.generate_mipmap(WebGl2RenderingContext::TEXTURE_2D);
     }) as Box<dyn Fn()>);
     
     image.borrow().set_onload(Some(closure.as_ref().unchecked_ref()));
     closure.forget();
+    image.borrow().set_cross_origin(Some(""));
     image.borrow().set_src(url);
 
-    Ok(texture)
+    Ok((image, texture))
 }
 
 #[derive(Serialize, Deserialize)]
 struct Me {
-    name: String,
+    pub name: String,
     email: String,
     level: u32,
     levelPercentage: f32,

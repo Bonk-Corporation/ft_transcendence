@@ -13,8 +13,8 @@ use serde::{
 };
 use glam::Vec2;
 
-const WINDOWS_WIDTH      : f32 = 1920.;
-const WINDOWS_HEIGHT     : f32 = 1440.;
+const WINDOWS_WIDTH         : f32 = 1920.;
+const WINDOWS_HEIGHT        : f32 = 1440.;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Entity {
@@ -121,7 +121,6 @@ fn display_circles<'a>(context: &'a WebGl2RenderingContext, circles: Vec<Circle>
 	for circle in circles {
 	
     	let position_attribute_location = context.get_attrib_location(program, "position");
-        let texcoord_attribute_location = context.get_attrib_location(program, "texcoord");
     	let buffer = context.create_buffer().ok_or("Failed to create buffer")?;
     	context.bind_buffer(WebGl2RenderingContext::ARRAY_BUFFER, Some(&buffer));
 		let vert_count = 2;
@@ -145,8 +144,7 @@ fn display_circles<'a>(context: &'a WebGl2RenderingContext, circles: Vec<Circle>
             	WebGl2RenderingContext::STATIC_DRAW,
         	);
     	}
-
-    	let vertex_array_object = context
+        let vertex_array_object = context
         	.create_vertex_array()
         	.ok_or("Could not create vertex array object")?;
     	context.bind_vertex_array(Some(&vertex_array_object));
@@ -156,32 +154,20 @@ fn display_circles<'a>(context: &'a WebGl2RenderingContext, circles: Vec<Circle>
         	2,
         	WebGl2RenderingContext::FLOAT,
         	false,
-        	4 * std::mem::size_of::<f32>() as i32,
+        	0,
         	0,
     	);
     	context.enable_vertex_attrib_array(position_attribute_location as u32);
-        
-        context.vertex_attrib_pointer_with_i32(
-            texcoord_attribute_location as u32,
-            2,
-            WebGl2RenderingContext::FLOAT,
-            false,
-            4 * std::mem::size_of::<f32>() as i32,
-            2 * std::mem::size_of::<f32>() as i32,
-        );
-        context.enable_vertex_attrib_array(texcoord_attribute_location as u32);
 
         context.active_texture(WebGl2RenderingContext::TEXTURE0);
         context.bind_texture(WebGl2RenderingContext::TEXTURE_2D, Some(texture));
         context.uniform1i(context.get_uniform_location(&program, "u_texture").as_ref(), 0);
 
-    	draw(context, (circle_vertices.len() / vert_count) as i32);
+        context.draw_arrays(WebGl2RenderingContext::TRIANGLE_STRIP, 0, (circle_vertices.len() / vert_count) as i32);
 	}
 	Ok(())
 	
 }
-
-
 
 fn display_rectangles(context: &WebGl2RenderingContext, vector_vertices: Vec<[f32; 12]>, program: &WebGlProgram) -> Result<(), JsValue> {
 	for vertices in vector_vertices {
@@ -216,13 +202,9 @@ fn display_rectangles(context: &WebGl2RenderingContext, vector_vertices: Vec<[f3
     	context.enable_vertex_attrib_array(position_attribute_location as u32);
     	context.bind_vertex_array(Some(&vertex_array_object));
 
-    	draw(context, 4);
+        context.draw_arrays(WebGl2RenderingContext::TRIANGLE_STRIP, 0, 4);
 	}
 	Ok(())
-}
-
-fn draw(context: &WebGl2RenderingContext, vertex_count: i32) {
-    context.draw_arrays(WebGl2RenderingContext::TRIANGLE_STRIP, 0, vertex_count);
 }
 
 pub fn compile_shader(
