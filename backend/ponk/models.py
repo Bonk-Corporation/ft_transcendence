@@ -39,3 +39,10 @@ class GameHistory(models.Model):
 
     def __str__(self):
         return f"{self.game} - {'Win' if self.win else 'Loss'}"
+
+
+class Image(models.Model):
+    image = models.ImageField(upload_to="images/")
+
+    def __str__(self):
+        return self.name

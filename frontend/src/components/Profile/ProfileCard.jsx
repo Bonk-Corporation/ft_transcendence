@@ -6,11 +6,12 @@ import { Level } from './Level';
 import { language } from '../../scripts/languages';
 
 
-export function ProfileCard({ lang, profile, setProfile, setTriedLog }) {
+export function ProfileCard({ lang, profile, setProfile, setTriedLog, fetchProfile }) {
   const citation = useRef(null);
   const password = useRef(null);
   const confirmPassword = useRef(null);
   const [error, setError] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
 
   function logOut() {
     setProfile(null);
@@ -23,6 +24,7 @@ export function ProfileCard({ lang, profile, setProfile, setTriedLog }) {
     }));
   }
 
+  
   function updateProfile() {
     let data = {}
 
@@ -31,19 +33,19 @@ export function ProfileCard({ lang, profile, setProfile, setTriedLog }) {
       return;
     }
     if (citation.current.value.trim())
-      data["citation"] = citation.current.value;
-    if (password.current.value)
+    data["citation"] = citation.current.value;
+  if (password.current.value)
       data["password"] = password.current.value;
     if (!('citation' in data) && !('password' in data))
-      return ;
-
+    return ;
+  
     fetch("/api/update_profile", {
-			method: "POST",
+      method: "POST",
 			headers: {"Content-Type": "application/json"},
 			body: JSON.stringify(data),
 		}).then(res => {
-			if (!res.ok) {
-				return res.json().then(errData => {
+      if (!res.ok) {
+        return res.json().then(errData => {
 					throw new Error(errData.error)})
 			}
 		}).then(data => {
@@ -52,7 +54,7 @@ export function ProfileCard({ lang, profile, setProfile, setTriedLog }) {
 			password.current.value = "";
 			confirmPassword.current.value = "";
 		}).catch(err => {
-			setError(err.message);
+      setError(err.message);
 			password.current.value = "";
 			confirmPassword.current.value = "";
 		});
@@ -65,6 +67,29 @@ export function ProfileCard({ lang, profile, setProfile, setTriedLog }) {
       window.location.pathname = "/";
     }));
   }
+  
+  function uploadImage(event) {
+    if (!event.target.files[0]) return;
+
+    const formData = new FormData();
+    formData.append('image', event.target.files[0]);
+
+    fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    }).then(res => {
+      if (!res.ok) {
+        return res.json().then(errData => {
+          throw new Error(errData.error)
+        });
+      }
+      return res.json();
+    }).then(data => {
+      fetchProfile();
+    }).catch(err => {
+      setError(err.message);
+    });
+  }
 
   return (
     <>
@@ -76,6 +101,7 @@ export function ProfileCard({ lang, profile, setProfile, setTriedLog }) {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer rounded-full"
                 type="file"
                 accept="image/*, jpg, png"
+                onChange={uploadImage}
               />
               <i className="fa-solid fa-camera text-white text-lg"></i>
             </div>

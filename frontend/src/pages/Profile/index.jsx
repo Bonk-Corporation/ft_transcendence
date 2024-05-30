@@ -51,7 +51,7 @@ export function Profile({lang, fetchProfile, profile, setProfile, setTriedLog}) 
     <div className="flex flex-wrap justify-center w-full">
       <div className="pl-2 h-full">
           <h1 className="font-semibold text-lg md:text-xl">{language.profile[lang]}</h1>
-            <ProfileCard lang={lang} profile={profile} setProfile={setProfile} setTriedLog={setTriedLog}/>
+            <ProfileCard lang={lang} profile={profile} setProfile={setProfile} setTriedLog={setTriedLog} fetchProfile={fetchProfile} />
       </div>
 
       {
