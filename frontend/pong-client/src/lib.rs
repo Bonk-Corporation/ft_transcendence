@@ -176,7 +176,6 @@ pub async fn start() -> Result<(), JsValue> {
 					console_log!("Player 1 received: {} vs {} = {}",&txt.as_string().unwrap()[6..], &cloned_cd.id,&txt.as_string().unwrap()[6..] == &cloned_cd.id);
                 },
                 "UPDATE" => {
-					console_log!("Update received");
                     let game_state: render::GameState = serde_json::from_str(&txt.as_string().unwrap()[6..]).unwrap();
                     let (p1, p2) = game_state.score;
                     let score_str = p1.to_string() + " - " + &p2.to_string();
