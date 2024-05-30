@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'preact-iso';
 import { Card } from '../../components/utils/Card';
 import { CTA } from '../../components/utils/CTA';
 import { Chat } from '../../components/Chat/Chat';
@@ -7,10 +8,8 @@ import init, { start } from 'pong-client';
 
 export function Pong({ profile, lang }) {
 	const [mode, setMode] = useState("bot");
+	const loc = useLocation();
 
-	/*
-	parameters de jeu : jouer contre ennemi ou bot
-	*/
 	useEffect(() =>
 		init().then(start), [])
 

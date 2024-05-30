@@ -2,6 +2,7 @@ import { useLocation } from 'preact-iso';
 import { LogCard } from './LogCard';
 import { useEffect } from 'preact/hooks';
 import { language } from '../../scripts/languages';
+import init, { stop } from 'pong-client';
 
 
 export function Navbar(props) {
@@ -14,6 +15,9 @@ export function Navbar(props) {
 	useEffect(() => {
 		if (!LOG_LOCATIONS.includes(location.url) && props.triedLog && props.profile && props.profile.error && location.url) {
 			location.route('/');
+		}
+		if (location.url != '/pong') {
+			init().then(stop);
 		}
 	}, [props.profile, location, props.triedLog]);
 

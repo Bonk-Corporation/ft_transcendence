@@ -22,7 +22,7 @@ impl Clients {
 
         for cl in self.poll.as_slice() {
             match cl.id.as_str() {
-                num if num == client.id.clone()  => return Err("Client already in poll".to_string()),
+                num if num == client.id.clone()  => return Ok(()),//return Err("Client already in poll".to_string()),
                 _ => (),
             }
         }
