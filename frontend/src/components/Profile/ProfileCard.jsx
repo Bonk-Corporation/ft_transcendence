@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card } from '../utils/Card';
 import { Input } from '../utils/Input';
 import { CTA } from '../utils/CTA';
@@ -12,6 +12,7 @@ export function ProfileCard({ lang, profile, setProfile, setTriedLog, fetchProfi
   const confirmPassword = useRef(null);
   const [error, setError] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
   function logOut() {
     setProfile(null);
@@ -91,9 +92,13 @@ export function ProfileCard({ lang, profile, setProfile, setTriedLog, fetchProfi
     });
   }
 
+  useEffect(() => {
+    setLoaded(true);
+  }, [])
+
   return (
     <>
-      <Card className='flex flex-col items-center justify-center p-6 h-full'>
+      <Card className={`flex flex-col items-center justify-center p-6 h-full ${loaded ? "opacity-100" : "opacity-0"} transition-all duration-300`}>
         <div className="flex items-center">
           <div className={`relative rounded-full md:block hidden w-32 mr-4 aspect-square border-4 bg-[url(${profile ? profile.avatar : null})] bg-center bg-cover`}>
             <div className="absolute inset-0 z-50 hover:opacity-60 opacity-0 w-full h-full bg-black rounded-full transition-all flex items-center justify-center">
