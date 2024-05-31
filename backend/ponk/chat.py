@@ -59,6 +59,8 @@ class Chat(WebsocketConsumer):
         message = json.loads(text_data)
         if "content" in message and "room" in message:
             message["author"] = self.user.username
+            message["avatar"] = self.user.avatar
+            message["level"] = self.user.level
             async_to_sync(self.channel_layer.group_send)(
                 message["room"], {"type": "chat.message", "message": message}
             )

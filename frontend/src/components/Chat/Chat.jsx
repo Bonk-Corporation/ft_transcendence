@@ -53,7 +53,7 @@ export function Chat({ profile, lang }) {
 				content: input.value,
 			}));
 			(messages[activeRoom] ??= [])
-				.push(["local", input.value]);
+				.push(["local", {"content": input.value}]);
 			setMessages({...messages});
 			input.value = "";
 		}
@@ -79,11 +79,12 @@ export function Chat({ profile, lang }) {
 					break;
 				case "message":
 					(messages[message.room] ??= [])
-						.push(["distant", message.content]);
+						.push(["distant", message]);
 					setMessages(messages);
 					break;
 			}
 		}
+		console.log(messages);
 	}, []);
 
 	const roomOpts = {
