@@ -1,5 +1,10 @@
 # ft_transcendence
 
+## Introduction
+Best transcendence ever, made by students from 42LeHavre.
+The goal of this project is to make a single page application displaying at least a Pong game.
+But we decided to get more ambitious...
+
 ## General Requirements
 - Create an API app on 42 intra
 - Edit your redirect URI to ```https://localhost:8443/auth/42``` in production mode or to ```http://localhost:8000/auth/42``` in dev mode
