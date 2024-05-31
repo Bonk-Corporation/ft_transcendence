@@ -4,6 +4,8 @@
 Best transcendence ever, made by students from 42LeHavre.
 The goal of this project is to make a single page application displaying at least a Pong game.
 But we decided to get more ambitious...
+![Screenshot from 2024-05-31 20-08-24](https://github.com/Bonk-Corporation/ft_transcendence/assets/114430228/a35969cd-3bf0-4385-aa9a-3da83de064f2)
+
 
 ## General Requirements
 - Create an API app on 42 intra
