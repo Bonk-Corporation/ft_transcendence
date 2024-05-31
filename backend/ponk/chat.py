@@ -1,6 +1,8 @@
 from django.urls import path
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from datetime import timedelta
+from django.utils import timezone
 import json
 
 
@@ -24,7 +26,14 @@ class Chat(WebsocketConsumer):
                     dict(
                         type="friends",
                         friends=list(
-                            map(lambda f: f.username, self.user.friends.all())
+                            map(
+                                lambda f: f.username,
+                                filter(
+                                    lambda f: timezone.now() - f.last_online
+                                    < timedelta(seconds=10),
+                                    self.user.friends.all(),
+                                ),
+                            )
                         ),
                     )
                 )
