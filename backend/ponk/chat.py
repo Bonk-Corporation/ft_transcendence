@@ -6,13 +6,16 @@ from django.utils import timezone
 import json
 
 
+MAIN_ROOM = "Lobby"
+
+
 class Chat(WebsocketConsumer):
     def connect(self):
         self.accept()
         self.user = self.scope["user"]
 
         if self.user.is_authenticated:
-            async_to_sync(self.channel_layer.group_add)("Lobby", self.channel_name)
+            async_to_sync(self.channel_layer.group_add)(MAIN_ROOM, self.channel_name)
 
             for friend in self.user.friends.all():
                 users = sorted([friend.username, self.user.username])
@@ -41,7 +44,9 @@ class Chat(WebsocketConsumer):
 
     def disconnect(self, _):
         if self.user.is_authenticated:
-            async_to_sync(self.channel_layer.group_discard)("Lobby", self.channel_name)
+            async_to_sync(self.channel_layer.group_discard)(
+                MAIN_ROOM, self.channel_name
+            )
 
             for friend in self.user.friends.all():
                 users = sorted([friend.username, self.user.username])
@@ -72,7 +77,7 @@ class Chat(WebsocketConsumer):
             else:
                 real_room = user2
         else:
-            real_room = "Lobby"
+            real_room = MAIN_ROOM
 
         message["room"] = real_room
         if message["author"] != self.user.username:
