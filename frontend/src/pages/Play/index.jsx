@@ -10,26 +10,27 @@ export function Play() {
 		}));
 
 		if (!document.getElementById("lottie")) {
-			const anchorPong = document.getElementById('anchor-pong');
-			const anchorBonk = document.getElementById('anchor-bonk');
 			const scriptEl = document.createElement('script');
+
 			scriptEl.id = "lottie";
 			scriptEl.src = "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
 			scriptEl.type = "module";
-	
-			document.body.appendChild(scriptEl);
-			const dotlottie =`<dotlottie-player class="
-									relative bottom-28
-									opacity-0 group-hover:opacity-100
-									transition-all ease-in-out
-									h-[35rem] w-full
-									"
-								src="/media/images/flame.json" background="transparent" speed="1" loop autoplay></dotlottie-player>`;
-			anchorPong.innerHTML += dotlottie;
-			anchorBonk.innerHTML += dotlottie;
 
+			document.body.appendChild(scriptEl);
 		}
 
+		const anchorPong = document.getElementById('anchor-pong');
+		const anchorBonk = document.getElementById('anchor-bonk');
+		
+		const dotlottie =`<dotlottie-player class="
+								relative bottom-28
+								opacity-0 group-hover:opacity-100
+								transition-all ease-in-out
+								h-[35rem] w-full"
+							src="/media/images/flame.json" background="transparent" speed="1" loop autoplay></dotlottie-player>`;
+		
+		anchorPong.innerHTML += dotlottie;
+		anchorBonk.innerHTML += dotlottie;
 	}, [])
 	
 	return (

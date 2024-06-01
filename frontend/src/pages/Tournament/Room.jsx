@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { CTA } from '../../components/utils/CTA';
 import { PlayerCard } from '../../components/Tournament/PlayerCard';
 import { PopUp } from '../../components/utils/PopUp';
@@ -79,6 +79,38 @@ export function Room(props) {
       handleClick();
   }
 
+  useEffect(() => {
+		fetch("/api/citation").then(res => res.json().then(data => {
+			if (!data.error)
+				setCitation(data)
+		}));
+
+		if (!document.getElementById("lottie")) {
+      const scriptEl = document.createElement('script');
+			scriptEl.id = "lottie";
+			scriptEl.src = "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
+			scriptEl.type = "module";
+      
+			document.body.appendChild(scriptEl);
+      
+		}
+
+    const anchorPong = document.getElementById('pong');
+    const anchorBonk = document.getElementById('bonk');
+
+    const dotlottie =`<dotlottie-player class="
+                relative bottom-28
+                opacity-0 group-hover:opacity-100
+                transition-all ease-in-out
+                h-[46rem] w-full
+                "
+              src="/media/images/flame.json" background="transparent" speed="1" loop autoplay></dotlottie-player>`;
+    
+    anchorPong.innerHTML += dotlottie;
+    anchorBonk.innerHTML += dotlottie;
+    
+	}, [])
+
   return (
     <div className="w-full flex justify-center h-[40rem]">
       <PopUp onKeyPress={enter} clear={clear} active={popUp} setActive={setPopUp} className="flex flex-col items-center">
@@ -86,11 +118,14 @@ export function Room(props) {
         <Input ref={inputRef} className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder={language.search_someone[props.lang]} />
         <CTA onClick={handleClick}>{language.invite[props.lang]}</CTA>
       </PopUp>
-      <div className="h-full w-4/6 flex flex-col items-center">
-        <div className="h-full w-full flex overflow-hidden rounded">
-          <div onClick={() => setActive("Pong")} className={`${active == "Pong" ? "border-4 border-white" : ""} h-full w-1/3 hover:w-1/2 bg-red-500 transition-all ease-in-out flex justify-center py-4 text-xl`}>Pong</div>
-          <div onClick={() => setActive("Ponk")} className={`${active == "Ponk" ? "border-4 border-white" : ""} h-full w-1/3 hover:w-1/2 bg-blue-500 transition-all ease-in-out flex justify-center py-4 text-xl`}>Ponk</div>
-          <div onClick={() => setActive("Bonk")} className={`${active == "Bonk" ? "border-4 border-white" : ""} h-full w-1/3 hover:w-1/2 bg-green-500 transition-all ease-in-out flex justify-center py-4 text-xl`}>Bonk</div>
+      <div className="h-full w-2/3 flex flex-col items-center">
+        <div className="h-full w-full flex overflow-hidden">
+          <div id="pong" onClick={() => setActive("Pong")} className={`${active == "Pong" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 mr-2 rounded bg-red-500 transition-all ease-in-out flex flex-col items-center text-xl group`}>
+            <p className="absolute mt-4 transition-all ease-in-out text-xl group-hover:text-9xl font-semibold">Pong</p>
+          </div>
+          <div id="bonk" onClick={() => setActive("Bonk")} className={`${active == "Bonk" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 ml-2 rounded bg-blue-500 transition-all ease-in-out flex flex-col items-center text-xl group`}>
+            <p className="absolute mt-4 transition-all ease-in-out text-xl group-hover:text-9xl font-semibold">Bonk</p>
+          </div>
         </div>
         <div className="my-4 flex items-center justify-center">
           <button onClick={() => {setPopUp(true)}} className='mr-2 px-12 py-3 bg-transparent border-2 border-white rounded-lg hover:bg-white hover:text-black transition-all ease-in-out'><i className="fa-solid fa-link mr-2"></i>{language.invite[props.lang]}</button>
