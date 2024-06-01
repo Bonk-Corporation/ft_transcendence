@@ -14,6 +14,7 @@ from django.utils import timezone
 from ponk.tournament import rooms
 from ponk.utils import get_selected_skin_url
 from ponk.private import tokens
+import ponk.bonk
 import ponk.private
 import json
 import os
@@ -194,6 +195,7 @@ def upload_image(request, *args, **kwargs):
 urls = [
     path("me", me),
     path("friends/", include(ponk.friends.urls)),
+    path("bonk/", include(ponk.bonk.urls)),
     path("private/", include(ponk.private.urls)),
     path("tournament/", include(ponk.tournament.urls)),
     path("shop", shoopa_shoop),
