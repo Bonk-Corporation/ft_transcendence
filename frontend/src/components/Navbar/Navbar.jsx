@@ -9,7 +9,7 @@ export function Navbar(props) {
 	const location = useLocation();
 	const logged = true;
 
-	const AUTHORIZED_LOCATIONS = ["/play", "/tournament", "/shop", "/profile", "/legal-notice"];
+	const AUTHORIZED_LOCATIONS = ["/play", "/tournament", "/shop", "/profile", "/legal-notice", "/tournament/room"];
 	const LOG_LOCATIONS = ["/", "/signup"]
 	const [showLegalNotice, setShowLegalNotice] = useState(false);
 
