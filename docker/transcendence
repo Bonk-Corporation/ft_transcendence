@@ -1,0 +1,9 @@
+FROM nixos/nix
+
+RUN echo "demostanis:x:1000:1000:demostanis::/sbin/nologin" >> /etc/passwd
+
+COPY . /app
+
+WORKDIR /app
+
+CMD ["nix-shell", "--arg", "prod", "true"]

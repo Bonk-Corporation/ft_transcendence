@@ -1,5 +1,6 @@
 #!/bin/sh
 
 if [ "$prod" = true ]; then
+	pnpm -C frontend wasm
 	pnpm -C frontend build
 fi

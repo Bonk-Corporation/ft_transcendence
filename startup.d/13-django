@@ -5,5 +5,5 @@ prod=$1
 if [ "$prod" = true ]; then
 	( sleep 3 && echo -e \
 		"\x1b[2J\x1b[1mListening on https://localhost:8443/\x1b[0m" ) &
-	exec make
+	make
 fi

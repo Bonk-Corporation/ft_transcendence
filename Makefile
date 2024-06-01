@@ -8,8 +8,11 @@ run:
 fdev:
 	$(PNPM) -C frontend run dev
 
+pong-server:
+	$(MAKE) -C backend/$@
+
 venv:
 	$(RM) -r $@
 	$(VIRTUALENV) $@
 
-.PHONY: run
+.PHONY: run venv pong-server

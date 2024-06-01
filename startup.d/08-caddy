@@ -3,21 +3,12 @@
 prod=$1
 
 if [ "$prod" = true ]; then
-	export "port=8443"
-	export "protocol=https"
-else
-	export "port=8000"
-	export "protocol=http"
+	export "optional_https_url=,\ https://localhost:8443"
 fi
 
-if [ "$prod" = true ]; then
-	# hardcoded in docker
-	export "srv_root=/srv/static"
-	export "skins_root=/srv/skins"
-else
-	export "srv_root=$PWD/.static"
-	export "skins_root=$PWD/skins"
-fi
+export "srv_root=$PWD/.static"
+export "skins_root=$PWD/skins"
+export "media_root=$PWD/backend/media"
 
 # copy all static files to .static, to be served by caddy
 # since serving them by django is strongly discouraged
@@ -28,7 +19,7 @@ caddy start --adapter caddyfile --config <( cat <<-EOF
 		auto_https disable_redirects
 	}
 
-	$protocol://localhost:$port
+	http://$HOST_IP_ADDRESS:8000$optional_https_url
 
 	handle_path /static/* {
 		root * $srv_root
@@ -40,8 +31,16 @@ caddy start --adapter caddyfile --config <( cat <<-EOF
 		file_server
 	}
 
+	handle_path /media/* {
+		root * $media_root
+		file_server
+	}
+
 	handle {
 		reverse_proxy localhost:8001 # django
+		header {
+			Server bob
+		}
 	}
 EOF
 )

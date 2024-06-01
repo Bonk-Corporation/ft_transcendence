@@ -1,6 +1,23 @@
 #!/bin/sh
 
-initdb 2>/dev/null
+prod=$1
+
+if [ "$prod" = true ]; then
+	mkdir -p backend/.pg
+	chown 1000:1000 backend/.pg
+	# i can't fucking sudo
+	(
+		echo '#include <unistd.h>'
+		echo '#include <sys/types.h>'
+		echo '#define blblblbl return'
+		echo 'uid_t geteuid(){blblblbl 1000;}'
+		echo 'uid_t getuid(){blblblbl 1000;}'
+	) |\
+		cc -shared -xc -
+	export LD_PRELOAD=./a.out
+fi
+
+initdb #2>/dev/null
 pg_ctl -o "-k /tmp" -l backend/pg.log start
 createdb -h /tmp "$DB_NAME" 2>/dev/null
 psql -h /tmp -c "
@@ -8,3 +25,6 @@ psql -h /tmp -c "
 	GRANT ALL ON DATABASE $DB_NAME TO $DB_USER;
 	ALTER DATABASE $DB_NAME OWNER TO $DB_USER;" \
 	"$DB_NAME"
+
+unset LD_PRELOAD
+rm a.out

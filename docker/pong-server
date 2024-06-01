@@ -1,0 +1,7 @@
+FROM nixos/nix
+
+COPY . /app
+
+WORKDIR /app
+
+CMD ["nix-shell", "--arg", "prod", "true", "--argstr", "should-start", "pong-server"]
