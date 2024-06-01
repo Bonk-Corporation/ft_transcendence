@@ -34,7 +34,8 @@ HOST = "localhost:8000"
 if not DEBUG:
     HOST = "localhost:8443"
     ALLOWED_HOSTS = [
-        "localhost",  # to test production
+        "localhost",
+        os.environ.get("HOST_IP_ADDRESS", "localhost"),  # to test production
         HOST,
     ]
 else:

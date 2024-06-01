@@ -1,21 +1,26 @@
-version: "3.7"
-
 services:
-  django-app:
-    build: .
+  transcendence:
+    build:
+      context: docker
+      dockerfile: transcendence
     volumes:
-      - static:/app/frontend/static/
       - .:/app
-    ports:
-      - "8000:8000"
-  caddy:
-    build: caddy/
+      - media:/app/backend/media
     ports:
       - "8443:8443"
+      - "8000:8000"
     depends_on:
-      - django-app
+      - pong-server
+    environment:
+      - HOST_IP_ADDRESS
+  pong-server:
     volumes:
-      - static:/srv/static
+      - .:/app
+    build:
+      context: docker
+      dockerfile: pong-server
+    ports:
+      - "4210:4210"
 
 volumes:
-  static:
+  media:

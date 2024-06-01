@@ -1,2 +1,5 @@
 node_modules
+.initial_migration_done
+backend/.pg
+backend/media
 venv
