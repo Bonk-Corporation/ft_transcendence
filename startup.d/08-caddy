@@ -4,14 +4,19 @@ prod=$1
 
 if [ "$prod" = true ]; then
 	export "port=8443"
+	export "protocol=https"
 else
 	export "port=8000"
+	export "protocol=http"
 fi
 
 if [ "$prod" = true ]; then
-	export "srv_root=/srv/static" # hardcoded in docker
+	# hardcoded in docker
+	export "srv_root=/srv/static"
+	export "skins_root=/srv/skins"
 else
 	export "srv_root=$PWD/.static"
+	export "skins_root=$PWD/skins"
 fi
 
 # copy all static files to .static, to be served by caddy
@@ -19,10 +24,15 @@ fi
 yes yes | python backend/manage.py collectstatic
 
 caddy start --adapter caddyfile --config <( cat <<-EOF
-	http://localhost:$port
+	$protocol://localhost:$port
 
 	handle_path /static/* {
 		root * $srv_root
+		file_server
+	}
+
+	handle_path /skins/* {
+		root * $skins_root
 		file_server
 	}
 
