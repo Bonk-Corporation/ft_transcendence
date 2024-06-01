@@ -11,7 +11,6 @@ use axum::{
 use input::*;
 use tokio::sync::RwLock;
 
-#[derive(Debug)]
 struct Clients {
     poll: Vec<Client>,
     games: Vec<Game>,
@@ -150,16 +149,24 @@ impl Clients {
     }
 }
 
-#[derive(Debug)]
+#[derive(PartialEq)]
+enum BotState {
+    WAIT,
+    ESTIMATE,
+    PLAY,
+}
+
 struct BotGame {
     pub player          : Entity,
     pub bot             : Entity,
     pub ball            : Entity,
     pub last_move       : Movement,
+    pub last_state      : BotState,
     pub move_time       : SystemTime,
     pub update_time     : SystemTime,
+    pub preshot_delay   : f32,
+    pub think_delay     : f32,
     pub pause_counter   : u8,
-    pub delay           : f32,
 }
 
 impl BotGame {
@@ -169,24 +176,26 @@ impl BotGame {
             bot             : Entity::default(),
             ball            : Entity::default(),
             last_move       : Movement::Static,
+            last_state      : BotState::WAIT,
             move_time       : SystemTime::now(),
             update_time     : SystemTime::UNIX_EPOCH,
+            preshot_delay   : 0.,
+            think_delay     : 0.,
             pause_counter   : 0,
-            delay           : 0.0,
         }
     }
 
     async fn bot_turn(&mut self, game: Game) {
-        let time_elapsed = self.move_time.elapsed().unwrap().as_millis() as u64;
+        let time_elapsed = self.move_time.elapsed().unwrap().as_millis();
 
-        if 1000 < self.update_time.elapsed().unwrap().as_millis() {
+        if BOT_SCRAP_TIME < self.update_time.elapsed().unwrap().as_millis() {
             self.player         = game.state.lock().await.player1_ent.clone();
             self.bot            = game.state.lock().await.player2_ent.clone();
             self.ball           = game.state.lock().await.ball_ent.clone();
             self.update_time    = SystemTime::now();
         } else {
-            let mut time_credit = time_elapsed;
-            while PLAYER_MOVE_TIME <  time_credit{
+            let mut time_credit = time_elapsed as u64;
+            while PLAYER_MOVE_TIME < time_credit {
                 if self.last_move == Movement::Up && !hit_top(&self.bot) {
                     self.bot.position.y += PLAYER_SPEED;
                 } else if self.last_move == Movement::Down && !hit_bot(&self.bot) {
@@ -194,30 +203,64 @@ impl BotGame {
                 }
                 time_credit -= PLAYER_MOVE_TIME;
             }
-            self.ball.position += self.ball.velocity * 2.0;
+            self.ball.position += self.ball.velocity;
             if hit_bounds(&self.ball) {
                 self.ball.velocity.y = -self.ball.velocity.y;
             }
         }
-
-        let mut ball_touch = (self.bot.position.x - self.ball.position.x - self.ball.width) / self.ball.velocity.x * self.ball.velocity.y + self.ball.position.y;
-        let rebound_count = (ball_touch / WINDOW_HEIGHT).ceil();
-
-        if rebound_count as i32 % 2 == 0 {
-            ball_touch = WINDOW_HEIGHT - ball_touch;
-        }
-        ball_touch = ball_touch.rem_euclid(WINDOW_HEIGHT);
-
-        if self.ball.velocity.x < 0.0 && 0.0 < self.ball.position.x {
-            if self.delay <= 0.0 {
-                self.delay = rand::random::<f32>() * BOT_DELAY;
+        
+        if self.ball.velocity.x <= 0. && 0. <= self.ball.position.x {
+            self.bot_move(None, game).await;
+            self.last_state = BotState::WAIT;
+        } else if self.ball.velocity.x <= 0. {
+            if self.last_state == BotState::WAIT {
+                self.preshot_delay = rand::random::<f32>() * BOT_PRESHOT_DELAY + BOT_PRESHOT_MIN_DELAY;
+            }
+            if 0. < self.preshot_delay {
+                self.preshot_delay -= time_elapsed as f32;
             }
             self.bot_move(None, game).await;
-        } else if 0.0 < self.delay {
-            self.delay -= time_elapsed as f32;
-            self.bot_move(None, game).await;
+            self.last_state = BotState::ESTIMATE;
         } else {
-            self.bot_move(Some(ball_touch), game).await;
+            let mut ball_touch = (self.bot.position.x - self.ball.position.x - self.ball.width) / self.ball.velocity.x * self.ball.velocity.y + self.ball.position.y;
+            let rebound_count = (ball_touch / WINDOW_HEIGHT).ceil();
+
+            if rebound_count as i32 % 2 == 0 {
+                ball_touch = WINDOW_HEIGHT - ball_touch;
+            }
+            ball_touch = ball_touch.rem_euclid(WINDOW_HEIGHT);
+
+            let bot_reach_time =    if ball_touch < self.bot.position.y {
+                                        (self.bot.position.y - ball_touch) / PLAYER_SPEED * PLAYER_MOVE_TIME as f32
+                                    } else if self.bot.position.y + self.bot.height < ball_touch {
+                                        (ball_touch - self.bot.position.y - self.bot.height) / PLAYER_SPEED * PLAYER_MOVE_TIME as f32
+                                    } else {
+                                        0.0
+                                    };
+            let ball_reach_time = (self.bot.position.x - self.ball.position.x) / (self.ball.velocity.x) * 1000. / FPS as f32;
+
+            if BOT_MISS_TIME <= bot_reach_time - ball_reach_time {
+                self.think_delay = 0.;
+                self.preshot_delay = 0.;
+            }
+
+            if self.last_state == BotState::WAIT || self.last_state == BotState::ESTIMATE {
+                self.think_delay = rand::random::<f32>() * BOT_DELAY_REBOUND_FACTOR * rebound_count * rebound_count;
+                if self.last_state == BotState::WAIT {
+                    self.preshot_delay = rand::random::<f32>() * BOT_PRESHOT_DELAY + BOT_PRESHOT_MIN_DELAY;
+                }
+            }
+            if self.think_delay <= 0. {
+                self.bot_move(Some(ball_touch), game).await;
+            } else if self.preshot_delay <= 0. {
+                self.think_delay -= time_elapsed as f32;
+                self.bot_move(Some(WINDOW_HEIGHT / 2.), game).await;
+            } else {
+                self.preshot_delay -= time_elapsed as f32;
+                self.think_delay -= time_elapsed as f32;
+                self.bot_move(None, game).await;
+            }
+            self.last_state = BotState::PLAY;
         }
     }
 
@@ -230,12 +273,12 @@ impl BotGame {
         };
 
         let target_diff =   if let Some(y_target) = y_target {
-                                y_target - self.bot.position.y - self.bot.height / 2.0
+                                y_target - self.bot.position.y
                             } else {
-                                0.0
+                                0.
                             };
 
-        if self.pause_counter == 0 && target_diff < -BOT_MARGIN && self.last_move != Movement::Down
+        if self.pause_counter == 0 && target_diff < 0. && self.last_move != Movement::Down
         {
             if self.last_move == Movement::Static {
                 ai_move.movement = String::from("DOWN");
@@ -245,7 +288,7 @@ impl BotGame {
                 self.pause_counter = 1;
             }
         }
-        if self.pause_counter == 0 && BOT_MARGIN < target_diff && self.last_move != Movement::Up
+        if self.pause_counter == 0 && self.bot.height <= target_diff && self.last_move != Movement::Up
         {
             if self.last_move == Movement::Static {
                 ai_move.movement = String::from("UP");
@@ -255,7 +298,7 @@ impl BotGame {
                 self.pause_counter = 1;
             }
         }
-        if 0 < self.pause_counter || (target_diff.abs() <= BOT_MARGIN && self.last_move != Movement::Static)
+        if 0 < self.pause_counter || (0. <= target_diff && target_diff <= self.bot.height && self.last_move != Movement::Static)
         {
             if self.pause_counter == BOT_PAUSE {
                 self.pause_counter = 0;
