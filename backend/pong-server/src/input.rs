@@ -7,32 +7,35 @@ use glam::Vec2;
 use std::sync::Arc;
 use futures::lock::Mutex;
 
-pub const FPS               : u64   = 60;
-pub const WINDOW_WIDTH      : f32   = 1920.;
-pub const WINDOW_HEIGHT     : f32   = 1440.;
+pub const FPS                       : u64   = 60;
+pub const WINDOW_WIDTH              : f32   = 1920.;
+pub const WINDOW_HEIGHT             : f32   = 1440.;
 
-pub const PLAYER_WIDTH      : f32   = WINDOW_WIDTH * 0.04;
-pub const PLAYER_HEIGHT     : f32   = WINDOW_HEIGHT * 0.3;
-pub const PLAYER_MARGIN     : f32   = PLAYER_WIDTH;
-pub const PLAYER_MOVE_TIME  : u64   = 8;
+pub const PLAYER_WIDTH              : f32   = WINDOW_WIDTH * 0.04;
+pub const PLAYER_HEIGHT             : f32   = WINDOW_HEIGHT * 0.3;
+pub const PLAYER_MARGIN             : f32   = WINDOW_WIDTH * 0.02;
+pub const PLAYER_MOVE_TIME          : u64   = 8;
 
-pub const BALL_WIDTH        : f32   = PLAYER_WIDTH;
-pub const BALL_HEIGHT       : f32   = BALL_WIDTH;
+pub const BALL_WIDTH                : f32   = PLAYER_WIDTH;
+pub const BALL_HEIGHT               : f32   = BALL_WIDTH;
 
-pub const PLAYER_SPEED      : f32   = WINDOW_HEIGHT / 100.;
-pub const PLAYER_SPIN       : f32   = WINDOW_HEIGHT / 100.;
+pub const PLAYER_SPEED              : f32   = WINDOW_HEIGHT / 100.;
+pub const PLAYER_SPIN               : f32   = WINDOW_HEIGHT / 100.;
 
-pub const BALL_SPEED        : f32   = WINDOW_WIDTH / 200.;
-pub const BALL_ACCELERTION  : f32   = BALL_SPEED / 32.;
-pub const MAX_BALL_SPEED    : f32   = BALL_SPEED * 2.;
+pub const BALL_SPEED                : f32   = WINDOW_WIDTH / 200.;
+pub const BALL_ACCELERTION          : f32   = BALL_SPEED / 32.;
+pub const MAX_BALL_SPEED            : f32   = BALL_SPEED * 2.;
 
-pub const MAX_SCORE         : u8    = 5;
+pub const MAX_SCORE                 : u8    = 5;
 
-pub const BOT_MARGIN        : f32   = PLAYER_WIDTH;
-pub const BOT_DELAY         : f32   = 2000.0;
-pub const BOT_PAUSE         : u8    = 2;
+pub const BOT_SCRAP_TIME            : u128  = 1000;
+pub const BOT_MISS_TIME             : f32   = 200.;
+pub const BOT_PRESHOT_MIN_DELAY     : f32   = 1000.;
+pub const BOT_PRESHOT_DELAY         : f32   = 1000.;
+pub const BOT_DELAY_REBOUND_FACTOR  : f32   = 500.;
+pub const BOT_PAUSE                 : u8    = 2;
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Client {
    pub id: String,
    pub name: String,
@@ -52,7 +55,7 @@ pub struct Move {
     pub movement: String,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct Entity {
     pub width       : f32,
     pub height      : f32,
@@ -104,7 +107,7 @@ pub struct GameState {
     pub finished    : bool,
 }
 
-#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub enum EndGame {
     Player1,
     Player2,
@@ -234,7 +237,7 @@ impl GameState {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Game {
     pub player1 : Option<Client>,
     pub player2 : Option<Client>,
@@ -243,7 +246,7 @@ pub struct Game {
     pub state   : Arc<Mutex<GameState>>,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(PartialEq)]
 pub enum Movement {
     Up,
     Down,
