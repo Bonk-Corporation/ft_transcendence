@@ -24,6 +24,10 @@ fi
 yes yes | python backend/manage.py collectstatic
 
 caddy start --adapter caddyfile --config <( cat <<-EOF
+	{
+		auto_https disable_redirects
+	}
+
 	$protocol://localhost:$port
 
 	handle_path /static/* {
