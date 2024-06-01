@@ -74,9 +74,14 @@ export function Room(props) {
     inputRef.current.value = "";
   }
 
+  function enter(e) {
+    if (e.key == 'Enter')
+      handleClick();
+  }
+
   return (
     <div className="w-full flex justify-center h-[40rem]">
-      <PopUp clear={clear} active={popUp} setActive={setPopUp} className="flex flex-col items-center">
+      <PopUp onKeyPress={enter} clear={clear} active={popUp} setActive={setPopUp} className="flex flex-col items-center">
         <h1 className="font-semibold text-xl">{language.add_user[props.lang]}</h1>
         <Input ref={inputRef} className="rounded-full bg-[#4f4f4f] mb-4 mt-2" placeholder={language.search_someone[props.lang]} />
         <CTA onClick={handleClick}>{language.invite[props.lang]}</CTA>

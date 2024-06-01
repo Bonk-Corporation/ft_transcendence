@@ -1,10 +1,11 @@
 import React from 'react';
 
-export function Card({id = "", className = "", children, setHover = (_) => {}}) {
+export function Card({id = "", className = "", children, setHover = (_) => {}, onKeyPress = () => {}}) {
   return (
     <div className={`backdrop-blur-lg rounded-md before:rounded-md ${className} bg-gradient-to-br from-white/20 to-white/5  transition-all ease-in-out`}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
+        onKeyPress={onKeyPress}
     	id={id}
 	  >
       {children}

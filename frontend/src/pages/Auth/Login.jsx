@@ -44,11 +44,16 @@ export function Login(props) {
 		});
 	}
 
+	function enter(e) {
+		if (e.key == 'Enter')
+			handleLogin();
+	}
+
 	return (
 		<Card className="py-28 w-full max-w-[800px] px-16 flex flex-col items-center justify-center">
 			<div className="max-w-[600px] flex flex-col items-center justify-center">
 				<h1 className="text-2xl font-semibold">{language.log_in[props.lang]}</h1>
-				<form action="" method="POST" className="w-full flex flex-col items-center">
+				<form onKeyPress={enter} action="" method="POST" className="w-full flex flex-col items-center">
 					<Input className="my-1 w-full" ref={username} placeholder={language.username[props.lang]} type="text"/>
 					<Input className="my-1 w-full" ref={password} placeholder={language.password[props.lang]} type="password"/>
 					<p className="mb-2 text-sm text-red-500">{error}</p>
