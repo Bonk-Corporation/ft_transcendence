@@ -21,6 +21,10 @@ export function Navbar(props) {
 		if (!LOG_LOCATIONS.includes(location.url) && props.triedLog && profile && profile.error && location.url) {
 			location.route('/');
 		}
+		// why the fuck is it the navbar managing the redirects?????????????
+		if (LOG_LOCATIONS.includes(location.url) && profile)
+			location.route("/play");
+
 		if (location.url != '/pong') {
 			init().then(stop);
 		}
