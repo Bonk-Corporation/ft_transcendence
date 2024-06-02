@@ -1,0 +1,80 @@
+[gd_scene load_steps=6 format=3 uid="uid://3psjlgsy78cg"]
+
+[ext_resource type="Script" path="res://map/map.gd" id="1_cvoq4"]
+[ext_resource type="Script" path="res://map/collision.gd" id="2_6sgan"]
+[ext_resource type="Texture2D" uid="uid://dbn7bota8p2gd" path="res://asset/city.svg" id="3_xxrcf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5i30o"]
+size = Vector2(438.756, 38)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qcc0f"]
+properties/0/path = NodePath("scores:text")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("label:text")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="map" type="Node2D"]
+script = ExtResource("1_cvoq4")
+
+[node name="body" type="StaticBody2D" parent="."]
+z_index = -1
+position = Vector2(640, 320)
+
+[node name="area" type="Area2D" parent="body"]
+monitoring = false
+monitorable = false
+
+[node name="collisions" type="CollisionShape2D" parent="body/area"]
+shape = SubResource("RectangleShape2D_5i30o")
+
+[node name="collision" type="CollisionShape2D" parent="body"]
+shape = SubResource("RectangleShape2D_5i30o")
+script = ExtResource("2_6sgan")
+
+[node name="spawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://player/player.tscn")
+spawn_path = NodePath("../players")
+
+[node name="background" type="ParallaxBackground" parent="."]
+
+[node name="layer" type="ParallaxLayer" parent="background"]
+texture_repeat = 2
+motion_scale = Vector2(0.5, 0.5)
+motion_mirroring = Vector2(1280.85, 0)
+
+[node name="city" type="Sprite2D" parent="background/layer"]
+modulate = Color(0.105882, 0.14902, 0.231373, 1)
+texture_repeat = 2
+position = Vector2(642.281, 523.763)
+scale = Vector2(1.09229, 0.345124)
+texture = ExtResource("3_xxrcf")
+
+[node name="layer_2" type="ParallaxLayer" parent="background"]
+texture_repeat = 2
+motion_mirroring = Vector2(1280, 0)
+
+[node name="city" type="Sprite2D" parent="background/layer_2"]
+modulate = Color(0.0509804, 0.105882, 0.164706, 1)
+texture_repeat = 2
+position = Vector2(643.281, 587.878)
+scale = Vector2(1.09059, 0.364806)
+texture = ExtResource("3_xxrcf")
+
+[node name="scores" type="Label" parent="."]
+offset_left = 11.0
+offset_top = 10.0
+offset_right = 260.0
+offset_bottom = 152.0
+
+[node name="synchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_qcc0f")
+
+[node name="players" type="Node" parent="."]
+
+[node name="label" type="Label" parent="."]
+offset_top = 100.0
+offset_right = 1280.0
+offset_bottom = 200.0
+horizontal_alignment = 1
