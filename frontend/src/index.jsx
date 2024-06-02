@@ -63,7 +63,7 @@ export function App() {
 						<Route path="/signup" component={() => <Signup lang={lang} setTriedLog={setTriedLog} />} />
 						<Route path="/play" component={Play} />
 						<Route path="/tournament" component={() => <Menu lang={lang} />} />
-						<Route path="/tournament/room" component={() => <Room lang={lang} />} />
+						<Route path="/tournament/room" component={() => <Room lang={lang} profile={profile} />} />
 						<Route path="/shop" component={() => <Shop lang={lang} profile={profile} setProfile={setProfile} fetchProfile={fetchProfile} />} />
 						<Route path="/profile" component={() => <Profile lang={lang} fetchProfile={fetchProfile} profile={profile} setProfile={setProfile} setTriedLog={setTriedLog} />} />
 						<Route path="/pong" component={() => <Pong profile={profile} lang={lang} />} />
