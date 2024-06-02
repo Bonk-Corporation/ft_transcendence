@@ -15,6 +15,13 @@ venv:
 	$(RM) -r $@
 	$(VIRTUALENV) $@
 
+bonk-rebuild:
+	godot4 --display-driver headless --path backend/bonk-server --export-debug server $(PWD)/backend/bonk-server/pkg/bonk-server.x86-64
+	godot4 --display-driver headless --path backend/bonk-server --export-debug Web $(PWD)/frontend/bonk-client/bonk-client.html
+	gzip -f frontend/bonk-client/bonk-client.wasm
+	gzip -f frontend/bonk-client/bonk-client.pck
+	sh backend/bonk-server/pkg/bonk-server.sh
+
 bonk-server:
 	sh backend/bonk-server/pkg/bonk-server.sh
 
