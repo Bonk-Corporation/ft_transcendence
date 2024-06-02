@@ -45,6 +45,8 @@ let
 			targets.wasm32-unknown-unknown.latest.rust-std
 		])
 		wasm-pack
+
+		wget
 		godot_4
 	];
 in
