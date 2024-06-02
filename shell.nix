@@ -38,6 +38,14 @@ let
 		black
 
 		tmux
+
+		# rust
+		(with fenix; with latest; combine [
+			minimal.toolchain
+			targets.wasm32-unknown-unknown.latest.rust-std
+		])
+		wasm-pack
+		godot_4
 	];
 in
 

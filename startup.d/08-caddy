@@ -23,6 +23,10 @@ caddy start --adapter caddyfile --config <( cat <<-EOF
 	handle_path /static/* {
 		root * $srv_root
 		file_server
+		header {
+			Cross-Origin-Opener-Policy same-origin
+			Cross-Origin-Embedder-Policy require-corp
+		}
 	}
 
 	handle_path /assets/* {
@@ -31,10 +35,15 @@ caddy start --adapter caddyfile --config <( cat <<-EOF
 	}
 
 	handle {
+		header /bonk {
+			Cross-Origin-Opener-Policy same-origin
+			Cross-Origin-Embedder-Policy require-corp
+		}
 		reverse_proxy localhost:8001 # django
 		header {
 			Server bob
 		}
 	}
+
 EOF
 )

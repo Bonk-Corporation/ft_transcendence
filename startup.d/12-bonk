@@ -13,9 +13,11 @@ if [ ! -f "backend/bonk-server/pkg/bonk-server.x86-64" ]; then
 fi
 
 if [ ! -f "$HOME/.local/share/godot/export_templates/4.2.2.stable/web_debug.zip" ]; then
-    wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1EjnEIGj4-DS6SNk5Kb_4NLzL_DJNKYDm" -O ~/.local/share/godot/export_templates/4.2.2.stable/web_debug.zip
+    wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1TSWOhwXIGD6rxX-5V1ynXsjXUrWQy6xj" -O ~/.local/share/godot/export_templates/4.2.2.stable/web_debug.zip
 fi
 
-if [ ! -f "frontend/bonk-client/bonk-client.html" ]; then
+if [ ! -f "frontend/bonk-client/bonk-client.js" ]; then
     godot4 --display-driver headless --path backend/bonk-server --export-debug Web "$PWD"/frontend/bonk-client/bonk-client.html
+    gzip frontend/bonk-client/bonk-client.wasm
+    gzip frontend/bonk-client/bonk-client.pck
 fi
