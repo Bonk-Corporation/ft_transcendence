@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useLocation } from "preact-iso";
 import { LogCard } from "./LogCard";
 import { language } from "../../scripts/languages";
@@ -8,6 +9,19 @@ import { ProfileContext, LangContext } from "../../Contexts";
 export function Navbar(props) {
   const location = useLocation();
   const logged = true;
+=======
+import { useLocation } from 'preact-iso';
+import { LogCard } from './LogCard';
+import { useEffect, useState } from 'preact/hooks';
+import { language } from '../../scripts/languages';
+import init, { stop } from 'pong-client';
+
+
+export function Navbar(props) {
+	const location = useLocation();
+  const [oldLoc, setOldLoc] = useState('');
+	const logged = true;
+>>>>>>> 7f11273 (+ | Fetching join and leave on front)
 
   const profile = useContext(ProfileContext);
   const lang = useContext(LangContext);
