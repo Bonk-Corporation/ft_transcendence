@@ -1,0 +1,21 @@
+#!/bin/sh
+
+mkdir -p $HOME/.local/share/godot/export_templates/4.2.2.stable/
+mkdir -p backend/bonk-server/pkg
+mkdir -p frontend/bonk-client
+
+if [ ! -f "$HOME/.local/share/godot/export_templates/4.2.2.stable/linux_debug.x86_64" ]; then
+    wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1yIHSqEMwfKHfkKACKWsc3bGQhbG_Idm9" -O ~/.local/share/godot/export_templates/4.2.2.stable/linux_debug.x86_64
+fi
+
+if [ ! -f "backend/bonk-server/pkg/bonk-server.x86-64" ]; then
+    godot4 --display-driver headless --path backend/bonk-server --export-debug server "$PWD"/backend/bonk-server/pkg/bonk-server.x86-64
+fi
+
+if [ ! -f "$HOME/.local/share/godot/export_templates/4.2.2.stable/web_debug.zip" ]; then
+    wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1EjnEIGj4-DS6SNk5Kb_4NLzL_DJNKYDm" -O ~/.local/share/godot/export_templates/4.2.2.stable/web_debug.zip
+fi
+
+if [ ! -f "frontend/bonk-client/bonk-client.html" ]; then
+    godot4 --display-driver headless --path backend/bonk-server --export-debug Web "$PWD"/frontend/bonk-client/bonk-client.html
+fi

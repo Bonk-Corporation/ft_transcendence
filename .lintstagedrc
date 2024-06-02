@@ -1,5 +1,4 @@
 {
 	"*.{js,jsx}": "prettier --write",
 	"*.py": "black",
-	"*.gd": "gdformat"
 }

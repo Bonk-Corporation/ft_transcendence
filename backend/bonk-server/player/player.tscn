@@ -1,0 +1,105 @@
+[gd_scene load_steps=8 format=3 uid="uid://ecq8tbk7vkc0"]
+
+[ext_resource type="Script" path="res://player/body.gd" id="1_w7ysv"]
+[ext_resource type="Texture2D" uid="uid://ir5g2j7r5tkt" path="res://asset/circle.svg" id="2_2it3p"]
+[ext_resource type="Texture2D" uid="uid://cpf1tsp2wymug" path="res://asset/circle_full.png" id="2_m6ikb"]
+[ext_resource type="Script" path="res://player/grapple.gd" id="3_i2gif"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_fdced"]
+light_mode = 2
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o1o6r"]
+radius = 30.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_fpr0t"]
+properties/0/path = NodePath("body:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("body/power:tint_progress")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("body/power:value")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("grapple:points")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("grapple:visible")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath("body/pseudo:text")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath("body:too_far")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath("body:color")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+properties/8/path = NodePath("body:skin")
+properties/8/spawn = true
+properties/8/replication_mode = 1
+
+[node name="player" type="Node2D"]
+
+[node name="body" type="RigidBody2D" parent="."]
+visibility_layer = 2
+z_index = 1
+position = Vector2(640, 235)
+can_sleep = false
+freeze = true
+max_contacts_reported = 10
+contact_monitor = true
+script = ExtResource("1_w7ysv")
+
+[node name="useless_light" type="PointLight2D" parent="body"]
+position = Vector2(-1.43051e-05, -0.499993)
+scale = Vector2(0.121094, 0.119141)
+texture = ExtResource("2_m6ikb")
+
+[node name="skin" type="Sprite2D" parent="body"]
+material = SubResource("CanvasItemMaterial_fdced")
+position = Vector2(0.125061, 0)
+scale = Vector2(0.130978, 0.130435)
+region_rect = Rect2(0, 0, 460, 460)
+
+[node name="collision" type="CollisionShape2D" parent="body"]
+shape = SubResource("CircleShape2D_o1o6r")
+
+[node name="power" type="TextureProgressBar" parent="body"]
+process_mode = 4
+offset_left = -39.0
+offset_top = -39.0
+offset_right = 40.0
+offset_bottom = 39.0
+pivot_offset = Vector2(39, 39)
+value = 100.0
+rounded = true
+fill_mode = 4
+nine_patch_stretch = true
+texture_under = ExtResource("2_2it3p")
+texture_progress = ExtResource("2_2it3p")
+texture_progress_offset = Vector2(-0.37, 0)
+tint_under = Color(1, 1, 1, 0.258824)
+tint_progress = Color(1, 1, 1, 0.498039)
+metadata/_edit_use_anchors_ = true
+
+[node name="pseudo" type="Label" parent="body"]
+offset_left = -62.0
+offset_top = 31.0
+offset_right = 63.0
+offset_bottom = 54.0
+horizontal_alignment = 1
+
+[node name="grapple" type="Line2D" parent="."]
+modulate = Color(1, 1, 1, 0.196078)
+z_index = -1
+points = PackedVector2Array(0, 0, 0, 0)
+width = 3.0
+script = ExtResource("3_i2gif")
+
+[node name="synchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_fpr0t")
+visibility_update_mode = 1
+
+[connection signal="body_entered" from="body" to="body" method="_on_body_entered"]

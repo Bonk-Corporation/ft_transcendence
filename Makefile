@@ -15,4 +15,7 @@ venv:
 	$(RM) -r $@
 	$(VIRTUALENV) $@
 
+bonk-server:
+	sh backend/bonk-server/pkg/bonk-server.sh
+
 .PHONY: run venv pong-server
