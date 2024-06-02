@@ -3,6 +3,7 @@ from django.http.response import JsonResponse
 from ponk.api_decorators import authenticated
 from ponk.money import urls as money_api, skins
 import ponk.friends
+import ponk.tournament
 from ponk.models import User, GameHistory, Image
 from ponk.friends import get_friends_info
 from ponk.friends import get_friends_request_info
@@ -183,6 +184,7 @@ urls = [
     path("me", me),
     path("friends/", include(ponk.friends.urls)),
     path("private/", include(ponk.private.urls)),
+    path("tournament/", include(ponk.tournament.urls)),
     path("shop", shoopa_shoop),
     path("skin/<str:skin>", set_selected_skin),
     path("ping", ping),
