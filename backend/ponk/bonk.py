@@ -5,11 +5,12 @@ from ponk.models import User
 from ponk.private import events
 
 global_user_list = []
-game_id = 0
+room_id = 1
 
 
 @authenticated
 def join_matchmaking_bonk(request, *args, **kwargs):
+    global room_id
     for i in range(len(global_user_list)):
         if request.user.username == global_user_list[i]:
             return JsonResponse({"error": "You are already in this game"}, status=409)
@@ -17,8 +18,8 @@ def join_matchmaking_bonk(request, *args, **kwargs):
     global_user_list.append(request.user.username)
 
     if len(global_user_list) == 2:
-        events.append({"game_id": game_id, "users": global_user_list.copy()})
-        game_id += 1
+        events.append({"game_id": str(room_id), "users": global_user_list.copy()})
+        room_id += 1
         global_user_list.clear()
 
     return JsonResponse({"success": True})

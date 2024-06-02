@@ -26,16 +26,6 @@ import './bonk.css';
             await new Promise(r => setTimeout(r, 100));
         }
 
-	    function handleClick() {
-            fetch(`/api/bonk/join`)
-              .then(res => res.json().then(data => {
-                  if (data.error)
-                    setError(data.error);
-                  else
-                    setPopUp(false);
-            }));
-        }
-
         if (!document.getElementById("bonkScript")) {
             let bonkScript = document.createElement('script');
             bonkScript.id = "bonkScript";
@@ -69,8 +59,11 @@ import './bonk.css';
     }, []);
 
     const handlePlayClick = () => {
-        setPopUp(false);
-        setPlayClicked(true);
+        fetch(`/api/bonk/join`)
+        .then(res => res.json().then(data => {
+            setPopUp(false);
+            setPlayClicked(true);
+        }));
     };
 
     return (

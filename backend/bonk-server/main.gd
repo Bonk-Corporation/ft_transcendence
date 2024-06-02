@@ -98,13 +98,13 @@ func send_token(sender_id, token):
 		request.set_name(str(sender_id))
 		request.request_completed.connect(get_bonk_player_response.bind(sender_id))
 		add_child(request)
-		request.request("http://localhost:8000/api/get_bonk_player/" + token)
+		request.request("http://localhost:8000/api/private/get_bonk_player/" + token, ["Authorization: " + OS.get_environment("PRIVATE_API_TOKEN")])
 	
 func _process(delta):
 	if multiplayer.is_server():
 		if time > 1:
 			time = 0
-			$http.request("http://localhost:8000/api/get_bonk_events")
+			$http.request("http://localhost:8000/api/private/get_bonk_event",  ["Authorization: " + OS.get_environment("PRIVATE_API_TOKEN")])
 		else:
 			time += delta
 
@@ -127,14 +127,12 @@ func get_bonk_player_response(result, response_code, headers, body, id):
 			users.append(User.new(json["name"], id, json["skin"]))
 	else:
 		info_label.rpc_id(id, "Error: Authentification failed, please try again later")
-		close_connection().rpc_id(id)
+		close_connection.rpc_id(id)
 	get_node(str(id)).call_deferred("queue_free")
 
 func get_bonk_events_response(result, response_code, headers, body):
 	if response_code == 200:
 		var json = JSON.parse_string(body.get_string_from_utf8())
-		if json["users"].size() <= 0:
-			return
 		if !get_node("rooms").has_node(json["game_id"]):
 			var map = map_scene.instantiate()
 			for i in range(32):
