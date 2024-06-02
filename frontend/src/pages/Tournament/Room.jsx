@@ -51,16 +51,6 @@ export function Room(props) {
       avatar: "https://upload.wikimedia.org/wikipedia/commons/3/3d/Noah_mosaic.JPG",
       level: 666
     },
-    {
-      name: "ndavenne",
-      avatar: "https://upload.wikimedia.org/wikipedia/commons/3/3d/Noah_mosaic.JPG",
-      level: 666
-    },
-    {
-      name: "ndavenne",
-      avatar: "https://upload.wikimedia.org/wikipedia/commons/3/3d/Noah_mosaic.JPG",
-      level: 666
-    }
   ]
 
   const [popUp, setPopUp] = useState(false);
@@ -127,11 +117,11 @@ export function Room(props) {
       </PopUp>
       <div className="h-full w-2/3 flex flex-col items-center">
         <div className="h-full w-full flex overflow-hidden">
-          <div id="pong" onClick={() => setActive("Pong")} className={`${active == "Pong" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 mr-2 rounded bg-red-500 transition-all ease-in-out flex flex-col items-center text-xl group`}>
-            <p className="absolute mt-4 transition-all ease-in-out text-xl group-hover:text-9xl font-semibold">Pong</p>
+          <div id="pong" onClick={() => setActive("Pong")} className={`${active == "Pong" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 mr-2 rounded bg-red-500 transition-all ease-in-out flex flex-col items-center group`}>
+            <p className="absolute mt-4 transition-all ease-in-out group-hover:text-9xl font-semibold">Pong</p>
           </div>
-          <div id="bonk" onClick={() => setActive("Bonk")} className={`${active == "Bonk" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 ml-2 rounded bg-blue-500 transition-all ease-in-out flex flex-col items-center text-xl group`}>
-            <p className="absolute mt-4 transition-all ease-in-out text-xl group-hover:text-9xl font-semibold">Bonk</p>
+          <div id="bonk" onClick={() => setActive("Bonk")} className={`${active == "Bonk" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 ml-2 rounded bg-blue-500 transition-all ease-in-out flex flex-col items-center group`}>
+            <p className="absolute mt-4 transition-all ease-in-out group-hover:text-9xl font-semibold">Bonk</p>
           </div>
         </div>
         <div className="my-4 flex items-center justify-center">

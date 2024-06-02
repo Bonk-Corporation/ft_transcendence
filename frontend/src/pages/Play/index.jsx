@@ -44,10 +44,10 @@ export function Play() {
 			{citation ? <h1 className="text-lg mb-4 text-center max-w-[1000px]">❝{citation.citation}❞ - {citation.username}</h1> : null}
 			<div className="w-screen max-w-[1000px] h-96 flex">
 				<a id="anchor-pong" href="/pong" className="w-1/2 flex flex-col items-center rounded h-full bg-red-500 mx-4 hover:w-3/4 transition-all overflow-hidden group">
-					<p className="absolute mt-4 transition-all ease-in-out text-xl group-hover:text-9xl font-semibold">Pong</p>
+					<p className="absolute mt-4 transition-all ease-in-out group-hover:text-9xl font-semibold">Pong</p>
 				</a>
 				<a id="anchor-bonk" href="/bonk" className="w-1/2 flex flex-col items-center rounded h-full bg-blue-500 mx-4 hover:w-3/4 transition-all overflow-hidden group">
-					<p className="absolute mt-4 transition-all ease-in-out text-xl group-hover:text-9xl font-semibold">Bonk</p>
+					<p className="absolute mt-4 transition-all ease-in-out group-hover:text-9xl font-semibold">Bonk</p>
 
 				</a>
 			</div>
