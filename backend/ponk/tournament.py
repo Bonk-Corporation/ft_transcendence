@@ -31,8 +31,6 @@ def new(request, *args, **kwargs):
     if kwargs.game.lower() != "bonk" or kwargs.game.lower() != "pong":
         return JsonResponse({"error": "This game does not exist"}, status=409)
 
-    if request.user in tournaments:
-        tournaments.remove(request.user)
     tournaments[request.user] = Tournament(
         users=[request.user],
         host_user=request.user,
@@ -40,6 +38,7 @@ def new(request, *args, **kwargs):
         room_size=int(kwargs.size),
         private=False,
     )
+    request.user.current_room = request.user.username
     return JsonResponse({"success": True})
 
 
@@ -60,32 +59,57 @@ def set_to_public(request, *args, **kwargs):
 
 
 @authenticated
-def add_user(request, *args, **kwargs):
-    if len(tournament[request.user].users) == tournament[request.user].room_size:
-        return JsonResponse({"error": "This room is full"}, status=409)
-
+def join_room(request, *args, **kwargs):
     username = args[1].get("host")
     try:
         target_room_host = User.objects.get(username=username)
     except ObjectDoesNotExist:
         return JsonResponse(
-            {"error": "User {} does not exist".format(username)}, status=404
+            {"error": "Room does not exist".format(username)}, status=404
+        )
+
+    if target_room_host not in tournaments:
+        return JsonResponse(
+            {"error": "Room does not exist".format(username)}, status=404
         )
 
     if tournaments[target_room_host].private == True:
         if request.user not in target_room_host.friends:
             return JsonResponse(
-                {"error": "This game is private".format(username)}, status=404
+                {"error": "This room is private".format(username)}, status=409
             )
 
+    if len(tournament[request.user].users) == tournament[request.user].room_size:
+        return JsonResponse({"error": "This room is full"}, status=409)
+
     tournament[target_room_host].users.append(request.user)
-    tournament[request.user] = tournament[target_room_host]
+    request.user.current_room = target_room_host.username
+    return JsonResponse({"success": True})
+
+
+@authenticated
+def leave_room(request, *args, **kwargs):
+    if request.user.current_room == "":
+        return JsonResponse({"error": "You're not part of a tournament"}, status=400)
+
+    tournaments[User.objects.get(username=request.user.current_room)].users.remove(
+        request.user
+    )
+    request.user.current_room = ""
     return JsonResponse({"success": True})
 
 
 @authenticated
 def kick_user(request, *args, **kwargs):
-    if request.user not in tournaments[request.user].host_user:
+    if request.user.current_room == "":
+        return JsonResponse({"error": "You're not part of a tournament"}, status=400)
+
+    if (
+        request.user
+        not in tournaments[
+            User.objects.get(username=request.user.current_room)
+        ].host_user
+    ):
         return JsonResponse({"error": "You're not the tournament host"}, status=409)
 
     username = args[1].get("target")
@@ -101,7 +125,8 @@ def kick_user(request, *args, **kwargs):
             {"error": "User {} is not in this tournament".format(username)}, status=409
         )
 
-    tournaments.remove(target_user)
+    tournaments[request.user].users.remove(target_user)
+    target_user.current_room = ""
     return JsonResponse({"success": True})
 
 
@@ -154,11 +179,14 @@ def get_all_tournaments_info(request, *args, **kwargs):
 
 
 urls = [
-    path("status", status),
+    path("status", status),  # get informations about current turnament
     path("get_all_tournaments", get_all_tournaments_info),
     path("set_to_public", set_to_public),
     path("set_to_private", set_to_private),
-    path("add_user/<str:host>", add_user),
-    path("new/<str:game>/<str:size>", new),
+    path("join_room/<str:host>", join_room),
+    path("leave_room", leave_room),
+    path(
+        "new/<str:game>/<str:size>", new
+    ),  # game is pong or bonk, size is the max size of the room (2, 4 or 8)
     path("kick_user/<str:target>", kick_user),
 ]
