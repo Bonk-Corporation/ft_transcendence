@@ -30,7 +30,10 @@ export function Pong({ profile, lang }) {
 				<h1 id="winner" className="font-semibold text-4xl">BOLVIC WIN</h1>
 				<hr className="w-4/5 my-2" />
 				<p id="final-score" className="mb-2 font-semibold text-2xl">4 - 1</p>
-				<CTA id="replay-button" name={mode}>Play again</CTA>
+				<div className="flex">
+					<CTA id="replay-button" name={mode}>Play again</CTA>
+					<a className='ml-2' href="/play"><CTA>Home</CTA></a>
+				</div>
 			</Card>
 			<canvas id="canvas" width="1920px" height="1440px" className="h-screen flex items-center justify-center">
 				<h1>Pong</h1>
