@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from '../utils/Card';
 import { language } from '../../scripts/languages';
 
-export function PlayerCard({lang, profile, admin}) {
+export function PlayerCard({lang, profile, userIsAdmin, iAmAdmin}) {
   return (
     <Card className='flex items-center px-4 py-2 mb-4 w-80'>
       <div className="w-full flex items-center">
@@ -12,11 +12,16 @@ export function PlayerCard({lang, profile, admin}) {
           <h1 className="w-full">{language.level[lang]} {profile.level}</h1>
         </div>
       </div>
-      {admin ? 
-      <div className="bg-white aspect-square rounded-full ml-10 px-2 py-1 flex items-center shadow">
-        <i className="fa-solid fa-crown text-black"></i>
-      </div>
-        : null}
+      {userIsAdmin ? 
+        <div className="bg-white aspect-square rounded-full px-2 py-1 flex items-center shadow">
+          <i className="fa-solid fa-crown text-black"></i>
+        </div>
+        : iAmAdmin ?
+          <div className="aspect-square flex items-center shadow">
+            <i className="fa-solid text-2xl fa-user-minus text-red-500 hover:text-red-600 cursor-pointer"></i>
+          </div>
+          : null
+      }
     </Card>
   );
 }

@@ -189,4 +189,14 @@ export const language = {
     fr: "Votre message...",
     br: "Da gemennadenn...",
   },
+  private: {
+    en: "Private",
+    fr: "Privé",
+    br: "Prevez",
+  },
+  public: {
+    en: "Public",
+    fr: "Publique",
+    br: "An holl",
+  },
 };
