@@ -29,8 +29,14 @@ export function Play() {
 								h-[35rem] w-full"
 							src="/media/images/flame.json" background="transparent" speed="1" loop autoplay></dotlottie-player>`;
 		
+		const dotlottieBlue =`<dotlottie-player class="
+							relative bottom-28
+							opacity-0 group-hover:opacity-100
+							transition-all ease-in-out
+							h-[35rem] w-full"
+						src="/media/images/blue_flame.json" background="transparent" speed="1" loop autoplay></dotlottie-player>`;
 		anchorPong.innerHTML += dotlottie;
-		anchorBonk.innerHTML += dotlottie;
+		anchorBonk.innerHTML += dotlottieBlue;
 	}, [])
 	
 	return (
