@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Card } from '../../components/utils/Card';
 import { CTA } from '../../components/utils/CTA';
 import { Chat } from '../../components/Chat/Chat';
 import { language } from '../../scripts/languages';
+import { ProfileContext, LangContext } from '../../Contexts';
 
-export function Bonk({ profile, lang }) {
+export function Bonk() {
 	const [popUp, setPopUp] = useState(true);
 	const [mode, setMode] = useState("bot");
 
-	/*
-	parameters de jeu : jouer contre ennemi ou bot
-	*/
+	const profile = useContext(ProfileContext);
+	const lang = useContext(LangContext);
 
   return (
 		<>
@@ -24,7 +24,7 @@ export function Bonk({ profile, lang }) {
 			<canvas className="w-screen h-screen absolute bg-[#111111]">
 				<h1>Bonk</h1>
 			</canvas>
-			<Chat profile={profile} lang={lang} />
+			<Chat/>
 		</>
   );
 }

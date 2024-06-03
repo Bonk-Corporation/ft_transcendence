@@ -1,7 +1,8 @@
 import {ShopItem} from '../../components/Shop/ShopItem';
-import { useEffect, useState } from 'preact/hooks';
+import { useContext, useEffect, useState } from 'preact/hooks';
+import { ProfileContext, LangContext } from '../../Contexts';
 
-export function Shop({ lang, profile, fetchProfile }) {
+export function Shop({ fetchProfile }) {
   const [page, setPage] = useState(0);
   const [items, setItems] = useState(null);
 
@@ -18,14 +19,17 @@ export function Shop({ lang, profile, fetchProfile }) {
     return () => {window.removeEventListener('resize', () => {setFactor(window.screen.width < 768 ? 8 : 12)})}
   }, [])
 
+  const profile = useContext(ProfileContext);
+	const lang = useContext(LangContext);
+
   return (
     <div className={`flex flex-col items-center transition-all duration-300 ${items ? 'opacity-100' : 'opacity-0'}`}>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 my-4">
         {items ? items.slice(page * factor, (page + 1) * factor).map((item, idx) => (
-          <ShopItem item={item} lang={lang}
+          <ShopItem item={item}
                     possessed={profile ? profile.skins.includes(item.name) : false}
                     selected={profile ? profile.selectedSkin == item.name : false}
-                    profile={profile} fetchProfile={fetchProfile}
+                    fetchProfile={fetchProfile}
           />
         )) : null}
       </div>

@@ -1,12 +1,15 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { FriendCard } from './FriendCard';
 import { PopUp } from '../utils/PopUp';
 import { Input } from '../utils/Input';
 import { CTA } from '../utils/CTA';
 import { Card } from '../utils/Card';
 import { language } from '../../scripts/languages'
+import { LangContext } from '../../Contexts';
 
-export function FriendList({lang, fetchProfile, friends, friendsRequests}) {
+export function FriendList({fetchProfile, friends, friendsRequests}) {
+	const lang = useContext(LangContext);
+
   const [popUp, setPopUp] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef(null);
@@ -62,12 +65,12 @@ export function FriendList({lang, fetchProfile, friends, friendsRequests}) {
         <div className={`overflow-auto ${friends.length && friendsRequests.length ? "down-gradient" : ""}  max-h-96 pr-2 backdrop-blur-lg ${loaded ? "opacity-100" : "opacity-0"} transition-all duration-500`}>
           {
             friendsRequests.map((friend) => (
-            <FriendCard lang={lang} fetchProfile={fetchProfile} profile={friend} request={true}></FriendCard>
+            <FriendCard fetchProfile={fetchProfile} profile={friend} request={true}></FriendCard>
             ))
           }
           {
             friends.map((friend) => (
-            <FriendCard lang={lang} fetchProfile={fetchProfile} profile={friend}></FriendCard>
+            <FriendCard fetchProfile={fetchProfile} profile={friend}></FriendCard>
             ))
           }
           {

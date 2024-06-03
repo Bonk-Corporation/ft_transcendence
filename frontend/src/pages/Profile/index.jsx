@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { ProfileCard } from '../../components/Profile/ProfileCard';
 import { Stat } from '../../components/Profile/Stat';
 import { FriendList } from '../../components/Profile/FriendList';
 import { GameHistory } from '../../components/Profile/GameHistory';
 import { language } from '../../scripts/languages'
+import { ProfileContext, LangContext } from '../../Contexts';
 
 
-export function Profile({lang, fetchProfile, profile, setProfile, setTriedLog}) {
+export function Profile({fetchProfile, setProfile, setTriedLog}) {
+  const profile = useContext(ProfileContext);
+	const lang = useContext(LangContext);
+
   const [stats, setStats] = useState([
     {
       title: "Win ratio - Pong",
@@ -51,14 +55,14 @@ export function Profile({lang, fetchProfile, profile, setProfile, setTriedLog}) 
     <div className="flex flex-wrap justify-center w-full">
       <div className="pl-2 h-full">
           <h1 className="font-semibold text-lg md:text-xl">{language.profile[lang]}</h1>
-            <ProfileCard lang={lang} profile={profile} setProfile={setProfile} setTriedLog={setTriedLog} fetchProfile={fetchProfile} />
+            <ProfileCard setProfile={setProfile} setTriedLog={setTriedLog} fetchProfile={fetchProfile} />
       </div>
 
       {
         profile ?
         <>
-          <FriendList lang={lang} fetchProfile={fetchProfile} friends={profile.friends} friendsRequests={profile.friendsRequests} />
-          <GameHistory lang={lang} gameHistory={profile.gameHistory.reverse()}/>
+          <FriendList fetchProfile={fetchProfile} friends={profile.friends} friendsRequests={profile.friendsRequests} />
+          <GameHistory gameHistory={profile.gameHistory.reverse()}/>
         </>
         : null
       }

@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BallPresentation } from './BallPresentation';
 import { Price } from './Price';
 import { Input } from '../utils/Input';
 import { CTA } from '../utils/CTA';
 import { language } from '../../scripts/languages';
+import { LangContext, ProfileContext } from '../../Contexts';
 
 
 export function ItemSelection(props) {
+  const profile = useContext(ProfileContext);
+	const lang = useContext(LangContext);
+
   function handleClick() {
     if (!props.selected)
       fetch(`/api/skin/${props.item.name}`).then(props.fetchProfile)
@@ -32,12 +36,12 @@ export function ItemSelection(props) {
           target="_blank" className="mt-4 flex flex-col justify-center items-center">
           {
             props.possessed ?
-            <CTA className='w-72 h-11 font-normal' black={props.selected}>{props.selected ? language.deselect[props.lang] : language.select[props.lang]}</CTA> :
+            <CTA className='w-72 h-11 font-normal' black={props.selected}>{props.selected ? language.deselect[lang] : language.select[lang]}</CTA> :
             // @ts-ignore
             <stripe-buy-button
               buy-button-id="buy_btn_1PIBt8KG666poqhFwKbTAzAp"
               publishable-key={import.meta.env.VITE_STRIPE_API_KEY}
-              client-reference-id={props.profile.name + "_" + props.item.name}
+              client-reference-id={profile.name + "_" + props.item.name}
             />
           }
       </a>

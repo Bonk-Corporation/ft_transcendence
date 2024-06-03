@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Card } from '../utils/Card';
 import { language } from '../../scripts/languages';
+import { LangContext } from '../../Contexts';
 
-export function FriendCard({lang, fetchProfile, profile, request = false}) {
+export function FriendCard({fetchProfile, profile, request = false}) {
+  const lang = useContext(LangContext);
   const [deleted, setDeleted] = useState(false);
+
   function handleClick(call) {
     fetch(`/api/friends/${call}/${profile.name}`, {
       method: "POST",

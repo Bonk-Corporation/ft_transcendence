@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Card } from '../utils/Card';
 import { language } from '../../scripts/languages';
+import { LangContext } from '../../Contexts';
 
-export function InvitationCard({ lang, invitation }) {
+export function InvitationCard({ invitation }) {
+	const lang = useContext(LangContext);
   return (
       <Card className='py-2 px-4 mb-2 w-72 overflow-hidden hover:from-white/40 hover:to-white/10 cursor-pointer'>
           <a href="/tournament/room" className="flex items-center">

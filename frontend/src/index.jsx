@@ -17,6 +17,7 @@ import { Pong } from './pages/Games/Pong';
 import { Bonk } from './pages/Games/Bonk';
 import { useEffect, useState } from 'preact/hooks';
 import { LegalNotice } from './pages/LegalNotice/LegalNotice';
+import { ProfileContext, LangContext } from './Contexts';
 
 export function App() {
 	const [profile, setProfile] = useState(null);
@@ -57,27 +58,30 @@ export function App() {
 		return () => clearInterval(intervalId);
 	}, []);
 
-	const baseUrl = import.meta.env.BASE_URL || '/';
 
 	return (
 		<div id="ambient" className="w-screen min-h-screen bg-gradient-to-br from-[#0D011D] to-black p-8 background-animate flex flex-col items-center overflow-hidden">
 			<LocationProvider>
-				<Navbar lang={lang} setLang={setLang} profile={profile} triedLog={triedLog} />
-				<main className="w-screen h-full z-50 flex-1 flex flex-col justify-center items-center px-10">
-					<Router>
-						<Route path="/" component={() => <Login lang={lang} setTriedLog={setTriedLog} />} />
-						<Route path="/signup" component={() => <Signup lang={lang} setTriedLog={setTriedLog} />} />
-						<Route path="/play" component={Play} />
-						<Route path="/tournament" component={() => <Menu lang={lang} />} />
-						<Route path="/tournament/room" component={() => <Room lang={lang} profile={profile} />} />
-						<Route path="/shop" component={() => <Shop lang={lang} profile={profile} setProfile={setProfile} fetchProfile={fetchProfile} />} />
-						<Route path="/profile" component={() => <Profile lang={lang} fetchProfile={fetchProfile} profile={profile} setProfile={setProfile} setTriedLog={setTriedLog} />} />
-						<Route path="/pong" component={() => <Pong profile={profile} lang={lang} />} />
-						<Route path="/bonk" component={() => <Bonk profile={profile} lang={lang} />} />
-						<Route path="/legal-notice" component={LegalNotice} />
-						<Route default component={() => <NotFound lang={lang} />} />
-					</Router>
-				</main>
+				<ProfileContext.Provider value={profile}>
+					<LangContext.Provider value={lang}>
+						<Navbar setLang={setLang} triedLog={triedLog} />
+						<main className="w-screen h-full z-50 flex-1 flex flex-col justify-center items-center px-10">
+							<Router>
+								<Route path="/" component={() => <Login setTriedLog={setTriedLog} />} />
+								<Route path="/signup" component={() => <Signup setTriedLog={setTriedLog} />} />
+								<Route path="/play" component={Play} />
+								<Route path="/tournament" component={() => <Menu />} />
+								<Route path="/tournament/room" component={() => <Room />} />
+								<Route path="/shop" component={() => <Shop fetchProfile={fetchProfile} />} />
+								<Route path="/profile" component={() => <Profile fetchProfile={fetchProfile} setProfile={setProfile} setTriedLog={setTriedLog} />} />
+								<Route path="/pong" component={() => <Pong />} />
+								<Route path="/bonk" component={() => <Bonk />} />
+								<Route path="/legal-notice" component={LegalNotice} />
+								<Route default component={() => <NotFound />} />
+							</Router>
+						</main>
+					</LangContext.Provider>
+				</ProfileContext.Provider>
 			</LocationProvider>
 		</div>
 	);

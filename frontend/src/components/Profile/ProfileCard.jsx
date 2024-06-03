@@ -1,12 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Card } from '../utils/Card';
 import { Input } from '../utils/Input';
 import { CTA } from '../utils/CTA';
 import { Level } from './Level';
 import { language } from '../../scripts/languages';
+import { LangContext, ProfileContext } from '../../Contexts';
 
 
-export function ProfileCard({ lang, profile, setProfile, setTriedLog, fetchProfile }) {
+export function ProfileCard({ setProfile, setTriedLog, fetchProfile }) {
+  const profile = useContext(ProfileContext);
+	const lang = useContext(LangContext);
+
   const citation = useRef(null);
   const password = useRef(null);
   const confirmPassword = useRef(null);
@@ -126,7 +130,7 @@ export function ProfileCard({ lang, profile, setProfile, setTriedLog, fetchProfi
           <CTA onClick={logOut} className='ml-2 mr-2 border-red-500 border-2 text-red-500 hover:bg-red-500 hover:text-white' transparent={true}>{language.log_out[lang]}</CTA>
           <CTA onClick={deleteAccount} className='ml-2 border-red-500 border-2 text-red-500 hover:bg-red-500 hover:text-white' transparent={true}>{language.delete_account[lang]}</CTA>
         </div>
-        <Level lang={lang} level={profile ? profile.level : null} levelPercentage={profile ? profile.levelPercentage : null} />
+        <Level level={profile ? profile.level : null} levelPercentage={profile ? profile.levelPercentage : null} />
       </Card>
     </>
   );
