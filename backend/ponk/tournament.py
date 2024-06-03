@@ -94,7 +94,7 @@ def join_room(request, *args, **kwargs):
         target_room_host = User.objects.get(username=username)
     except ObjectDoesNotExist:
         return JsonResponse(
-            {"error": "Room does not exist".format(username)}, status=404
+            {"error": "Room does not existt".format(username)}, status=404
         )
 
     if target_room_host not in tournaments:
@@ -128,15 +128,23 @@ def leave_room(request, *args, **kwargs):
 
     if rooms[request.user] == request.user:
         if len(tournaments[rooms[request.user]].users) != 1:
-            tournaments[request.user].host_user = User.objects.get(
-                username=tournaments[rooms[request.user]].users[1]
-            )
-        else:
+            next_host = tournaments[request.user].users[1]
+            tournaments[request.user].users.remove(request.user)
+            tournaments[next_host] = tournaments[request.user]
             tournaments.pop(request.user)
+            del rooms[request.user]
+            tournaments[next_host].host_user = next_host
+            for user in tournaments[next_host].users:
+                rooms[user] = next_host
             return JsonResponse({"success": True})
 
-    tournaments[rooms[request.user]].users.pop(request.user)
-    rooms.pop(request.user)
+        else:
+            tournaments.pop(request.user)
+            del rooms[request.user]
+            return JsonResponse({"success": True})
+
+    tournaments[rooms[request.user]].users.remove(request.user)
+    del rooms[request.user]
     return JsonResponse({"success": True})
 
 
@@ -159,7 +167,7 @@ def kick_user(request, *args, **kwargs):
         )
 
     tournaments[request.user].users.pop(target_user)
-    rooms.pop(request.user)
+    del rooms[request.user]
     return JsonResponse({"success": True})
 
 

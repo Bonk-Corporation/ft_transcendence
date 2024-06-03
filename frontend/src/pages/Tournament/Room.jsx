@@ -84,6 +84,14 @@ export function Room(props) {
     });
   };
 
+  const switchActiveGame = (game) => {
+    if (active == game) return;
+
+    fetch(`/api/tournament/set_to_${game}`).then(() => {
+      setActive(game);
+    });
+  };
+
   return (
     <div className="w-full flex justify-center h-[40rem]">
       <div className="h-full w-2/3 flex flex-col items-center">
@@ -102,7 +110,7 @@ export function Room(props) {
             </div>
             <div
               id="bonk"
-              onClick={() => setActive("Bonk")}
+              onClick={switchActiveGame.bind(null, "bonk")}
               className={`${active == "Bonk" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 ml-2 rounded bg-blue-500 transition-all ease-in-out flex flex-col items-center group`}
             >
               <p className="absolute mt-4 transition-all ease-in-out group-hover:text-9xl font-semibold">
