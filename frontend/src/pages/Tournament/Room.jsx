@@ -18,21 +18,29 @@ export function Room(props) {
   const lang = useContext(LangContext);
 
   const [room, setRoom] = useState(null);
+  const [isHost, setIsHost] = useState(false);
   const location = useLocation();
-  let isHost = false;
 
   useEffect(() => {
     if (!profile) return;
 
-    fetch("/api/tournament/status").then((res) =>
-      res.json().then((data) => {
-        if (data.error) return location.route("/");
+    const id = setInterval(() => {
+      fetch("/api/tournament/status").then((res) =>
+        res.json().then((data) => {
+          if (data.error) return location.route("/");
 
-        setRoom(data);
-        isHost = data.host == profile.username;
-      }),
-    );
-  }, [profile]);
+          setRoom(data);
+          setPriv(data.private);
+          setIsHost(data.host == props.profile.name);
+        }),
+      );
+    }, 1000);
+
+    return () => {
+      clearInterval(id);
+      fetch("/api/tournament/leave_room");
+    };
+  }, [props.profile]);
 
   useEffect(() => {
     if (!document.getElementById("lottie")) {
@@ -69,6 +77,13 @@ export function Room(props) {
   }, []);
 
   const currPhase = 0;
+  const toggleRoomPrivacy = () => {
+    const privacy = priv ? "public" : "private";
+    console.log(privacy);
+    fetch(`/api/tournament/set_to_${privacy}`).then(() => {
+      setPriv(!priv);
+    });
+  };
 
   return (
     <div className="w-full flex justify-center h-[40rem]">
@@ -109,6 +124,8 @@ export function Room(props) {
                 : "bg-white text-black hover:bg-gray-300 hover:border-gray-300"
             } 
             rounded-lg  transition-all ease-in-out`}
+            disabled={!isHost}
+            onClick={toggleRoomPrivacy}
           >
             <i
               className={`fa-solid ${priv ? "fa-lock" : "fa-unlock"} mr-2`}
