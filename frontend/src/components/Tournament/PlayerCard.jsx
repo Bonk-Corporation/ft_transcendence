@@ -27,7 +27,7 @@ export function PlayerCard({ player, host, iAmAdmin }) {
           <i className="fa-solid fa-crown text-black"></i>
         </div>
       ) : (
-        iAmAdmin ?? (
+        iAmAdmin && (
           <div className="aspect-square flex items-center shadow">
             <i className="fa-solid text-2xl fa-user-minus text-red-500 hover:text-red-600 cursor-pointer"></i>
           </div>
