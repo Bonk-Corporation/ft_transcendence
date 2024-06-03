@@ -11,6 +11,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from ponk.money import skins
 from django.utils import timezone
+from ponk.tournament import tournaments
 import ponk.private
 import random
 import json
