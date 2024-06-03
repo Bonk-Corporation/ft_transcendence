@@ -22,20 +22,27 @@ tournaments = {}
 
 @authenticated
 def new(request, *args, **kwargs):
-    if str == "":
+    try:
+        name = args[1].get("name")
+        size = int(args[1].get("size"))
+    except BaseException:
+        return JsonResponse({"error": "Fatal error"}, status=400)
+
+    print(name, size)
+
+    if name == "":
         return JsonResponse({"error": "Room name cannot be empty"}, status=409)
 
-    if kwargs.size != 2 or kwargs.size != 4 or kwargs.size != 8:
+    print(size != 8)
+    if size != 2 and size != 4 and size != 8:
         return JsonResponse({"error": "Room size can only be 2, 4 or 8"}, status=409)
 
-    if kwargs.game.lower() != "bonk" or kwargs.game.lower() != "pong":
-        return JsonResponse({"error": "This game does not exist"}, status=409)
-
     tournaments[request.user] = Tournament(
+        name=name,
         users=[request.user],
         host_user=request.user,
-        selected_game=kwargs.game.lower(),
-        room_size=int(kwargs.size),
+        selected_game="pong",
+        room_size=size,
         private=False,
     )
     request.user.current_room = request.user.username
@@ -185,8 +192,6 @@ urls = [
     path("set_to_private", set_to_private),
     path("join_room/<str:host>", join_room),
     path("leave_room", leave_room),
-    path(
-        "new/<str:game>/<str:size>", new
-    ),  # game is pong or bonk, size is the max size of the room (2, 4 or 8)
+    path("new/<str:name>/<str:size>", new),
     path("kick_user/<str:target>", kick_user),
 ]
