@@ -27,7 +27,7 @@ export function Room(props) {
     const id = setInterval(() => {
       fetch("/api/tournament/status").then((res) =>
         res.json().then((data) => {
-          if (data.error) return location.route("/");
+          if (data.error) return location.route("/tournament");
 
           setRoom(data);
           setPriv(data.private);
