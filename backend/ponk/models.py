@@ -23,8 +23,12 @@ class User(AbstractUser):
     auth_method = models.IntegerField(choices=AuthMethod.choices)
     last_online = models.DateTimeField(default=timezone.now)
     citation = models.CharField(default="", max_length=256)
-    current_room = models.CharField(
-        max_length=150, unique=False, blank=True, default=""
+    current_room = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="tournament_host",
     )
 
     def __str__(self):
