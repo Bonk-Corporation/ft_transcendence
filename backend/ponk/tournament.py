@@ -83,11 +83,15 @@ def join_room(request, *args, **kwargs):
                 {"error": "This room is private".format(username)}, status=409
             )
 
-    if len(tournament[request.user].users) == tournament[request.user].room_size:
+    if (
+        len(tournaments[target_room_host].users)
+        == tournaments[target_room_host].room_size
+    ):
         return JsonResponse({"error": "This room is full"}, status=409)
 
-    tournament[target_room_host].users.append(request.user)
+    tournaments[target_room_host].users.append(request.user)
     request.user.current_room = target_room_host.username
+    request.user.save()
     return JsonResponse({"success": True})
 
 
@@ -167,6 +171,7 @@ def get_all_tournaments_info(request, *args, **kwargs):
                 "room_name": tournaments[other_user].name,
                 "host_avatar": tournaments[other_user].host_user.avatar,
                 "players_number": len(tournaments[other_user].users),
+                "host_name": tournaments[other_user].host_user.username,
             }
             tournaments_info.append(tournament_info)
 
@@ -176,6 +181,7 @@ def get_all_tournaments_info(request, *args, **kwargs):
                 "room_name": tournaments[other_user].name,
                 "host_avatar": tournaments[other_user].host_user.avatar,
                 "players_number": len(tournaments[other_user].users),
+                "host_name": tournaments[other_user].host_user.username,
             }
             tournaments_info.append(tournament_info)
 
