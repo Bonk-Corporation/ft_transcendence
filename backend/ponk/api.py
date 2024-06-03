@@ -12,6 +12,7 @@ from django.core.exceptions import ValidationError
 from ponk.money import skins
 from django.utils import timezone
 from ponk.tournament import tournaments
+from ponk.tournament import rooms
 import ponk.private
 import random
 import json
