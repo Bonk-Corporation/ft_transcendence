@@ -34,6 +34,9 @@ def new(request, *args, **kwargs):
     if size != 2 and size != 4 and size != 8:
         return JsonResponse({"error": "Room size can only be 2, 4 or 8"}, status=409)
 
+    if request.user in tournaments:
+        tournaments.pop(requests.user)
+
     tournaments[request.user] = Tournament(
         name=name,
         users=[request.user],
