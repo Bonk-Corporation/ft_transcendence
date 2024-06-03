@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { CTA } from "../../components/utils/CTA";
 import { InvitationCard } from "../../components/Tournament/InvitationCard";
 import { language } from "../../scripts/languages";
+import { LangContext } from "../../Contexts";
 import { PopUp } from "../../components/utils/PopUp";
 import { useLocation } from "preact-iso";
 import { Input } from "../../components/utils/Input";
@@ -17,6 +18,8 @@ export function Menu(props) {
   const [tournaments, setTournaments] = useState([]);
 
   const nameRef = useRef(null);
+
+  const lang = useContext(LangContext);
 
   function createTournament() {
     if (!nameRef.current.value.trim()) return;
@@ -85,7 +88,7 @@ export function Menu(props) {
       <div className="flex items-center">
         <div className="flex flex-col items-center mr-4">
           <h1 className="text-lg font-semibold">
-            {language.create_room[props.lang]}
+            {language.create_room[lang]}
           </h1>
           <CTA
             onClick={() => setPopUp(true)}
@@ -93,20 +96,20 @@ export function Menu(props) {
           >
             <i className="text-6xl fa-solid fa-plus mb-2"></i>
             <h1 className="text-lg text-center font-semibold">
-              {language.create_room[props.lang]}
+              {language.create_room[lang]}
             </h1>
           </CTA>
         </div>
         <div className="flex flex-col items-center">
           <h1 className="px-2 text-lg font-semibold">
-            {language.join_room[props.lang]}
+            {language.join_room[lang]}
           </h1>
           <p className="text-sm text-red-500">{errorJoin}</p>
           <div className="h-96 backdrop-blur-lg overflow-y-auto overflow-x-hidden pr-2 down-gradient">
             {tournaments.length ? (
               tournaments.map((room) => (
                 <InvitationCard
-                  lang={props.lang}
+                  lang={lang}
                   room={room}
                   setError={setErrorJoin}
                 />
@@ -114,7 +117,7 @@ export function Menu(props) {
             ) : (
               <Card className="py-4 w-72 flex items-center flex-col">
                 <h1 className="font-semibold text-md md:text-lg">
-                  {language.no_tournament[props.lang]}
+                  {language.no_tournament[lang]}
                 </h1>
               </Card>
             )}

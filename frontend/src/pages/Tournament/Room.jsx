@@ -17,120 +17,22 @@ export function Room(props) {
   const profile = useContext(ProfileContext);
   const lang = useContext(LangContext);
 
-  const room = {
-    size: 8,
-    phases: [
-      [
-        {
-          name: "jcario",
-          avatar:
-            "https://i.pinimg.com/236x/9d/58/d1/9d58d1fba36aa76996b5de3f3d233d22.jpg",
-          level: 18,
-        },
-        {
-          name: "FeuilleMorte",
-          avatar: "https://i.ytimg.com/vi/lX7ofuGJl6Y/hqdefault.jpg",
-          level: 4,
-        },
-        {
-          name: "Feur",
-          avatar:
-            "https://www.itadori-shop.com/cdn/shop/articles/Satoru-Hollow-Purple-e1615636661895_1200x1200.jpg?v=1634757049",
-          level: 42,
-        },
-        {
-          name: "Bolvic",
-          avatar:
-            "https://user-images.githubusercontent.com/8974888/231858967-7c37bf1e-335b-4f5a-9760-da97be9f54bb.png",
-          level: 21,
-        },
-        {
-          name: "MaxMaxicoMax",
-          avatar:
-            "https://s2.coinmarketcap.com/static/img/coins/200x200/23095.png",
-          level: 21,
-        },
-        {
-          name: "ndavenne",
-          avatar:
-            "https://upload.wikimedia.org/wikipedia/commons/3/3d/Noah_mosaic.JPG",
-          level: 666,
-        },
-        {
-          name: "Babobi",
-          avatar:
-            "https://medias.cerveauetpsycho.fr/api/v1/images/view/653792ad2c3b8f5ebd5db10b/wide_1300/image.jpg",
-          level: 666,
-        },
-        {
-          name: "Bebaba",
-          avatar:
-            "https://yt3.googleusercontent.com/ytc/AIdro_lm527KArC3sZW1H1zY8wzAk_kY8QQWz5ywt6KFkmryuy8=s900-c-k-c0x00ffffff-no-rj",
-          level: 666,
-        },
-      ],
-      [
-        {
-          name: "jcario",
-          avatar:
-            "https://i.pinimg.com/236x/9d/58/d1/9d58d1fba36aa76996b5de3f3d233d22.jpg",
-          level: 18,
-        },
-        {
-          name: "Bolvic",
-          avatar:
-            "https://user-images.githubusercontent.com/8974888/231858967-7c37bf1e-335b-4f5a-9760-da97be9f54bb.png",
-          level: 21,
-        },
-        {
-          name: "MaxMaxicoMax",
-          avatar:
-            "https://s2.coinmarketcap.com/static/img/coins/200x200/23095.png",
-          level: 21,
-        },
-        {
-          name: "Bebaba",
-          avatar:
-            "https://yt3.googleusercontent.com/ytc/AIdro_lm527KArC3sZW1H1zY8wzAk_kY8QQWz5ywt6KFkmryuy8=s900-c-k-c0x00ffffff-no-rj",
-          level: 666,
-        },
-      ],
-      [
-        {
-          name: "jcario",
-          avatar:
-            "https://i.pinimg.com/236x/9d/58/d1/9d58d1fba36aa76996b5de3f3d233d22.jpg",
-          level: 18,
-        },
-        {
-          name: "MaxMaxicoMax",
-          avatar:
-            "https://s2.coinmarketcap.com/static/img/coins/200x200/23095.png",
-          level: 21,
-        },
-      ],
-      [
-        {
-          name: "jcario",
-          avatar:
-            "https://i.pinimg.com/236x/9d/58/d1/9d58d1fba36aa76996b5de3f3d233d22.jpg",
-          level: 18,
-        },
-      ],
-    ],
-  };
-  const admin = "jcario";
+  const [room, setRoom] = useState(null);
+  const location = useLocation();
+  let isHost = false;
 
+  useEffect(() => {
+    if (!profile) return;
 
     fetch("/api/tournament/status").then((res) =>
       res.json().then((data) => {
         if (data.error) return location.route("/");
 
         setRoom(data);
-        isHost = data.host == props.profile.username;
+        isHost = data.host == profile.username;
       }),
     );
-  }, [props.profile]);
+  }, [profile]);
 
   useEffect(() => {
     if (!document.getElementById("lottie")) {
@@ -221,14 +123,15 @@ export function Room(props) {
       </div>
 
       <div className="ml-4 down-gradient overflow-auto h-full px-2 overflow-x-hidden">
-        {room && room.phases[currPhase]
+        {room && room.phases[currPhase] ?
           room.phases[currPhase].map((user) => (
             <PlayerCard
               player={user}
               host={room.host}
               iAmAdmin={profile.username == room.host}
             />
-          ))}
+          )) : null
+        }
       </div>
     </div>
   );

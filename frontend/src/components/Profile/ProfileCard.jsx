@@ -174,15 +174,11 @@ export function ProfileCard({ setProfile, setTriedLog, fetchProfile }) {
             {language.delete_account[lang]}
           </CTA>
         </div>
-<<<<<<< HEAD
-        <Level level={profile ? profile.level : null} levelPercentage={profile ? profile.levelPercentage : null} />
-=======
         <Level
           lang={lang}
           level={profile ? profile.level : null}
           levelPercentage={profile ? profile.levelPercentage : null}
         />
->>>>>>> da2dfc1 (+ | RUN PRETTIER)
       </Card>
     </>
   );
