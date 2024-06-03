@@ -25,11 +25,13 @@ export function PlayerCard({ user, userIsAdmin, iAmAdmin }) {
         <div className="bg-white aspect-square rounded-full px-2 py-1 flex items-center shadow">
           <i className="fa-solid fa-crown text-black"></i>
         </div>
-      ) : iAmAdmin ? (
-        <div className="aspect-square flex items-center shadow">
-          <i className="fa-solid text-2xl fa-user-minus text-red-500 hover:text-red-600 cursor-pointer"></i>
-        </div>
-      ) : null}
+      ) : (
+        iAmAdmin ?? (
+          <div className="aspect-square flex items-center shadow">
+            <i className="fa-solid text-2xl fa-user-minus text-red-500 hover:text-red-600 cursor-pointer"></i>
+          </div>
+        )
+      )}
     </Card>
   );
 }

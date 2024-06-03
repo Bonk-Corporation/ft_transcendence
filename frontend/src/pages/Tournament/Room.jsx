@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
+import { useLocation } from "preact-iso";
 import { CTA } from "../../components/utils/CTA";
 import { PlayerCard } from "../../components/Tournament/PlayerCard";
 import { PopUp } from "../../components/utils/PopUp";
@@ -120,6 +121,17 @@ export function Room(props) {
   };
   const admin = "jcario";
 
+
+    fetch("/api/tournament/status").then((res) =>
+      res.json().then((data) => {
+        if (data.error) return location.route("/");
+
+        setRoom(data);
+        isHost = data.host == props.profile.username;
+      }),
+    );
+  }, [props.profile]);
+
   useEffect(() => {
     if (!document.getElementById("lottie")) {
       const scriptEl = document.createElement("script");
@@ -209,15 +221,14 @@ export function Room(props) {
       </div>
 
       <div className="ml-4 down-gradient overflow-auto h-full px-2 overflow-x-hidden">
-        {profile
-          ? room.phases[currPhase].map((player) => (
-              <PlayerCard
-                user={player}
-                userIsAdmin={player.name == admin}
-                iAmAdmin={admin == profile.name}
-              />
-            ))
-          : null}
+        {room && room.phases[currPhase]
+          room.phases[currPhase].map((user) => (
+            <PlayerCard
+              player={user}
+              host={room.host}
+              iAmAdmin={profile.username == room.host}
+            />
+          ))}
       </div>
     </div>
   );

@@ -17,23 +17,27 @@ export function FriendList({fetchProfile, friends, friendsRequests}) {
 
   useEffect(() => {
     setLoaded(true);
-  }, [])
+  }, []);
 
   function handleClick() {
     if (inputRef.current.value.trim().length) {
       fetch(`/api/friends/send/${inputRef.current.value}`, {
         method: "POST",
-      }).then(res => {
-        if (!res.ok) {
-          return res.json().then(errData => {
-            throw new Error(errData.error)})
-        }
-        fetchProfile();
-      }).then(data => {
-        setPopUp(false);
-      }).catch(err => {
-        setError(err.message);
       })
+        .then((res) => {
+          if (!res.ok) {
+            return res.json().then((errData) => {
+              throw new Error(errData.error);
+            });
+          }
+          fetchProfile();
+        })
+        .then((data) => {
+          setPopUp(false);
+        })
+        .catch((err) => {
+          setError(err.message);
+        });
     }
     inputRef.current.value = "";
   }
@@ -44,19 +48,30 @@ export function FriendList({fetchProfile, friends, friendsRequests}) {
   }
 
   function enter(e) {
-    if (e.key == 'Enter')
-      handleClick();
+    if (e.key == "Enter") handleClick();
   }
 
   return (
     <div className="md:mt-0 mt-2 flex-1 ml-4 mr-4">
-        <PopUp onKeyPress={enter} clear={clear} active={popUp} setActive={setPopUp} className="flex flex-col items-center">
-          <h1 className="font-semibold text-xl">{language.add_friend[lang]}</h1>
-          {/* @ts-ignore */}
-          <Input ref={inputRef} className="rounded-full bg-[#4f4f4f] mt-2" placeholder={language.search_someone[lang]} />
-          <p className="mb-2 text-sm text-red-500">{error}</p>
-          <CTA className='' onClick={handleClick}>{language.invite[lang]}</CTA>
-        </PopUp>
+      <PopUp
+        onKeyPress={enter}
+        clear={clear}
+        active={popUp}
+        setActive={setPopUp}
+        className="flex flex-col items-center"
+      >
+        <h1 className="font-semibold text-xl">{language.add_friend[lang]}</h1>
+        {/* @ts-ignore */}
+        <Input
+          ref={inputRef}
+          className="rounded-full bg-[#4f4f4f] mt-2"
+          placeholder={language.search_someone[lang]}
+        />
+        <p className="mb-2 text-sm text-red-500">{error}</p>
+        <CTA className="" onClick={handleClick}>
+          {language.invite[lang]}
+        </CTA>
+      </PopUp>
 
         <div className="flex items-center justify-between">
           <h1 className="font-semibold text-lg md:text-xl">{language.friends[lang]}</h1>
