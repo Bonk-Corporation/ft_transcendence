@@ -101,6 +101,8 @@ export function Room(props) {
     anchorBonk.innerHTML += dotlottieBlue;
   }, []);
 
+  const schema = true;
+
   return (
     <div className="w-full flex justify-center h-[40rem]">
       <div className="h-full w-2/3 flex flex-col items-center">
@@ -129,7 +131,13 @@ export function Room(props) {
             onClick={() => {
               setPriv(!priv);
             }}
-            className="mr-2 px-12 py-3 bg-transparent border-2 border-white rounded-lg hover:bg-white hover:text-black transition-all ease-in-out"
+            className={`mr-2 px-12 py-3 border-2 border-white 
+            ${
+              priv
+                ? "bg-black text-white hover:bg-white hover:text-black"
+                : "bg-white text-black hover:bg-gray-300 hover:border-gray-300"
+            } 
+            rounded-lg  transition-all ease-in-out`}
           >
             <i
               className={`fa-solid ${priv ? "fa-lock" : "fa-unlock"} mr-2`}
