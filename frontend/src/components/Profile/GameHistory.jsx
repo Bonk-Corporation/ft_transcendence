@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GameCard } from './GameCard';
 import { Card } from '../utils/Card';
 import { language } from '../../scripts/languages';
+import { LangContext } from '../../Contexts';
 
-export function GameHistory({lang, gameHistory}) {
+export function GameHistory({gameHistory}) {
+	const lang = useContext(LangContext);
+
   const [displayGame, setDisplayGame] = useState('all');
   const [loaded, setLoaded] = useState(false);
 

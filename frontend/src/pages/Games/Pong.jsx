@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'preact-iso';
 import { Card } from '../../components/utils/Card';
 import { CTA } from '../../components/utils/CTA';
 import { Chat } from '../../components/Chat/Chat';
 import { language } from '../../scripts/languages';
+import { ProfileContext, LangContext } from '../../Contexts';
 import init, { start } from 'pong-client';
 
-export function Pong({ profile, lang }) {
+export function Pong() {
 	const [mode, setMode] = useState("bot");
 	const loc = useLocation();
+	const profile = useContext(ProfileContext);
+	const lang = useContext(LangContext);
 
 	useEffect(() =>
 		init().then(start), [])
@@ -38,7 +41,7 @@ export function Pong({ profile, lang }) {
 			<canvas id="canvas" width="1920px" height="1440px" className="h-screen flex items-center justify-center">
 				<h1>Pong</h1>
 			</canvas>
-			<Chat profile={profile} />
+			<Chat/>
 		</div>
   );
 }

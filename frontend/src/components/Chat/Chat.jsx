@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useContext } from 'preact/hooks';
 import { Message } from './Message';
 import { language } from '../../scripts/languages';
 import { createRef } from 'preact';
+import { ProfileContext, LangContext } from '../../Contexts';
 
 function RoomButton({ withSeparator, children, activeRoom, ...rest }) {
 	return (
@@ -24,7 +25,10 @@ function RoomButton({ withSeparator, children, activeRoom, ...rest }) {
 
 let ws;
 
-export function Chat({ profile, lang }) {
+export function Chat() {
+	const profile = useContext(ProfileContext);
+	const lang = useContext(LangContext);
+
 	if (!profile) return;
 
 	const ref = createRef();
