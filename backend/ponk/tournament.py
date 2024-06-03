@@ -18,6 +18,7 @@ class Tournament:
 
 
 tournaments = {}
+rooms = {}
 
 
 @authenticated
@@ -42,8 +43,7 @@ def new(request, *args, **kwargs):
         room_size=size,
         private=False,
     )
-    request.user.current_room = request.user
-    request.user.save()
+    rooms[request.user] = request.user
     return JsonResponse({"success": True})
 
 
@@ -109,28 +109,26 @@ def join_room(request, *args, **kwargs):
         return JsonResponse({"error": "This room is full"}, status=409)
 
     tournaments[target_room_host].users.append(request.user)
-    request.user.current_room = target_room_host
-    request.user.save()
+    rooms[request.user] = target_room_host
     return JsonResponse({"success": True})
 
 
 @authenticated
 def leave_room(request, *args, **kwargs):
-    if request.user.current_room == None:
+    if rooms[request.user] == None:
         return JsonResponse({"error": "You're not part of a tournament"}, status=400)
 
-    if request.user.current_room == request.user:
-        if len(tournaments[request.user.current_room].users != 1):
+    if rooms[request.user] == request.user:
+        if len(tournaments[rooms[request.user]].users != 1):
             tournaments[request.user].host_user = User.objects.get(
-                username=tournaments[request.user.current_room].users[1]
+                username=tournaments[rooms[request.user]].users[1]
             )
         else:
             tournaments.pop(request.user)
             return JsonResponse({"success": True})
 
-    tournaments[request.user.current_room].users.remove(request.user)
-    request.user.current_room = None
-    request.user.save()
+    tournaments[rooms[request.user]].users.remove(request.user)
+    rooms.remove(request.user)
     return JsonResponse({"success": True})
 
 
@@ -153,17 +151,16 @@ def kick_user(request, *args, **kwargs):
         )
 
     tournaments[request.user].users.remove(target_user)
-    target_user.current_room = ""
-    target_user.save()
+    rooms.remove(request.user)
     return JsonResponse({"success": True})
 
 
 @authenticated
 def status(request, *args, **kwargs):
-    if request.user.current_room == None:
+    if rooms[request.user] == None:
         return JsonResponse({"error": "You're not part of a tournament"}, status=400)
 
-    room = request.user.current_room
+    room = rooms[request.user]
 
     tournament = tournaments[room]
     return JsonResponse(
