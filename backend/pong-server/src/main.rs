@@ -3,11 +3,12 @@ mod input;
 use std::{sync::Arc, time::SystemTime};
 use futures::{sink::SinkExt, stream::StreamExt};
 use axum::{
-    extract::{WebSocketUpgrade, ws::{Message, WebSocket}, State},
+    extract::{WebSocketUpgrade, ws::{Message, WebSocket}, State, Json},
     response::IntoResponse,
     Router,
-    routing::get,
+    routing::{get, post},
 };
+use serde::Deserialize;
 use input::*;
 use tokio::sync::RwLock;
 
@@ -21,7 +22,7 @@ impl Clients {
 
         for cl in self.poll.as_slice() {
             match cl.id.as_str() {
-                num if num == client.id.clone()  => return Ok(()),//return Err("Client already in poll".to_string()),
+                num if num == client.id.clone()  => return Ok(()),
                 _ => (),
             }
         }
@@ -555,6 +556,40 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
     }
 }
 
+#[derive(Deserialize, Debug)]
+struct Duos {
+    pub games: Vec<(String, String)>,
+}
+
+async fn handle_rooms(State(state): State<Arc<RwLock<Clients>>>, extract: Json<Duos>) {
+    println!("Info received");
+    for (player1, player2) in &extract.games {
+        let game_id = uuid::Uuid::new_v4().to_string();
+        let client1 = Client {
+            id: player1.to_string(),
+            name: "Player".to_string(),
+            id_game: Some(game_id.to_string()),
+        };
+        let client2 = Client {
+            id: player2.to_string(),
+            name: "Player".to_string(),
+            id_game: Some(game_id.to_string()),
+        };
+        let mut game = Game::new(client1, game_id.clone());
+        game.add_player(client2);
+        state.write().await.games.push(game.clone());
+        tokio::spawn(async move {
+            let winner = game.start().await;
+            match winner {
+                EndGame::Player1 => println!("Player won"),
+                EndGame::Player2 => println!("Bot won"),
+                EndGame::Draw => println!("Draw"),
+                EndGame::Undecided => println!("Undecided"),
+            }
+        });
+    }
+}
+
 #[tokio::main]
 async fn main() {
 
@@ -562,6 +597,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/", get(websocket_handler))
+        .route("/rooms", post(handle_rooms))
         .with_state(clients_poll);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:4210")
