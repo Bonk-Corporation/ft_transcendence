@@ -28,12 +28,9 @@ def new(request, *args, **kwargs):
     except BaseException:
         return JsonResponse({"error": "Fatal error"}, status=400)
 
-    print(name, size)
-
     if name == "":
         return JsonResponse({"error": "Room name cannot be empty"}, status=409)
 
-    print(size != 8)
     if size != 2 and size != 4 and size != 8:
         return JsonResponse({"error": "Room size can only be 2, 4 or 8"}, status=409)
 
@@ -164,8 +161,8 @@ def status(request, *args, **kwargs):
 def get_all_tournaments_info(request, *args, **kwargs):
     tournaments_info = []
 
-    for other_user in tournaments.all():
-        if other_user in request.user.friends:
+    for other_user in tournaments:
+        if other_user in request.user.friends.all():
             tournament_info = {
                 "room_name": tournaments[other_user].name,
                 "host_avatar": tournaments[other_user].host_user.avatar,
@@ -173,8 +170,8 @@ def get_all_tournaments_info(request, *args, **kwargs):
             }
             tournaments_info.append(tournament_info)
 
-    for other_user in tournaments.all():
-        if other_user not in request.user.friends:
+    for other_user in tournaments:
+        if other_user not in request.user.friends.all():
             tournament_info = {
                 "room_name": tournaments[other_user].name,
                 "host_avatar": tournaments[other_user].host_user.avatar,
@@ -182,7 +179,7 @@ def get_all_tournaments_info(request, *args, **kwargs):
             }
             tournaments_info.append(tournament_info)
 
-    return tournaments_info
+    return JsonResponse({"data": tournaments_info})
 
 
 urls = [
