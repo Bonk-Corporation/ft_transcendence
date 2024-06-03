@@ -24,8 +24,15 @@ export function Menu(props) {
   function createTournament() {
     if (!nameRef.current.value.trim()) return;
 
-    fetch(`/api/tournament/new/${nameRef.current.value}/${nbPlayers}`, {
+    fetch("/api/tournament/new", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: nameRef.current.value,
+        size: nbPlayers,
+      }),
     })
       .then((res) => {
         if (!res.ok) {

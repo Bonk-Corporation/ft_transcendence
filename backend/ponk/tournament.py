@@ -5,6 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from ponk.models import User
 from dataclasses import dataclass
 from typing import List
+import json
 
 
 @dataclass
@@ -24,10 +25,17 @@ rooms = {}
 @authenticated
 def new(request, *args, **kwargs):
     try:
-        name = args[1].get("name")
-        size = int(args[1].get("size"))
-    except BaseException:
-        return JsonResponse({"error": "Fatal error"}, status=400)
+        data = json.loads(request.body)
+    except BaseException as e:
+        print(e, file=sys.stderr)
+        return JsonResponse(
+            {
+                "error": "Fatal error !",
+            },
+            status=400,
+        )
+    name = data["name"]
+    size = int(data["size"])
 
     if name == "":
         return JsonResponse({"error": "Room name cannot be empty"}, status=409)
@@ -115,7 +123,7 @@ def join_room(request, *args, **kwargs):
 
 @authenticated
 def leave_room(request, *args, **kwargs):
-    if not rooms.get(request.user):
+    if not rooms.get(request.user) or not tournaments.get(rooms[request.user]):
         return JsonResponse({"error": "You're not part of a tournament"}, status=400)
 
     if rooms[request.user] == request.user:
@@ -127,8 +135,8 @@ def leave_room(request, *args, **kwargs):
             tournaments.pop(request.user)
             return JsonResponse({"success": True})
 
-    tournaments[rooms[request.user]].users.remove(request.user)
-    rooms.remove(request.user)
+    tournaments[rooms[request.user]].users.pop(request.user)
+    rooms.pop(request.user)
     return JsonResponse({"success": True})
 
 
@@ -150,14 +158,14 @@ def kick_user(request, *args, **kwargs):
             {"error": "User {} is not in this tournament".format(username)}, status=409
         )
 
-    tournaments[request.user].users.remove(target_user)
-    rooms.remove(request.user)
+    tournaments[request.user].users.pop(target_user)
+    rooms.pop(request.user)
     return JsonResponse({"success": True})
 
 
 @authenticated
 def status(request, *args, **kwargs):
-    if not rooms.get(request.user):
+    if not rooms.get(request.user) or not tournaments.get(rooms[request.user]):
         return JsonResponse({"error": "You're not part of a tournament"}, status=400)
 
     room = rooms[request.user]
@@ -209,6 +217,7 @@ def get_all_tournaments_info(request, *args, **kwargs):
     return JsonResponse({"data": tournaments_info})
 
 
+@authenticated
 def play(request, *args, **kwargs):
     if not tournaments.get(request.user):
         return JsonResponse({"error": "You're not the tournament host"}, status=409)
@@ -240,6 +249,6 @@ urls = [
     path("set_to_private", set_to_private),
     path("join_room/<str:host>", join_room),
     path("leave_room", leave_room),
-    path("new/<str:name>/<str:size>", new),
+    path("new", new),
     path("kick_user/<str:target>", kick_user),
 ]

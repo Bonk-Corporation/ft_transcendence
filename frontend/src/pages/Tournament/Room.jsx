@@ -79,7 +79,6 @@ export function Room(props) {
   const currPhase = 0;
   const toggleRoomPrivacy = () => {
     const privacy = priv ? "public" : "private";
-    console.log(privacy);
     fetch(`/api/tournament/set_to_${privacy}`).then(() => {
       setPriv(!priv);
     });
