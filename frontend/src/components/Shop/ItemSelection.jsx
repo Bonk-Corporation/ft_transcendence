@@ -13,24 +13,25 @@ export function ItemSelection(props) {
 
   function handleClick() {
     if (!props.selected)
-      fetch(`/api/skin/${props.item.name}`).then(props.fetchProfile)
-    else
-      fetch(`/api/skin/default`).then(props.fetchProfile)
+      fetch(`/api/skin/${props.item.name}`).then(props.fetchProfile);
+    else fetch(`/api/skin/default`).then(props.fetchProfile);
   }
 
   return (
     <div className="flex flex-col justify-center items-center">
-        <div className="flex flex-col items-center">
-            <BallPresentation images={props.item.images}/>
-            <div className=" mx-4 flex flex-col items-center">
-                <h1 className="font-semibold text-xl">'{props.item.name}' skin pack</h1>
-                <div className="flex items-center">
-                    <Price price={props.item.price} />
-                    <p className="mx-2 font-medium text-gray-300">
-                        {props.item.price * 2}€
-                    </p>
-                </div>
-            </div>
+      <div className="flex flex-col items-center">
+        <BallPresentation images={props.item.images} />
+        <div className=" mx-4 flex flex-col items-center">
+          <h1 className="font-semibold text-xl">
+            '{props.item.name}' skin pack
+          </h1>
+          <div className="flex items-center">
+            <Price price={props.item.price} />
+            <p className="mx-2 font-medium text-gray-300">
+              {props.item.price * 2}€
+            </p>
+          </div>
+        </div>
       </div>
       <a  onClick={handleClick}
           target="_blank" className="mt-4 flex flex-col justify-center items-center">

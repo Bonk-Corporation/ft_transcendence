@@ -1,82 +1,104 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-	font-family: "Ubuntu", sans-serif;
+  font-family: "Ubuntu", sans-serif;
 }
 
 .background-animate {
-	background-size: 200%;
+  background-size: 200%;
 
-    -webkit-animation: AnimationName 7s linear infinite;
-    -moz-animation: AnimationName 7s linear infinite;
-    animation: AnimationName 7s linear infinite;
+  -webkit-animation: AnimationName 7s linear infinite;
+  -moz-animation: AnimationName 7s linear infinite;
+  animation: AnimationName 7s linear infinite;
 }
 
 @keyframes AnimationName {
-    0%, 100% {
-        background-position: 0% 0%;
-    }
-    50% {
-      background-position: 100% 100%;
-    }
+  0%,
+  100% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
 }
 
 .angle-gradient {
-	background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.05)
+  );
 }
 
 .border-gradient-hover:hover:before {
-	content: "";
-	position: absolute;
-	inset: 0;
-	padding: 2px;
-	background: linear-gradient(to bottom right, #F6EAFF, #DFD2F0, #CEBDE3, #D3B4FB);
-	-webkit-mask:
-	   linear-gradient(#fff 0 0) content-box,
-	   linear-gradient(#fff 0 0);
-			mask: 
-	   linear-gradient(#fff 0 0) content-box,
-	   linear-gradient(#fff 0 0);
-	-webkit-mask-composite: xor;
-			mask-composite: exclude;
-	pointer-events: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(
+    to bottom right,
+    #f6eaff,
+    #dfd2f0,
+    #cebde3,
+    #d3b4fb
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 .border-gradient:before {
-	content: "";
-	position: absolute;
-	inset: 0;
-	padding: 2px;
-	background: linear-gradient(to bottom right, #F6EAFF, #DFD2F0, #CEBDE3, #D3B4FB);
-	-webkit-mask:
-	   linear-gradient(#fff 0 0) content-box,
-	   linear-gradient(#fff 0 0);
-			mask: 
-	   linear-gradient(#fff 0 0) content-box,
-	   linear-gradient(#fff 0 0);
-	-webkit-mask-composite: xor;
-			mask-composite: exclude;
-	pointer-events: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(
+    to bottom right,
+    #f6eaff,
+    #dfd2f0,
+    #cebde3,
+    #d3b4fb
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 .nav:before {
-	border-radius: 4242px;
+  border-radius: 4242px;
 }
 
 .text-shadow {
-	text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .bvambient_particle {
-	position: absolute;
-	pointer-events: none;
-	transition: top linear, left linear;
+  position: absolute;
+  pointer-events: none;
+  transition:
+    top linear,
+    left linear;
 }
 
 .down-gradient {
-	-webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
-	color-stop(80%, rgba(0,0,0,1)),
-	to(rgba(0,0,0,0))
-);
+  -webkit-mask-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(80%, rgba(0, 0, 0, 1)),
+    to(rgba(0, 0, 0, 0))
+  );
 }

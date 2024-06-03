@@ -12,44 +12,47 @@ export function Signup(props) {
 	const password = React.useRef(null);
 	const confirmPassword = React.useRef(null);
 
-	const [error, setError] = useState("");
+  const [error, setError] = useState("");
 
-	function handleSignup() {
-		if (password.current.value != confirmPassword.current.value) {
-			setError("Password mismatch !");
-			password.current.value = "";
-			confirmPassword.current.value = "";
-			return;
-		}
+  function handleSignup() {
+    if (password.current.value != confirmPassword.current.value) {
+      setError("Password mismatch !");
+      password.current.value = "";
+      confirmPassword.current.value = "";
+      return;
+    }
 
-		fetch("/auth/register", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				"username": username.current.value,
-				"password": password.current.value
-			}),
-		}).then(res => {
-			if (!res.ok) {
-				return res.json().then(errData => {
-					throw new Error(errData.error)})
-			}
-		}).then(data => {
-			window.location.pathname = "/play";
-		}).catch(err => {
-			setError(err.message);
-			username.current.value = "";
-			password.current.value = "";
-			confirmPassword.current.value = "";
-		});
-	}
+    fetch("/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username.current.value,
+        password: password.current.value,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((errData) => {
+            throw new Error(errData.error);
+          });
+        }
+      })
+      .then((data) => {
+        window.location.pathname = "/play";
+      })
+      .catch((err) => {
+        setError(err.message);
+        username.current.value = "";
+        password.current.value = "";
+        confirmPassword.current.value = "";
+      });
+  }
 
-	function enter(e) {
-		if (e.key == 'Enter')
-			handleSignup();
-	}
+  function enter(e) {
+    if (e.key == "Enter") handleSignup();
+  }
 
 	return (
 		<Card className="py-32 w-full max-w-[800px] px-16 flex flex-col items-center justify-center">
