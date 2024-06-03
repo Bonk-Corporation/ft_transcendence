@@ -199,4 +199,9 @@ export const language = {
     fr: "Publique",
     br: "An holl",
   },
+  no_tournament: {
+    en: "No tournaments yet.",
+    fr: "Aucun tournoi.",
+    br: "Tournamant ebet.",
+  },
 };
