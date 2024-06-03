@@ -115,11 +115,11 @@ def join_room(request, *args, **kwargs):
 
 @authenticated
 def leave_room(request, *args, **kwargs):
-    if rooms[request.user] == None:
+    if not rooms.get(request.user):
         return JsonResponse({"error": "You're not part of a tournament"}, status=400)
 
     if rooms[request.user] == request.user:
-        if len(tournaments[rooms[request.user]].users != 1):
+        if len(tournaments[rooms[request.user]].users) != 1:
             tournaments[request.user].host_user = User.objects.get(
                 username=tournaments[rooms[request.user]].users[1]
             )
@@ -157,7 +157,7 @@ def kick_user(request, *args, **kwargs):
 
 @authenticated
 def status(request, *args, **kwargs):
-    if rooms[request.user] == None:
+    if not rooms.get(request.user):
         return JsonResponse({"error": "You're not part of a tournament"}, status=400)
 
     room = rooms[request.user]
