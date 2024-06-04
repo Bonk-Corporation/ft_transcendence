@@ -20,9 +20,15 @@ export function Menu(props) {
   const nameRef = useRef(null);
 
   const lang = useContext(LangContext);
+  function clear() {
+    setError('');
+  }
 
   function createTournament() {
-    if (!nameRef.current.value.trim()) return;
+    if (!nameRef.current.value.trim()) {
+      setError("Name can't be empty");
+      return;
+    }
 
     fetch("/api/tournament/new", {
       method: "POST",
@@ -62,9 +68,14 @@ export function Menu(props) {
         active={popUp}
         setActive={setPopUp}
         className="flex flex-col items-center"
+        clear={clear}
       >
         <h1 className="text-xl font-semibold mb-4">Create a tournament</h1>
-        <Input ref={nameRef} className="mb-2" placeholder="Name of the room" />
+        {
+          props.profile ?
+          <Input ref={nameRef} className="mb-2" placeholder="Name of the room" value={`${props.profile.name}${props.profile.name.endsWith("s") ? "'" : "'s"} room`}/>
+          : null
+        }
         <h1>Numbers of players</h1>
         <div className="mb-4">
           <button
