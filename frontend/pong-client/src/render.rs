@@ -65,8 +65,8 @@ pub fn render(
     texture: &WebGlTexture,
 ) -> Result<(), JsValue> {
 
-    let program = link_program(context, vertex_shader, fragment_shader)?;
-    context.use_program(Some(&program));
+    let rectangle_program = link_program(context, vertex_shader, fragment_shader)?;
+    let circle_program = link_program(context, circle_vertex_shader, circle_fragment_shader)?;
 
     let c1 = view_coord(game_state.player1_ent.position);
     let c2 = view_coord(game_state.player1_ent.position + Vec2::new(game_state.player1_ent.width, game_state.player1_ent.height));
@@ -97,13 +97,10 @@ pub fn render(
 
 	context.clear_color(0.0, 0.0, 0.0, 1.0);
     context.clear(WebGl2RenderingContext::COLOR_BUFFER_BIT);
-	display_rectangles(context, vector_vertices, &program)?;
-    let program = link_program(context, circle_vertex_shader, circle_fragment_shader)?;
-    context.use_program(Some(&program));
-	display_circles(context, vec![circle], &program, &texture)?;
+	display_circles(context, vec![circle], &circle_program, &texture)?;
+	display_rectangles(context, vector_vertices, &rectangle_program)?;
 
     Ok(())
-
 }
 
 pub fn get_context(document: &Document) -> Result<WebGl2RenderingContext, JsValue> {
@@ -118,8 +115,8 @@ pub fn get_context(document: &Document) -> Result<WebGl2RenderingContext, JsValu
 }
 
 fn display_circles<'a>(context: &'a WebGl2RenderingContext, circles: Vec<Circle>, program: &WebGlProgram, texture: &WebGlTexture) -> Result<(), JsValue> {
+    context.use_program(Some(&program));
 	for circle in circles {
-	
     	let position_attribute_location = context.get_attrib_location(program, "position");
     	let buffer = context.create_buffer().ok_or("Failed to create buffer")?;
     	context.bind_buffer(WebGl2RenderingContext::ARRAY_BUFFER, Some(&buffer));
@@ -170,6 +167,7 @@ fn display_circles<'a>(context: &'a WebGl2RenderingContext, circles: Vec<Circle>
 }
 
 fn display_rectangles(context: &WebGl2RenderingContext, vector_vertices: Vec<[f32; 12]>, program: &WebGlProgram) -> Result<(), JsValue> {
+    context.use_program(Some(&program));
 	for vertices in vector_vertices {
 
     	let position_attribute_location = context.get_attrib_location(program, "position");
