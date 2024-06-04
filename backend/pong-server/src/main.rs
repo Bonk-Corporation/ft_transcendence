@@ -515,6 +515,32 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                             break;
                                         }
                                     }
+                                    #[derive(Serialize)]
+                                    struct GameStats<'a> {
+                                        player:     String,
+                                        game:       &'a str,
+                                        score:      (u8, u8),
+                                    }
+                                    let (p1,p2) = game.state.lock().await.score;
+                                    let end_stats = GameStats {
+                                        player:     player1_id,
+                                        game:       "pong",
+                                        score:      (p1, p2),
+                                    };
+                                    let client = reqwest::Client::new();
+                                    client.post("http://localhost:8001/api/private/game_stats")
+                                        .json(&end_stats)
+                                        .send()
+                                        .await;
+                                    let end_stats = GameStats {
+                                        player: player2_id,
+                                        game: "pong",
+                                        score: (p2, p1),
+                                    };
+                                    client.post("http://localhost:8001/api/private/game_stats")
+                                        .json(&end_stats)
+                                        .send()
+                                        .await;
                                     println!("quitting thread");
                                     return;
                                 }
