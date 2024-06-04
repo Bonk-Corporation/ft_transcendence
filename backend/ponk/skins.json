@@ -72,12 +72,12 @@
 		]
 	},
 	{
-		"name": "8",
+		"name": "Insu (Limited Edition)",
 		"price": 4.2,
 		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
+			"/assets/skins/insu-anan.png",
+			"/assets/skins/insu-gwigwi.png",
+			"/assets/skins/insu-juju.png"
 		]
 	},
 	{
