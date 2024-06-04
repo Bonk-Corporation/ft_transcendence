@@ -5,6 +5,7 @@ import { PopUp } from "../../components/utils/PopUp";
 import { Input } from "../../components/utils/Input";
 import { language } from "../../scripts/languages";
 import { ProfileContext, LangContext } from "../../Contexts";
+import { Schema } from "../../components/Tournament/Schema";
 
 export function Room(props) {
   const [active, setActive] = useState("");
@@ -15,6 +16,7 @@ export function Room(props) {
   const lang = useContext(LangContext);
 
   const room = {
+    size: 8,
     players: [
       {
         name: "jcario",
@@ -106,26 +108,30 @@ export function Room(props) {
   return (
     <div className="w-full flex justify-center h-[40rem]">
       <div className="h-full w-2/3 flex flex-col items-center">
-        <div className="h-full w-full flex overflow-hidden">
-          <div
-            id="pong"
-            onClick={() => setActive("Pong")}
-            className={`${active == "Pong" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 mr-2 rounded bg-red-500 transition-all ease-in-out flex flex-col items-center group`}
-          >
-            <p className="absolute mt-4 transition-all ease-in-out group-hover:text-9xl font-semibold">
-              Pong
-            </p>
+        {schema ? (
+          <Schema room={room} />
+        ) : (
+          <div className="h-full w-full flex overflow-hidden">
+            <div
+              id="pong"
+              onClick={() => setActive("Pong")}
+              className={`${active == "Pong" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 mr-2 rounded bg-red-500 transition-all ease-in-out flex flex-col items-center group`}
+            >
+              <p className="absolute mt-4 transition-all ease-in-out group-hover:text-9xl font-semibold">
+                Pong
+              </p>
+            </div>
+            <div
+              id="bonk"
+              onClick={() => setActive("Bonk")}
+              className={`${active == "Bonk" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 ml-2 rounded bg-blue-500 transition-all ease-in-out flex flex-col items-center group`}
+            >
+              <p className="absolute mt-4 transition-all ease-in-out group-hover:text-9xl font-semibold">
+                Bonk
+              </p>
+            </div>
           </div>
-          <div
-            id="bonk"
-            onClick={() => setActive("Bonk")}
-            className={`${active == "Bonk" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 ml-2 rounded bg-blue-500 transition-all ease-in-out flex flex-col items-center group`}
-          >
-            <p className="absolute mt-4 transition-all ease-in-out group-hover:text-9xl font-semibold">
-              Bonk
-            </p>
-          </div>
-        </div>
+        )}
         <div className="my-4 flex items-center justify-center">
           <button
             onClick={() => {
