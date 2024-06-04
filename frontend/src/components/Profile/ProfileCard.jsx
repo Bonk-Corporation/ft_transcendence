@@ -105,7 +105,7 @@ export function ProfileCard({ lang, profile, setProfile, setTriedLog, fetchProfi
               <input
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer rounded-full"
                 type="file"
-                accept="image/*, jpg, png"
+                accept="assets/avatars/*, jpg, png"
                 onChange={uploadImage}
               />
               <i className="fa-solid fa-camera text-white text-lg"></i>

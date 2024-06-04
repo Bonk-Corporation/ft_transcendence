@@ -42,7 +42,7 @@ class GameHistory(models.Model):
 
 
 class Image(models.Model):
-    image = models.ImageField(upload_to="images/")
+    image = models.ImageField(upload_to="assets/avatars/")
 
     def __str__(self):
         return self.name
