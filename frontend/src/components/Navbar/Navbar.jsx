@@ -1,46 +1,58 @@
-import { useLocation } from 'preact-iso';
-import { LogCard } from './LogCard';
-import { language } from '../../scripts/languages';
-import init, { stop } from 'pong-client';
-import { useContext, useEffect, useState } from 'preact/hooks';
-import { ProfileContext, LangContext } from '../../Contexts';
-
+import { useLocation } from "preact-iso";
+import { LogCard } from "./LogCard";
+import { language } from "../../scripts/languages";
+import init, { stop } from "pong-client";
+import { useContext, useEffect, useState } from "preact/hooks";
+import { ProfileContext, LangContext } from "../../Contexts";
 
 export function Navbar(props) {
   const location = useLocation();
   const logged = true;
 
-	const profile = useContext(ProfileContext);
-	const lang = useContext(LangContext);
+  const profile = useContext(ProfileContext);
+  const lang = useContext(LangContext);
 
-	const AUTHORIZED_LOCATIONS = ["/play", "/tournament", "/shop", "/profile", "/legal-notice", "/tournament/room"];
-	const LOG_LOCATIONS = ["/", "/signup"];
-	const [showLegalNotice, setShowLegalNotice] = useState(false);
+  const AUTHORIZED_LOCATIONS = [
+    "/play",
+    "/tournament",
+    "/shop",
+    "/profile",
+    "/legal-notice",
+    "/tournament/room",
+  ];
+  const LOG_LOCATIONS = ["/", "/signup"];
+  const [showLegalNotice, setShowLegalNotice] = useState(false);
 
-	useEffect(() => {
-		if (!LOG_LOCATIONS.includes(location.url) && props.triedLog && profile && profile.error && location.url) {
-			location.route('/');
-		}
-		// why the fuck is it the navbar managing the redirects?????????????
-		if (LOG_LOCATIONS.includes(location.url) && profile)
-			location.route("/play");
+  useEffect(() => {
+    if (
+      !LOG_LOCATIONS.includes(location.url) &&
+      props.triedLog &&
+      profile &&
+      profile.error &&
+      location.url
+    ) {
+      location.route("/");
+    }
+    // why the fuck is it the navbar managing the redirects????????????? cry + ratio - dinomalin
+    if (LOG_LOCATIONS.includes(location.url) && !profile?.error)
+      location.route("/play");
 
-		if (location.url != '/pong') {
-			init().then(stop);
-		}
-	}, [profile, location, props.triedLog]);
+    if (location.url != "/pong") {
+      init().then(stop);
+    }
+  }, [profile, location, props.triedLog]);
 
-	useEffect(() => {
-		const intervalId = setInterval(() => {
-			if (!LOG_LOCATIONS.includes(location.url))
-				fetch("/api/ping");
-		}, 60000);
-		return () => clearInterval(intervalId);
-	}, [])
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (!LOG_LOCATIONS.includes(location.url)) fetch("/api/ping");
+    }, 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
-	return (
-		<>
-			<header className={`
+  return (
+    <>
+      <header
+        className={`
 				${AUTHORIZED_LOCATIONS.includes(location.url) ? "" : "hidden"}
 				w-full pl-8 pr-4 py-4 z-50 mb-8
 				flex justify-between items-center rounded-full
@@ -87,33 +99,56 @@ export function Navbar(props) {
           </svg>
         </a>
 
-				<nav className="md:flex hidden">
-					<a href="/tournament" className={`mx-10 text-xl text-shadow ${location.url == '/tournament' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
-						{language.tournament[lang]}
-					</a>
-					<a href="/play" className={`mx-10 text-xl text-shadow ${location.url == '/play' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
-						{language.play[lang]}
-					</a>
-					<a href="/shop" className={`mx-10 text-xl text-shadow ${location.url == '/shop' ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}>
-						{language.shop[lang]}
-					</a>
-				</nav>
-				
-				{logged ? <LogCard /> : null}
-			</header>
-			<p className={`${AUTHORIZED_LOCATIONS.includes(location.url) ? "" : "hidden"} ${showLegalNotice ? "flex" : "hidden"} min-[1343px]:flex absolute top-2 min-[1343px]:bottom-2 min-[1343px]:top-auto text-sm z-50`}>
-				{AUTHORIZED_LOCATIONS.includes(location.url) ?
-				<>
-					<a href="/legal-notice" className="hover:underline cursor-pointer mx-1">
-						{language.legal_notice[lang]}
-					</a>
-					· PonkCorp 2024 |
-				</> : null
-				}
-				<div onClick={() => props.setLang('br')} className={`ml-2 ${lang == 'br' ? "border-2" : "" } w-5 h-5 rounded-full cursor-pointer bg-[url(https://upload.wikimedia.org/wikipedia/commons/c/c8/Gwenn_ha_Du_%2811_mouchetures%29.svg)] bg-center bg-cover`}></div>
-				<div onClick={() => props.setLang('en')} className={`ml-2 ${lang == 'en' ? "border-2" : "" } w-5 h-5 rounded-full cursor-pointer bg-[url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/1200px-Flag_of_the_United_Kingdom_%283-5%29.svg.png)] bg-center bg-cover`}></div>
-				<div onClick={() => props.setLang('fr')} className={`ml-2 ${lang == 'fr' ? "border-2" : "" } w-5 h-5 rounded-full cursor-pointer bg-[url(https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/255px-Flag_of_France.svg.png)] bg-center bg-cover`}></div>
-			</p>
-		</>
-	);
+        <nav className="md:flex hidden">
+          <a
+            href="/tournament"
+            className={`mx-10 text-xl text-shadow ${location.url == "/tournament" ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}
+          >
+            {language.tournament[lang]}
+          </a>
+          <a
+            href="/play"
+            className={`mx-10 text-xl text-shadow ${location.url == "/play" ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}
+          >
+            {language.play[lang]}
+          </a>
+          <a
+            href="/shop"
+            className={`mx-10 text-xl text-shadow ${location.url == "/shop" ? "text-white font-semibold" : "text-white/40 font-normal"} transition-all hover:text-white`}
+          >
+            {language.shop[lang]}
+          </a>
+        </nav>
+
+        {logged ? <LogCard /> : null}
+      </header>
+      <p
+        className={`${AUTHORIZED_LOCATIONS.includes(location.url) ? "" : "hidden"} ${showLegalNotice ? "flex" : "hidden"} min-[1343px]:flex absolute top-2 min-[1343px]:bottom-2 min-[1343px]:top-auto text-sm z-50`}
+      >
+        {AUTHORIZED_LOCATIONS.includes(location.url) ? (
+          <>
+            <a
+              href="/legal-notice"
+              className="hover:underline cursor-pointer mx-1"
+            >
+              {language.legal_notice[lang]}
+            </a>
+            · PonkCorp 2024 |
+          </>
+        ) : null}
+        <div
+          onClick={() => props.setLang("br")}
+          className={`ml-2 ${lang == "br" ? "border-2" : ""} w-5 h-5 rounded-full cursor-pointer bg-[url(https://upload.wikimedia.org/wikipedia/commons/c/c8/Gwenn_ha_Du_%2811_mouchetures%29.svg)] bg-center bg-cover`}
+        ></div>
+        <div
+          onClick={() => props.setLang("en")}
+          className={`ml-2 ${lang == "en" ? "border-2" : ""} w-5 h-5 rounded-full cursor-pointer bg-[url(https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/1200px-Flag_of_the_United_Kingdom_%283-5%29.svg.png)] bg-center bg-cover`}
+        ></div>
+        <div
+          onClick={() => props.setLang("fr")}
+          className={`ml-2 ${lang == "fr" ? "border-2" : ""} w-5 h-5 rounded-full cursor-pointer bg-[url(https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/255px-Flag_of_France.svg.png)] bg-center bg-cover`}
+        ></div>
+      </p>
+    </>
+  );
 }
