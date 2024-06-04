@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 
-DEFAULT_AVATAR = "https://cdn.intra.42.fr/product/image/995/Visuels_newsletter__51_.png"
+DEFAULT_AVATAR = "/assets/sheldon.png"
 
 
 class AuthMethod(models.IntegerChoices):
