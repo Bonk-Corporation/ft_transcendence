@@ -3,6 +3,7 @@ import { CTA } from "../../components/utils/CTA";
 import { InvitationCard } from "../../components/Tournament/InvitationCard";
 import { language } from "../../scripts/languages";
 import { LangContext } from "../../Contexts";
+import { ProfileContext } from "../../Contexts";
 import { PopUp } from "../../components/utils/PopUp";
 import { useLocation } from "preact-iso";
 import { Input } from "../../components/utils/Input";
@@ -20,6 +21,7 @@ export function Menu(props) {
   const nameRef = useRef(null);
 
   const lang = useContext(LangContext);
+  const profile = useContext(ProfileContext);
   function clear() {
     setError("");
   }
@@ -70,12 +72,12 @@ export function Menu(props) {
         clear={clear}
       >
         <h1 className="text-xl font-semibold mb-4">Create a tournament</h1>
-        {props.profile ? (
+        {profile ? (
           <Input
             ref={nameRef}
             className="mb-2"
             placeholder="Name of the room"
-            defaultValue={`${props.profile.name}${props.profile.name.endsWith("s") ? "'" : "'s"} room`}
+            defaultValue={`${profile.name}${profile.name.endsWith("s") ? "'" : "'s"} room`}
           />
         ) : null}
         <h1>Numbers of players</h1>
@@ -128,11 +130,7 @@ export function Menu(props) {
           <div className="h-96 backdrop-blur-lg overflow-y-auto overflow-x-hidden pr-2 down-gradient">
             {tournaments.length ? (
               tournaments.map((room) => (
-                <InvitationCard
-                  lang={lang}
-                  room={room}
-                  setError={setErrorJoin}
-                />
+                <InvitationCard room={room} setError={setErrorJoin} />
               ))
             ) : (
               <Card className="py-4 w-72 flex items-center flex-col">
