@@ -12,5 +12,5 @@ pg.log
 target
 pkg
 .static
-backend/media/images
+assets/avatars
 frontend/public
