@@ -92,6 +92,15 @@ export function Room(props) {
     });
   };
 
+  const playButton = () => {
+    location.route("/pong");
+    fetch("/api/tournament/play").then((res) =>
+      res.json().then((data) => {
+        if (data.error) return location.route("/tournament/room");
+      }),
+    );
+  };
+
   return (
     <div className="w-full flex justify-center h-[40rem]">
       <div className="h-full w-2/3 flex flex-col items-center">
@@ -139,7 +148,10 @@ export function Room(props) {
             ></i>
             {priv ? language.private[lang] : language.public[lang]}
           </button>
-          <CTA className="ml-2 px-12 py-3 border-2 border-white hover:border-gray-300">
+          <CTA
+            onClick={playButton}
+            className="ml-2 px-12 py-3 border-2 border-white hover:border-gray-300"
+          >
             <i className="fa-solid fa-play mr-2"></i>
             {language.play[lang]}
           </CTA>
