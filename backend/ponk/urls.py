@@ -31,6 +31,6 @@ urlpatterns = [
     path("auth/", include(ponk.auth.urls)),
     path("api/", include(ponk.api.urls)),
     *ponk.chat.urls,
-    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
+    *static(settings.ASSETS_URL, document_root=settings.ASSETS_ROOT),
     default(TemplateView.as_view(template_name="index.html")),
 ]

@@ -5,7 +5,7 @@ services:
       dockerfile: transcendence
     volumes:
       - .:/app
-      - media:/app/backend/media
+      - assets:/app/assets
     ports:
       - "8443:8443"
       - "8000:8000"
@@ -23,4 +23,4 @@ services:
       - "4210:4210"
 
 volumes:
-  media:
+  assets:

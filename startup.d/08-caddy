@@ -7,8 +7,7 @@ if [ "$prod" = true ]; then
 fi
 
 export "srv_root=$PWD/.static"
-export "skins_root=$PWD/skins"
-export "media_root=$PWD/backend/media"
+export "assets_root=$PWD/assets"
 
 # copy all static files to .static, to be served by caddy
 # since serving them by django is strongly discouraged
@@ -26,13 +25,8 @@ caddy start --adapter caddyfile --config <( cat <<-EOF
 		file_server
 	}
 
-	handle_path /skins/* {
-		root * $skins_root
-		file_server
-	}
-
-	handle_path /media/* {
-		root * $media_root
+	handle_path /assets/* {
+		root * $assets_root
 		file_server
 	}
 

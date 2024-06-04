@@ -77,7 +77,7 @@ export function Room(props) {
                 transition-all ease-in-out
                 h-[46rem] w-full
                 "
-              src="/media/images/flame.json" background="transparent" speed="1" loop autoplay></dotlottie-player>`;
+              src="/assets/flame.json" background="transparent" speed="1" loop autoplay></dotlottie-player>`;
     
     const dotlottieBlue =`<dotlottie-player class="
                 relative 2xl:bottom-28 xl:bottom-0 lg:bottom-[-60px]
@@ -85,7 +85,7 @@ export function Room(props) {
                 transition-all ease-in-out
                 h-[46rem] w-full
                 "
-              src="/media/images/blue_flame.json" background="transparent" speed="1" loop autoplay></dotlottie-player>`;
+              src="/assets/blue_flame.json" background="transparent" speed="1" loop autoplay></dotlottie-player>`;
     
     anchorPong.innerHTML += dotlottie;
     anchorBonk.innerHTML += dotlottieBlue;
