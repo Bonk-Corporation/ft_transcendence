@@ -21,7 +21,7 @@ export function Menu(props) {
 
   const lang = useContext(LangContext);
   function clear() {
-    setError('');
+    setError("");
   }
 
   function createTournament() {
@@ -59,7 +59,6 @@ export function Menu(props) {
         setTournaments(data.data);
       }),
     );
-    console.log(tournaments);
   }, []);
 
   return (
@@ -71,11 +70,14 @@ export function Menu(props) {
         clear={clear}
       >
         <h1 className="text-xl font-semibold mb-4">Create a tournament</h1>
-        {
-          props.profile ?
-          <Input ref={nameRef} className="mb-2" placeholder="Name of the room" value={`${props.profile.name}${props.profile.name.endsWith("s") ? "'" : "'s"} room`}/>
-          : null
-        }
+        {props.profile ? (
+          <Input
+            ref={nameRef}
+            className="mb-2"
+            placeholder="Name of the room"
+            defaultValue={`${props.profile.name}${props.profile.name.endsWith("s") ? "'" : "'s"} room`}
+          />
+        ) : null}
         <h1>Numbers of players</h1>
         <div className="mb-4">
           <button
