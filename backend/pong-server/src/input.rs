@@ -33,6 +33,7 @@ pub const BOT_MISS_TIME             : f32   = 200.;
 pub const BOT_PRESHOT_MIN_DELAY     : f32   = 1000.;
 pub const BOT_PRESHOT_DELAY         : f32   = 1000.;
 pub const BOT_DELAY_REBOUND_FACTOR  : f32   = 500.;
+pub const BOT_FLEXIBILITY           : f32   = PLAYER_HEIGHT * 0.1;
 pub const BOT_PAUSE                 : u8    = 2;
 
 #[derive(Clone)]
