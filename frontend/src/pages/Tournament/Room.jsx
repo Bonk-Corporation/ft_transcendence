@@ -12,7 +12,6 @@ export function Room(props) {
   const [active, setActive] = useState("");
   const [priv, setPriv] = useState(false);
   const [showSchema, setShowSchema] = useState(false);
-  const inputRef = useRef(null);
 
   const profile = useContext(ProfileContext);
   const lang = useContext(LangContext);
@@ -29,6 +28,7 @@ export function Room(props) {
         res.json().then((data) => {
           if (data.error) return location.route("/tournament");
 
+          console.log(data);
           setRoom(data);
           setPriv(data.private);
           setIsHost(data.host == props.profile.name);
@@ -123,6 +123,7 @@ export function Room(props) {
           <button
             onClick={() => {
               setPriv(!priv);
+              toggleRoomPrivacy();
             }}
             className={`mr-2 px-12 py-3 border-2 border-white 
             ${
@@ -132,7 +133,6 @@ export function Room(props) {
             } 
             rounded-lg  transition-all ease-in-out`}
             disabled={!isHost}
-            onClick={toggleRoomPrivacy}
           >
             <i
               className={`fa-solid ${priv ? "fa-lock" : "fa-unlock"} mr-2`}
@@ -147,15 +147,15 @@ export function Room(props) {
       </div>
 
       <div className="ml-4 down-gradient overflow-auto h-full px-2 overflow-x-hidden">
-        {room && room.phases[currPhase] ?
-          room.phases[currPhase].map((user) => (
-            <PlayerCard
-              player={user}
-              host={room.host}
-              iAmAdmin={profile.username == room.host}
-            />
-          )) : null
-        }
+        {room && room.phases[currPhase]
+          ? room.phases[currPhase].map((user) => (
+              <PlayerCard
+                player={user}
+                host={room.host}
+                iAmAdmin={profile.username == room.host}
+              />
+            ))
+          : null}
       </div>
     </div>
   );
