@@ -7,12 +7,14 @@ from dataclasses import dataclass
 from typing import List
 import requests
 import json
+import os
 
 
 @dataclass
 class Tournament:
     name: str
     users: List[User]
+    phases: List[List[User]]
     host_user: User
     selected_game: str
     room_size: int
@@ -55,6 +57,7 @@ def new(request, *args, **kwargs):
         room_size=size,
         private=False,
     )
+    tournaments[request.user].phases.append(tournaments[request.user].users)
     rooms[request.user] = request.user
     return JsonResponse({"success": True})
 
@@ -198,13 +201,16 @@ def status(request, *args, **kwargs):
         {
             "name": tournament.name,
             "host": tournament.host_user.username,
-            "users": [
-                {
-                    "avatar": user.avatar,
-                    "username": user.username,
-                    "level": user.level,
-                }
-                for user in tournament.users
+            "phases": [
+                [
+                    {
+                        "avatar": user.avatar,
+                        "username": user.username,
+                        "level": user.level,
+                    }
+                    for user in tournament.users
+                ]
+                for i in tournament.phases
             ],
             "selected_game": tournament.selected_game,
             "size": tournament.room_size,
@@ -263,9 +269,7 @@ def play(request, *args, **kwargs):
             data.append([users[i].username, users[i + 1].username])
         headers = {
             "Content-Type": "application/json",
-            "Authorization": os.getenv(
-                "PRIVATE_API_TOKEN"
-            ),  # Si besoin d'un token d'authentification
+            "Authorization": os.environ["PRIVATE_API_TOKEN"],
         }
         response = requests.post(url, data=data, headers=headers)
         print(f"Status Code: {response.status_code}")
@@ -279,6 +283,7 @@ def play(request, *args, **kwargs):
 
 urls = [
     path("status", status),  # get informations about current turnament
+    path("play", play),
     path("get_all_tournaments", get_all_tournaments_info),
     path("set_to_pong", set_to_pong),
     path("set_to_bonk", set_to_bonk),
