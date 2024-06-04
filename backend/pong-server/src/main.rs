@@ -578,11 +578,13 @@ async fn handle_rooms(State(state): State<Arc<RwLock<Clients>>>, extract: Json<D
         let mut game = Game::new(client1, game_id.clone());
         game.add_player(client2);
         state.write().await.games.push(game.clone());
+        state.write().await.add_client(client1).await;
+        state.write().await.add_client(client2).await;
         tokio::spawn(async move {
             let winner = game.start().await;
             match winner {
-                EndGame::Player1 => println!("Player won"),
-                EndGame::Player2 => println!("Bot won"),
+                EndGame::Player1 => println!("Player1 won"),
+                EndGame::Player2 => println!("Player2 won"),
                 EndGame::Draw => println!("Draw"),
                 EndGame::Undecided => println!("Undecided"),
             }
