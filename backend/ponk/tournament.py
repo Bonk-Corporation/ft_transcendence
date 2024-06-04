@@ -177,8 +177,11 @@ def kick_user(request, *args, **kwargs):
             {"error": "User {} is not in this tournament".format(username)}, status=409
         )
 
-    tournaments[request.user].users.pop(target_user)
-    del rooms[request.user]
+    if target_user == request.user:
+        return JsonResponse({"error": "You cannot kick yourself"}, status=409)
+
+    tournaments[request.user].users.remove(target_user)
+    del rooms[target_user]
     return JsonResponse({"success": True})
 
 
