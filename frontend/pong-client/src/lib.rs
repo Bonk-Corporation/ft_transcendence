@@ -108,7 +108,7 @@ pub async fn start() -> Result<(), JsValue> {
             else
             {
                 float j = float((gl_VertexID - 1) / 2) * 2.0 * 3.14159 / 32.0;
-                v_texcoord = vec2((cos(j) + 1.0) / 2.0 , (sin(j) + 1.0) / 2.0);
+                v_texcoord = vec2((cos(j) + 1.0) / 2.0 , 1.0 - (sin(j) + 1.0) / 2.0);
             }
         }
         "##,
