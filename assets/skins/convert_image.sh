@@ -6,4 +6,4 @@ convert \
 	-gravity Center \
 	-extent 512x512 \
 	-format png \
-	"$image"
+	"$image" "${image%%.*}.png"
