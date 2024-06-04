@@ -52,13 +52,14 @@ def new(request, *args, **kwargs):
     tournaments[request.user] = Tournament(
         name=name,
         users=[request.user],
+        phases=[],
         host_user=request.user,
         selected_game="pong",
         room_size=size,
         private=False,
     )
-    tournaments[request.user].phases.append(tournaments[request.user].users)
     rooms[request.user] = request.user
+    tournaments[request.user].phases.append(tournaments[request.user].users)
     return JsonResponse({"success": True})
 
 
