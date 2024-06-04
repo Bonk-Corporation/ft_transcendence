@@ -17,6 +17,7 @@ import { Bonk } from "./pages/Games/Bonk";
 import { useEffect, useState } from "preact/hooks";
 import { LegalNotice } from "./pages/LegalNotice/LegalNotice";
 import { ProfileContext, LangContext } from "./Contexts";
+import { Waiting } from "./pages/Tournament/Waiting";
 
 export function App() {
   const [profile, setProfile] = useState(null);
@@ -85,6 +86,7 @@ export function App() {
                 <Pong path="/pong" />
                 <Bonk path="/bonk" />
                 <LegalNotice path="/legal-notice" />
+                <Waiting path="/tournament/waiting" />
                 <NotFound path="/*" />
               </Router>
             </main>
