@@ -81,12 +81,12 @@
 		]
 	},
 	{
-		"name": "9",
+		"name": "Poulet",
 		"price": 4.2,
 		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
+			"/assets/skins/poulet1.png",
+			"/assets/skins/poulet2.png",
+			"/assets/skins/poulet3.png"
 		]
 	},
 	{
