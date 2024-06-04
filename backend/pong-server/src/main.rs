@@ -167,6 +167,7 @@ struct BotGame {
     pub last_state      : BotState,
     pub move_time       : SystemTime,
     pub update_time     : SystemTime,
+    pub colision_pos    : f32,
     pub preshot_delay   : f32,
     pub think_delay     : f32,
     pub pause_counter   : u8,
@@ -182,6 +183,7 @@ impl BotGame {
             last_state      : BotState::WAIT,
             move_time       : SystemTime::now(),
             update_time     : SystemTime::UNIX_EPOCH,
+            colision_pos    : 0.,
             preshot_delay   : 0.,
             think_delay     : 0.,
             pause_counter   : 0,
@@ -248,6 +250,7 @@ impl BotGame {
             }
 
             if self.last_state == BotState::WAIT || self.last_state == BotState::ESTIMATE {
+                self.colision_pos = rand::random::<f32>() * (self.bot.height - BOT_FLEXIBILITY * 2.) + BOT_FLEXIBILITY;
                 self.think_delay = rand::random::<f32>() * BOT_DELAY_REBOUND_FACTOR * rebound_count * rebound_count;
                 if self.last_state == BotState::WAIT {
                     self.preshot_delay = rand::random::<f32>() * BOT_PRESHOT_DELAY + BOT_PRESHOT_MIN_DELAY;
@@ -267,7 +270,7 @@ impl BotGame {
         }
     }
 
-    async fn    bot_move(&mut self, y_target: Option<f32>, game: Game)
+    async fn    bot_move(&mut self, target: Option<f32>, game: Game)
     {
         let mut ai_move = Move {
             id          : game.player2.unwrap().id.clone(),
@@ -275,13 +278,13 @@ impl BotGame {
             movement    : String::new()
         };
 
-        let target_diff =   if let Some(y_target) = y_target {
-                                y_target - self.bot.position.y
+        let target_diff =   if let Some(target) = target {
+                                target - self.bot.position.y - self.colision_pos
                             } else {
                                 0.
                             };
 
-        if self.pause_counter == 0 && target_diff < 0. && self.last_move != Movement::Down
+        if self.pause_counter == 0 && target_diff < -BOT_FLEXIBILITY && self.last_move != Movement::Down
         {
             if self.last_move == Movement::Static {
                 ai_move.movement = String::from("DOWN");
@@ -291,7 +294,7 @@ impl BotGame {
                 self.pause_counter = 1;
             }
         }
-        if self.pause_counter == 0 && self.bot.height <= target_diff && self.last_move != Movement::Up
+        if self.pause_counter == 0 && BOT_FLEXIBILITY < target_diff && self.last_move != Movement::Up
         {
             if self.last_move == Movement::Static {
                 ai_move.movement = String::from("UP");
@@ -301,7 +304,7 @@ impl BotGame {
                 self.pause_counter = 1;
             }
         }
-        if 0 < self.pause_counter || (0. <= target_diff && target_diff <= self.bot.height && self.last_move != Movement::Static)
+        if 0 < self.pause_counter || (-BOT_FLEXIBILITY <= target_diff && target_diff <= BOT_FLEXIBILITY && self.last_move != Movement::Static)
         {
             if self.pause_counter == BOT_PAUSE {
                 self.pause_counter = 0;
