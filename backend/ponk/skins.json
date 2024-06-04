@@ -3,216 +3,216 @@
 		"name": "Division Alpha",
 		"price": 42,
 		"images": [
-			"/skins/cgodard.png",
-			"/skins/jcario.png",
-			"/skins/nlaerema.png"
+			"/assets/skins/cgodard.png",
+			"/assets/skins/jcario.png",
+			"/assets/skins/nlaerema.png"
 		]
 	},
 	{
 		"name": "Division Omega",
 		"price": 42,
 		"images": [
-			"/skins/acasamit.png",
-			"/skins/vcornill.png",
-			"/skins/gprigent.png"
+			"/assets/skins/acasamit.png",
+			"/assets/skins/vcornill.png",
+			"/assets/skins/gprigent.png"
 		]
 	},
 	{
 		"name": "Mborde",
 		"price": 4.2,
 		"images": [
-			"/skins/mborde.png",
-			"/skins/maxborde.png",
-			"/skins/mbordeau.png"
+			"/assets/skins/mborde.png",
+			"/assets/skins/maxborde.png",
+			"/assets/skins/mbordeau.png"
 		]
 	},
 	{
 		"name": "Jesus",
 		"price": 4.2,
 		"images": [
-			"/skins/ndavenne.png",
-			"/skins/vcornill.png",
-			"/skins/aboyreau.png"
+			"/assets/skins/ndavenne.png",
+			"/assets/skins/vcornill.png",
+			"/assets/skins/aboyreau.png"
 		]
 	},
 	{
 		"name": "Dinosaur",
 		"price": 4.2,
 		"images": [
-			"/skins/dinos.png",
-			"/skins/autre-dinos.png",
-			"/skins/encore-dinos.png"
+			"/assets/skins/dinos.png",
+			"/assets/skins/autre-dinos.png",
+			"/assets/skins/encore-dinos.png"
 		]
 	},
 	{
 		"name": "Aubry",
 		"price": 4.2,
 		"images": [
-			"/skins/laubry.png",
-			"/skins/kylian.png",
-			"/skins/kaubry.png"
+			"/assets/skins/laubry.png",
+			"/assets/skins/kylian.png",
+			"/assets/skins/kaubry.png"
 		]
 	},
 	{
 		"name": "Dictionnaire",
 		"price": 4.2,
 		"images": [
-			"/skins/rriviere.png",
-			"/skins/atellier.png",
-			"/skins/rrouille.png"
+			"/assets/skins/rriviere.png",
+			"/assets/skins/atellier.png",
+			"/assets/skins/rrouille.png"
 		]
 	},
 	{
 		"name": "Louis",
 		"price": 4.2,
 		"images": [
-			"/skins/louis.png",
-			"/skins/lgalloux.png",
-			"/skins/autre-louis.png"
+			"/assets/skins/louis.png",
+			"/assets/skins/lgalloux.png",
+			"/assets/skins/autre-louis.png"
 		]
 	},
 	{
 		"name": "8",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "9",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "10",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "11",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "12",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "13",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "14",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "15",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "16",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "17",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "18",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "19",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "20",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "21",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "22",
 		"price": 4.2,
 		"images": [
-			"/skins/red.png",
-			"/skins/blue.png",
-			"/skins/green.png"
+			"/assets/skins/red.png",
+			"/assets/skins/blue.png",
+			"/assets/skins/green.png"
 		]
 	},
 	{
 		"name": "Our Users Data",
 		"price": 42.0,
 		"images": [
-			"/skins/cash.png",
-			"/skins/pointing-finger-at-you.png",
-			"/skins/data.png"
+			"/assets/skins/cash.png",
+			"/assets/skins/pointing-finger-at-you.png",
+			"/assets/skins/data.png"
 		]
 	}
 ]
