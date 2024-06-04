@@ -43,6 +43,9 @@ def new(request, *args, **kwargs):
     if size not in [2, 4, 8]:
         return JsonResponse({"error": "Room size can only be 2, 4 or 8"}, status=409)
 
+    if rooms.get(request.user):
+        leave_room(request, *args, **kwargs)
+
     tournaments[request.user] = Tournament(
         name=name,
         users=[request.user],
@@ -102,9 +105,17 @@ def join_room(request, *args, **kwargs):
             {"error": "Room does not exist".format(username)}, status=404
         )
 
+    if target_room_host == request.user:
+        return JsonResponse(
+            {"error": "You cannot join your own room".format(username)}, status=409
+        )
+
+    if rooms.get(request.user):
+        leave_room(request, *args, **kwargs)
+
     if (
         tournaments[target_room_host].private
-        and request.user not in target_room_host.friends
+        and request.user not in target_room_host.friends.all()
     ):
         return JsonResponse(
             {"error": "This room is private".format(username)}, status=409
@@ -213,7 +224,11 @@ def get_all_tournaments_info(request, *args, **kwargs):
             tournaments_info.append(tournament_info)
 
     for other_user in tournaments:
-        if other_user not in request.user.friends.all():
+        if (
+            other_user not in request.user.friends.all()
+            and tournaments[other_user].private == False
+            and tournaments[other_user].host_user != request.user
+        ):
             tournament_info = {
                 "room_name": tournaments[other_user].name,
                 "host_avatar": tournaments[other_user].host_user.avatar,
