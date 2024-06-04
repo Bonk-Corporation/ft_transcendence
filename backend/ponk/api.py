@@ -16,9 +16,9 @@ import json
 import os
 
 DEFAULT_SKINS = [
-    "https://t4.ftcdn.net/jpg/03/03/40/19/360_F_303401956_ufTeSp9EX62zQnJnbed9Q0kEgqaKKL44.jpg",
-    "https://htmlcolorcodes.com/assets/images/colors/bright-green-color-solid-background-1920x1080.png",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Solid_blue.svg/1024px-Solid_blue.svg.png",
+    "/assets/skins/red.png",
+    "/assets/skins/green.png",
+    "/assets/skins/blue.png",
 ]
 
 
