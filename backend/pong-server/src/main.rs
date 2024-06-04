@@ -8,7 +8,7 @@ use axum::{
     Router,
     routing::{get, post},
 };
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use input::*;
 use tokio::sync::RwLock;
 
@@ -18,17 +18,19 @@ struct Clients {
 }
 
 impl Clients {
-    async fn add_client(&mut self, client: Client) -> Result<(), String> {
-
-        for cl in self.poll.as_slice() {
+    async fn add_client(&mut self, client: Client) -> Result<Option<String>, String> {
+        for cl in self.poll.as_mut_slice() {
             match cl.id.as_str() {
-                num if num == client.id.clone()  => return Ok(()),
+                num if num == client.id.clone()  => {
+                    cl.id_game = client.id_game;
+                    return Ok(cl.id_game.to_owned())
+                },
                 _ => (),
             }
         }
-
+        let id_game = client.id_game.to_owned();
         self.poll.push(client.into());
-        Ok(())
+        Ok(id_game)
     }
 
     async fn start_game(&mut self, client_id: String) -> Result<String, String> {
@@ -340,10 +342,97 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                             name: "Player".to_string(),
                             id_game: None,
                         };
-                        state.write().await.add_client(client.clone()).await.unwrap();
+                        let game_id = if let Ok(Some(game_id)) = state.write().await.add_client(client.clone()).await {
+                            sender.write().await.send(Message::Text("GAMEID".to_owned() + &game_id))
+                                .await
+                                .unwrap();
+                            Some(game_id)
+                        } else {
+                            None
+                        };
                         sender.write().await.send(Message::Text(format!("{} added to poll | id: {}", client.name, client.id)))
                             .await
                             .unwrap();
+                        if let Some(game_id) = game_id {
+                            let cl_state = Arc::clone(&state);
+                            let ptr_ws = Arc::clone(&sender);
+                            join_handler.push(tokio::spawn(async move {
+                                if let Ok(game) = cl_state.read().await.get_game(game_id.clone()).await {
+                                    if let Err(err) = ptr_ws.write().await.send(Message::Text("PLYONE".to_owned() + &game.player1.unwrap().id)).await {
+                                        println!("{err}");
+                                    } else {
+                                        println!("PLYONE sent");                                
+                                    }
+                                    tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+                                } else {
+                                    println!("error");
+                                }
+                                loop  {
+                                    tokio::time::sleep(tokio::time::Duration::from_millis(1000 / FPS)).await;
+                                    let game = cl_state.read().await.get_game(game_id.clone()).await.unwrap();
+                                    if game.state.lock().await.ball_ent.velocity.x != 0. {
+                                        game.state.lock().await.update_ball();
+                                        game.state.lock().await.update_score();
+                                        match ptr_ws.write().await.send(Message::Text("UPDATE".to_owned() + &serde_json::to_string(&(*game.state.lock().await)).unwrap())).await {
+                                            Ok(_) => (),
+                                            Err(_) => return,
+                                        };
+                                    }
+                                    if game.state.lock().await.finished {
+                                        let player1_id = if let Ok(game) = cl_state.read().await.get_game(game_id.clone()).await {
+                                            game.player1.unwrap().id
+                                        } else {
+                                            return;
+                                        };
+                                        let player2_id = if let Ok(game) = cl_state.read().await.get_game(game_id.clone()).await {
+                                            game.player2.unwrap().id
+                                        } else {
+                                            return;
+                                        };
+                                        let mut count = 0;
+                                        for client in cl_state.write().await.poll.as_mut_slice() {
+                                            if client.id == player1_id {
+                                                client.id_game = None;
+                                                count += 1;
+                                            } else if client.id == player2_id {
+                                                client.id_game = None;
+                                            }
+                                            if count >= 2 {
+                                                break;
+                                            }
+                                        }
+                                        #[derive(Serialize)]
+                                        struct GameStats<'a> {
+                                            player:     String,
+                                            game:       &'a str,
+                                            score:      (u8, u8),
+                                        }
+                                        let (p1,p2) = game.state.lock().await.score;
+                                        let end_stats = GameStats {
+                                            player:     player1_id,
+                                            game:       "pong",
+                                            score:      (p1, p2),
+                                        };
+                                        let client = reqwest::Client::new();
+                                        client.post("http://localhost:8001/api/private/game_stats")
+                                            .json(&end_stats)
+                                            .send()
+                                            .await;
+                                        let end_stats = GameStats {
+                                            player: player2_id,
+                                            game: "pong",
+                                            score: (p2, p1),
+                                        };
+                                        client.post("http://localhost:8001/api/private/game_stats")
+                                            .json(&end_stats)
+                                            .send()
+                                            .await;
+                                        println!("quitting thread");
+                                        return;
+                                    }
+                                }
+                            }));
+                        }
                     },
                     "MOVE " => {
                         let movement: Move = serde_json::from_str(&text[5..]).unwrap();
@@ -575,11 +664,11 @@ async fn handle_rooms(State(state): State<Arc<RwLock<Clients>>>, extract: Json<D
             name: "Player".to_string(),
             id_game: Some(game_id.to_string()),
         };
-        let mut game = Game::new(client1, game_id.clone());
-        game.add_player(client2);
+        let mut game = Game::new(client1.clone(), game_id.clone());
+        game.add_player(client2.clone());
         state.write().await.games.push(game.clone());
-        state.write().await.add_client(client1).await;
-        state.write().await.add_client(client2).await;
+        let _ = state.write().await.add_client(client1).await;
+        let _ = state.write().await.add_client(client2).await;
         tokio::spawn(async move {
             let winner = game.start().await;
             match winner {

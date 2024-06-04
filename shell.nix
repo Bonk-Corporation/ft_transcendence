@@ -28,6 +28,8 @@ let
 
 		postgresql
 		pkgs.glibcLocales
+
+		openssh
 	];
 	pongDeps = lib.optional (!prod) [
 		codespell
@@ -41,6 +43,10 @@ in
 
 mkShell {
 	packages = commonDeps ++ transcendenceDeps ++ pongDeps;
+
+	nativeBuildInputs = [ pkgs.pkg-config ];
+	LD_LIBRARY_PATH = lib.makeLibraryPath [ openssl ];
+	buildInputs = [ pkgs.openssl ];
 
 	shellHook = ''
 		should_start="${should-start}"

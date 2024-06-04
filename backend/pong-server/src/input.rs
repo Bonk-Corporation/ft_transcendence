@@ -102,7 +102,7 @@ pub struct GameState {
     pub player1_ent : Entity,
     pub player2_ent : Entity,
     pub ball_ent    : Entity,
-    score           : (u8, u8),
+    pub score       : (u8, u8),
     pub winner      : EndGame,
     pub finished    : bool,
 }
