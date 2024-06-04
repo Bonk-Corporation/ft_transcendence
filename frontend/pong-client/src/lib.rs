@@ -61,8 +61,7 @@ pub async fn start() -> Result<(), JsValue> {
         .dyn_into::<Response>()?; 
     let me = wasm_bindgen_futures::JsFuture::from(me.json()?).await?;
     let me: Me = serde_wasm_bindgen::from_value(me)?;
-    console_log!("{:?}", me.selectedSkinUrl);
-    let (_image, texture) = load_texture(&context, "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/1920px-Flag_of_France.svg.png")?;
+    let (_image, texture) = load_texture(&context, &me.selectedSkinUrl)?;
     let vertex_shader = render::compile_shader(
         &context,
         WebGl2RenderingContext::VERTEX_SHADER,
