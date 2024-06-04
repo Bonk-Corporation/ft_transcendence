@@ -5,6 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from ponk.models import User
 from dataclasses import dataclass
 from typing import List
+import requests
 import json
 
 
@@ -256,10 +257,20 @@ def play(request, *args, **kwargs):
         )
 
     if tournaments[request.user].selected_game == "pong":
-        games = []
+        url = "0.0.0.0:4210/rooms"
+        data = []
         for i in range(0, len(users), 2):
-            games.append([users[i].username, users[i + 1].username])
-        return JsonResponse({"games": games})
+            data.append([users[i].username, users[i + 1].username])
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": os.getenv(
+                "PRIVATE_API_TOKEN"
+            ),  # Si besoin d'un token d'authentification
+        }
+        response = requests.post(url, data=data, headers=headers)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.json()}")
+        return JsonResponse({"success": True})
 
     # TODO handle if the selected_game is bonk
 
