@@ -1,63 +1,64 @@
 extends Node2D
 
-@export var collision_layer : int = 1
-var counter = 6
+@export var layer : int = 0
+signal game_finished(room_name, winner, scores)
+var started = false
+var finished = false
 
-func _ready():
-	get_node("body").set_collision_layer(1 << collision_layer)
-	get_node("body").set_collision_mask(1 << collision_layer)
-	var physic = PhysicsMaterial.new()
-	physic.set_absorbent(true)
-	get_node("body").set_physics_material_override(physic)
+func start_round(message, time):
+	for player in get_node("players").get_children():
+		player.get_node("body").set_position(Vector2(640, 235))
+		player.get_node("body").set_freeze_enabled(true)
+		player.get_node("body").death_state = false
+		player.get_node("body").tired_state = false
+		player.get_node("body").grapple_state = false
+		player.get_node("body").power = 100
+	get_node("message").set_text(message)
+	await get_tree().create_timer(3).timeout
+	while time >= 0:
+		get_node("message").set_text(str(time))
+		time -= 1
+		await get_tree().create_timer(1).timeout
+	get_node("message").set_text("")
+	for player in get_node("players").get_children():
+		player.get_node("body").set_freeze_enabled(false)
+	started = true
 	
 
-@rpc("call_local")
-func quit_game():
+func _ready():
 	if multiplayer.is_server():
-		print("Room deleted: ", name)
-	call_deferred("queue_free")
+		get_node("body").set_collision_layer(1 << layer)
+		get_node("body").set_collision_mask(1 << layer)
+		var physic = PhysicsMaterial.new()
+		physic.set_absorbent(true)
+		get_node("body").set_physics_material_override(physic)
+		start_round("Ready ?", 3)
 
 func _process(delta):
-	get_node("background").scroll_offset += Vector2(1, 0) * Parameters.parallax_speed * delta
-	if multiplayer.is_server() && get_node("players").get_child_count() > 0:
-		if (counter > 0):
-			get_node("label").set_text(str(floor(counter)))
-			counter -= delta
-			if floor(counter) <= 0:
-				get_node("label").set_text("")
-				for player in get_node("players").get_children():
-					player.get_node("body").set_freeze_enabled(false)
-		var nb_death = 0
-		var winner = get_node("players").get_child(0)
-		for child in get_node("players").get_children():
-			if child.get_node("body").is_dead:
-				nb_death += 1
-			else:
-				winner = child
-		if nb_death >= get_node("players").get_child_count() - 1 && get_node("players").get_child_count() > 1:
-			winner.get_node("body").wins += 1
-			for child in get_node("players").get_children():
-				child.get_node("body").is_dead = false
-				child.get_node("body").set_freeze_enabled(true)
-				child.get_node("body").endurance_time = Parameters.endurance_delay
-				child.get_node("body").is_grapple = false
-				child.get_node("body").tired = false
-				counter = 4;
-				child.get_node("body").set_position(Vector2(640, 235))
+	if !multiplayer.is_server():
+		get_node("background").scroll_offset += Vector2(1, 0) * Settings.parallax_speed * delta
+	elif started:
+		if finished:
+			return
+		var death_count = 0
+		var winner = null
 		var scores = ""
-		for child in get_node("players").get_children():
-			scores += child.get_node("body").get_node("pseudo").get_text() + ": " + str(child.get_node("body").wins) + "\n"
-			if child.get_node("body").wins >= 5:
-				get_parent().get_parent().layers[collision_layer] = false
-				get_node("label").set_text(child.get_node("body").get_node("pseudo").get_text() + " won this game")
-				for player in get_node("players").get_children():
-					player.call_deferred("queue_free")
-				rpc("quit_game")
-				break
-		if  get_node("players").get_child_count() == 1 && counter <= 0:
-				get_parent().get_parent().layers[collision_layer] = false
-				get_node("label").set_text(get_node("players").get_child(0).get_node("body").get_node("pseudo").get_text() + " won this game")
-				for player in get_node("players").get_children():
-					player.call_deferred("queue_free")
-				rpc("quit_game")
+		var scores_dict = {}
+		for player in get_node("players").get_children():
+			scores_dict[player.get_node("body/username").get_text()] = player.get_node("body").score
+			scores += player.get_node("body/username").get_text() + ": " + str(player.get_node("body").score) + "\n"
+			if player.get_node("body").death_state:
+				death_count += 1
+			else:
+				winner = player
 		get_node("scores").set_text(scores)
+		if !winner:
+			start_round("Draw !", 3)
+		elif death_count >= get_node("players").get_child_count() - 1:
+			winner.get_node("body").score += 1
+			if winner.get_node("body").score >= 5 || get_node("players").get_child_count() == 1:
+				finished = true
+				scores_dict[winner.get_node("body/username").get_text()] = winner.get_node("body").score
+				game_finished.emit(get_name(), Global.get_user(winner.get_node("body/username").get_text()), scores_dict)
+			else:
+				start_round(winner.get_node("body/username").get_text() + " scored !", 3)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://3psjlgsy78cg"]
+[gd_scene load_steps=7 format=3 uid="uid://3psjlgsy78cg"]
 
 [ext_resource type="Script" path="res://map/map.gd" id="1_cvoq4"]
 [ext_resource type="Script" path="res://map/collision.gd" id="2_6sgan"]
 [ext_resource type="Texture2D" uid="uid://dbn7bota8p2gd" path="res://asset/city.svg" id="3_xxrcf"]
+[ext_resource type="Script" path="res://map/rectangle.gd" id="4_ts5c7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5i30o"]
 size = Vector2(438.756, 38)
@@ -11,7 +12,7 @@ size = Vector2(438.756, 38)
 properties/0/path = NodePath("scores:text")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("label:text")
+properties/1/path = NodePath("message:text")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
@@ -39,28 +40,75 @@ spawn_path = NodePath("../players")
 
 [node name="background" type="ParallaxBackground" parent="."]
 
-[node name="layer" type="ParallaxLayer" parent="background"]
+[node name="layer_1" type="ParallaxLayer" parent="background"]
 texture_repeat = 2
+position = Vector2(0, -57)
 motion_scale = Vector2(0.5, 0.5)
-motion_mirroring = Vector2(1280.85, 0)
+motion_mirroring = Vector2(501.53, 0)
 
-[node name="city" type="Sprite2D" parent="background/layer"]
+[node name="city" type="Sprite2D" parent="background/layer_1"]
 modulate = Color(0.105882, 0.14902, 0.231373, 1)
 texture_repeat = 2
-position = Vector2(642.281, 523.763)
-scale = Vector2(1.09229, 0.345124)
+position = Vector2(250.28, 587.878)
+scale = Vector2(0.426758, 0.364806)
+texture = ExtResource("3_xxrcf")
+
+[node name="city2" type="Sprite2D" parent="background/layer_1"]
+modulate = Color(0.105882, 0.14902, 0.231373, 1)
+texture_repeat = 2
+position = Vector2(749, 589)
+scale = Vector2(0.427, 0.365)
+texture = ExtResource("3_xxrcf")
+
+[node name="city3" type="Sprite2D" parent="background/layer_1"]
+modulate = Color(0.105882, 0.14902, 0.231373, 1)
+texture_repeat = 2
+position = Vector2(1251, 589)
+scale = Vector2(0.427, 0.365)
+texture = ExtResource("3_xxrcf")
+
+[node name="city4" type="Sprite2D" parent="background/layer_1"]
+modulate = Color(0.105882, 0.14902, 0.231373, 1)
+texture_repeat = 2
+position = Vector2(1751, 589)
+scale = Vector2(0.427, 0.365)
 texture = ExtResource("3_xxrcf")
 
 [node name="layer_2" type="ParallaxLayer" parent="background"]
 texture_repeat = 2
-motion_mirroring = Vector2(1280, 0)
+motion_mirroring = Vector2(501.53, 0)
 
 [node name="city" type="Sprite2D" parent="background/layer_2"]
 modulate = Color(0.0509804, 0.105882, 0.164706, 1)
 texture_repeat = 2
-position = Vector2(643.281, 587.878)
-scale = Vector2(1.09059, 0.364806)
+position = Vector2(250.28, 587.878)
+scale = Vector2(0.426758, 0.364806)
 texture = ExtResource("3_xxrcf")
+
+[node name="city2" type="Sprite2D" parent="background/layer_2"]
+modulate = Color(0.0509804, 0.105882, 0.164706, 1)
+texture_repeat = 2
+position = Vector2(749, 588)
+scale = Vector2(0.427, 0.365)
+texture = ExtResource("3_xxrcf")
+
+[node name="city3" type="Sprite2D" parent="background/layer_2"]
+modulate = Color(0.0509804, 0.105882, 0.164706, 1)
+texture_repeat = 2
+position = Vector2(1251, 588)
+scale = Vector2(0.427, 0.365)
+texture = ExtResource("3_xxrcf")
+
+[node name="city4" type="Sprite2D" parent="background/layer_2"]
+modulate = Color(0.0509804, 0.105882, 0.164706, 1)
+texture_repeat = 2
+position = Vector2(1751, 588)
+scale = Vector2(0.427, 0.365)
+texture = ExtResource("3_xxrcf")
+
+[node name="rectangle" type="Node2D" parent="."]
+position = Vector2(0, 719)
+script = ExtResource("4_ts5c7")
 
 [node name="scores" type="Label" parent="."]
 offset_left = 11.0
@@ -73,7 +121,7 @@ replication_config = SubResource("SceneReplicationConfig_qcc0f")
 
 [node name="players" type="Node" parent="."]
 
-[node name="label" type="Label" parent="."]
+[node name="message" type="Label" parent="."]
 offset_top = 100.0
 offset_right = 1280.0
 offset_bottom = 200.0

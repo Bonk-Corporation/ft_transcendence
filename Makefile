@@ -20,6 +20,7 @@ bonk-rebuild:
 	godot4 --display-driver headless --path backend/bonk-server --export-debug Web $(PWD)/frontend/bonk-client/bonk-client.html
 	gzip -f frontend/bonk-client/bonk-client.wasm
 	gzip -f frontend/bonk-client/bonk-client.pck
+	yes yes | python backend/manage.py collectstatic
 	sh backend/bonk-server/pkg/bonk-server.sh
 
 bonk-server:
