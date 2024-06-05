@@ -33,7 +33,7 @@ export function Room(props) {
         setPlaying(data.playing);
         setActive(data.selected_game);
         setIsHost(data.host == profile.name);
-        setShowSchema(data.phases.length > 1);
+        if (data.phases.length > 1 || data.playing) setShowSchema(true);
       }),
     );
     const id = setInterval(() => {
@@ -46,8 +46,7 @@ export function Room(props) {
           setPlaying(data.playing);
           setActive(data.selected_game);
           setIsHost(data.host == profile.name);
-          setShowSchema(data.phases.length > 1);
-          console.log(data.phases);
+          if (data.phases.length > 1 || data.playing) setShowSchema(true);
         }),
       );
     }, 1000);
