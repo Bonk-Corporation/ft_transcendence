@@ -37,7 +37,7 @@ func game_finished(room_name, winner, scores_dict):
 		var body_data = {
 			"game": "Bonk",
 			"score": [scores_dict[user.username], scores_dict[winner.username]],
-			"user": user.username
+			"player": user.username
 		}
 		if user == winner:
 			var second_score = 0
@@ -47,7 +47,7 @@ func game_finished(room_name, winner, scores_dict):
 			body_data = {
 				"game": "Bonk",
 				"score": [scores_dict[user.username], second_score],
-				"user": user.username
+				"player": user.username
 			}
 		var http = HTTPRequest.new()
 		http.set_name("game_stats_" + str(user.id))
