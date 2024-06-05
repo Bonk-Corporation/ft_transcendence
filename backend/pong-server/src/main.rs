@@ -324,6 +324,15 @@ async fn websocket_handler(State(state): State<Arc<RwLock<Clients>>>, ws: WebSoc
     ws.on_upgrade(|socket| handle_socket(state, socket))
 }
 
+fn adequate_private_api_url() -> String {
+    if let Ok(is_debug) = env::var("FT_DEBUG") {
+        if is_debug == "y" {
+            return String::from("http://localhost:8000/api/private/game_stats");
+        }
+    }
+    String::from("http://transcendence:8000/api/private/game_stats")
+}
+
 async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
     let (sender, mut receiver) = socket.split();
     let sender = Arc::new(RwLock::new(sender));
@@ -419,20 +428,21 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                                 score:      (p1, p2),
                                             };
                                             let client = reqwest::Client::new();
-                                            client.post("http://localhost:8001/api/private/game_stats")
+                                            println!("{}", adequate_private_api_url());
+                                            println!("{:?}", client.post(adequate_private_api_url())
                                                 .header(
                                                     reqwest::header::HeaderName::from_bytes(b"Authorization").unwrap(),
                                                     reqwest::header::HeaderValue::from_str(&key).unwrap()
                                                 )
                                                 .json(&end_stats)
                                                 .send()
-                                                .await;
+                                                .await);
                                             let end_stats = GameStats {
                                                 player: player2_id,
                                                 game: "pong",
                                                 score: (p2, p1),
                                             };
-                                            client.post("http://localhost:8001/api/private/game_stats")
+                                            client.post(adequate_private_api_url())
                                                 .header(
                                                     reqwest::header::HeaderName::from_bytes(b"Authorization").unwrap(),
                                                     reqwest::header::HeaderValue::from_str(&key).unwrap()
@@ -545,20 +555,21 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                             score:      (p1, p2),
                                         };
                                         let client = reqwest::Client::new();
-                                        client.post("http://localhost:8001/api/private/game_stats")
+                                        println!("{:?}", adequate_private_api_url());
+                                        println!("{:?}", client.post(adequate_private_api_url())
                                             .header(
                                                 reqwest::header::HeaderName::from_bytes(b"Authorization").unwrap(),
                                                 reqwest::header::HeaderValue::from_str(&key).unwrap()
                                             )
                                             .json(&end_stats)
                                             .send()
-                                            .await;
+                                            .await);
                                         let end_stats = GameStats {
                                             player: player2_id,
                                             game: "pong",
                                             score: (p2, p1),
                                         };
-                                        client.post("http://localhost:8001/api/private/game_stats")
+                                        client.post(adequate_private_api_url())
                                             .header(
                                                 reqwest::header::HeaderName::from_bytes(b"Authorization").unwrap(),
                                                 reqwest::header::HeaderValue::from_str(&key).unwrap()

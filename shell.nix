@@ -63,8 +63,18 @@ mkShell {
 
 		case "$should_start" in
 			pong-server)
-				source startup.d/02-source_env
-				source startup.d/03-env
+				for script in startup.d/02-source_env startup.d/03-env startup.d/09-debug; do
+					echo sourcing $script...
+					${if prod then
+						''
+						source "$script" true
+						''
+					else
+						''
+						source "$script" false
+						''
+					 }
+				done
 
 				make pong-server
 				;;
