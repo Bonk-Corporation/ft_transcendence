@@ -9,6 +9,7 @@ fi
 export "srv_root=$PWD/.static"
 export "assets_root=$PWD/assets"
 
+rm -rf .static
 # copy all static files to .static, to be served by caddy
 # since serving them by django is strongly discouraged
 yes yes | python backend/manage.py collectstatic
