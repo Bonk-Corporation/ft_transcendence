@@ -22,6 +22,7 @@ class Tournament:
     room_size: int
     private: bool
     playing: bool
+    play_launched: bool
 
 
 tournaments = {}
@@ -61,6 +62,7 @@ def new(request, *args, **kwargs):
         room_size=size,
         private=False,
         playing=False,
+        play_launched=False,
     )
     rooms[request.user] = request.user
     tournaments[request.user].phases.append([None] * 8)
@@ -299,6 +301,34 @@ def start_game(tournament, phase):
 
 
 @authenticated
+def is_redirected(request, *args, **kwargs):
+    if not tournaments.get(request.user):
+        return JsonResponse({"error": "You're not the tournament host"}, status=409)
+    tournaments[request.user].play_launched = False
+    return JsonResponse({"success": True})
+
+
+@authenticated
+def play_non_host(request, *args, **kwargs):
+    if len(users) not in [2, 4, 8]:
+        return JsonResponse(
+            {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
+        )
+
+    if len(users) != tournaments[request.user].room_size:
+        return JsonResponse(
+            {
+                "error": "You must be {} players to start a game".format(
+                    tournaments[request.user].room_size
+                )
+            },
+            status=409,
+        )
+
+    return JsonResponse({"success": True})
+
+
+@authenticated
 def play(request, *args, **kwargs):
     if not tournaments.get(request.user):
         return JsonResponse({"error": "You're not the tournament host"}, status=409)
@@ -310,7 +340,7 @@ def play(request, *args, **kwargs):
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
-    if len(users) not in tournaments[request.user].room_size:
+    if len(users) != tournaments[request.user].room_size:
         return JsonResponse(
             {
                 "error": "You must be {} players to start a game".format(
@@ -347,7 +377,18 @@ def set_play(request, *args, **kwargs):
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
+    if len(users) != tournaments[request.user].room_size:
+        return JsonResponse(
+            {
+                "error": "You must be {} players to start a game".format(
+                    tournaments[request.user].room_size
+                )
+            },
+            status=409,
+        )
+
     tournaments[request.user].playing = True
+    tournaments[request.user].play_launched = True
     return JsonResponse({"success": True})
 
 
