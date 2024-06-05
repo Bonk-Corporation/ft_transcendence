@@ -1,15 +1,14 @@
-import React, { useContext } from 'react';
-import { BallPresentation } from './BallPresentation';
-import { Price } from './Price';
-import { Input } from '../utils/Input';
-import { CTA } from '../utils/CTA';
-import { language } from '../../scripts/languages';
-import { LangContext, ProfileContext } from '../../Contexts';
-
+import React, { useContext } from "react";
+import { BallPresentation } from "./BallPresentation";
+import { Price } from "./Price";
+import { Input } from "../utils/Input";
+import { CTA } from "../utils/CTA";
+import { language } from "../../scripts/languages";
+import { LangContext, ProfileContext } from "../../Contexts";
 
 export function ItemSelection(props) {
   const profile = useContext(ProfileContext);
-	const lang = useContext(LangContext);
+  const lang = useContext(LangContext);
 
   function handleClick() {
     if (!props.selected)
@@ -33,18 +32,22 @@ export function ItemSelection(props) {
           </div>
         </div>
       </div>
-      <a  onClick={handleClick}
-          target="_blank" className="mt-4 flex flex-col justify-center items-center">
-          {
-            props.possessed ?
-            <CTA className='w-72 h-11 font-normal' black={props.selected}>{props.selected ? language.deselect[lang] : language.select[lang]}</CTA> :
-            // @ts-ignore
-            <stripe-buy-button
-              buy-button-id="buy_btn_1PIBt8KG666poqhFwKbTAzAp"
-              publishable-key={import.meta.env.VITE_STRIPE_API_KEY}
-              client-reference-id={profile.name + "_" + props.item.name}
-            />
-          }
+      <a
+        onClick={handleClick}
+        target="_blank"
+        className="mt-4 flex flex-col justify-center items-center"
+      >
+        {props.possessed ? (
+          <CTA className="w-72 h-11 font-normal" black={props.selected}>
+            {props.selected ? language.deselect[lang] : language.select[lang]}
+          </CTA>
+        ) : (
+          <stripe-buy-button
+            buy-button-id="buy_btn_1PIBt8KG666poqhFwKbTAzAp"
+            publishable-key={import.meta.env.VITE_STRIPE_API_KEY}
+            client-reference-id={profile.name + "_" + props.item.name}
+          />
+        )}
       </a>
     </div>
   );
