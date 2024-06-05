@@ -298,6 +298,7 @@ def set_play(request, *args, **kwargs):
         )
 
     tournaments[request.user].playing = True
+    return JsonResponse({"success": True})
 
 
 @authenticated
