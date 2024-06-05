@@ -123,7 +123,6 @@ export function Room(props) {
     fetch("/api/tournament/play_non_host").then((res) =>
       res.json().then(async (data) => {
         if (data.error) return;
-        setShowSchema(true);
         await new Promise((r) => setTimeout(r, 5000));
         if (playing) location.route("/pong");
       }),
@@ -134,7 +133,6 @@ export function Room(props) {
     fetch("/api/tournament/set_play").then((res) =>
       res.json().then(async (data) => {
         if (data.error) return;
-        setShowSchema(true);
         await new Promise((r) => setTimeout(r, 5000));
         fetch("/api/tournament/play").then((res) =>
           res.json().then((data) => {
