@@ -9,6 +9,13 @@ fi
 export "srv_root=$PWD/.static"
 export "assets_root=$PWD/assets"
 
+export "pong_upstream=localhost"
+export "bonk_upstream=localhost"
+if [ -f /.dockerenv ]; then
+	export "pong_upstream=pong-server"
+	export "bonk_upstream=bonk-server"
+fi
+
 rm -rf .static
 # copy all static files to .static, to be served by caddy
 # since serving them by django is strongly discouraged
@@ -47,11 +54,11 @@ caddy start --adapter caddyfile --config <( cat <<-EOF
 	}
 
 	handle_path /pong-ws {
-		reverse_proxy pong-server:4210 localhost:4210
+		reverse_proxy $pong_upstream:4210
 	}
 
 	handle_path /bonk-ws {
-		reverse_proxy bonk-server:9999 localhost:9999
+		reverse_proxy $bonk_upstream:9999
 	}
 EOF
 )
