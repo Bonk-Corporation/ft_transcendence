@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://bx0c3wgr40qrr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_cglf0"]
-[ext_resource type="PackedScene" uid="uid://3psjlgsy78cg" path="res://map/map.tscn" id="2_oh807"]
-[ext_resource type="PackedScene" uid="uid://ecq8tbk7vkc0" path="res://player/player.tscn" id="3_00s32"]
+[ext_resource type="PackedScene" uid="uid://3psjlgsy78cg" path="res://map/map.tscn" id="2_xxo4d"]
+[ext_resource type="PackedScene" uid="uid://ecq8tbk7vkc0" path="res://player/player.tscn" id="3_mx2bi"]
 
 [node name="main" type="Control"]
 layout_mode = 3
@@ -12,12 +12,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cglf0")
-map_scene = ExtResource("2_oh807")
-player_scene = ExtResource("3_00s32")
+map_scene = ExtResource("2_xxo4d")
+player_scene = ExtResource("3_mx2bi")
 
-[node name="rooms" type="Node" parent="."]
-
-[node name="label" type="Label" parent="."]
+[node name="message" type="Label" parent="."]
 layout_mode = 0
 offset_top = 310.0
 offset_right = 1280.0
@@ -26,6 +24,19 @@ text = "Connecting to server..."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="http" type="HTTPRequest" parent="."]
+[node name="token" type="HTTPRequest" parent="."]
 
-[connection signal="request_completed" from="http" to="." method="get_bonk_events_response"]
+[node name="authenticate" type="HTTPRequest" parent="."]
+
+[node name="event" type="HTTPRequest" parent="."]
+
+[node name="join" type="HTTPRequest" parent="."]
+
+[node name="leave" type="HTTPRequest" parent="."]
+
+[node name="game_stats" type="HTTPRequest" parent="."]
+
+[node name="rooms" type="Node" parent="."]
+
+[connection signal="request_completed" from="token" to="." method="token_request_completed"]
+[connection signal="request_completed" from="event" to="." method="event_request_completed"]

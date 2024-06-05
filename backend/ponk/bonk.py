@@ -1,5 +1,7 @@
 from django.urls import path
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from ponk.api_decorators import private_api_auth
 from ponk.api_decorators import authenticated
 from ponk.models import User
 from ponk.private import events
@@ -25,17 +27,18 @@ def join_matchmaking_bonk(request, *args, **kwargs):
     return JsonResponse({"success": True})
 
 
-@authenticated
+@csrf_exempt
+@private_api_auth
 def leave_matchmaking_bonk(request, *args, **kwargs):
-    for i in range(len(global_user_list)):
-        if request.user.username == global_user_list[i]:
-            global_user_list.remove(request.user.username)
-            return JsonResponse({"success": True})
-
-    return JsonResponse({"error": "You are not in this game"}, status=409)
+    username = args[1].get("username")
+    try:
+        global_user_list.remove(username)
+        return JsonResponse({"success": True})
+    except ValueError:
+        return JsonResponse({"error": "You are not in this game"}, status=409)
 
 
 urls = [
     path("join", join_matchmaking_bonk),
-    path("leave", leave_matchmaking_bonk),
+    path("leave/<str:username>", leave_matchmaking_bonk),
 ]

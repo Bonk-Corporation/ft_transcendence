@@ -1,8 +1,7 @@
 extends Line2D
 
 func _process(_delta):
-	if is_visible():
-		queue_redraw()
+	queue_redraw()
 
 func _draw():
 	if is_visible():

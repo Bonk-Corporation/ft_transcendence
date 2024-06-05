@@ -15,8 +15,10 @@ fi
 mkdir -p backend/bonk-server/pkg
 mkdir -p frontend/bonk-client
 
-godot4 --display-driver headless --path backend/bonk-server --export-debug server "$PWD/backend/bonk-server/pkg/bonk-server.x86_64"
+godot4 --display-driver headless --path backend/bonk-server --export-debug server "$PWD/backend/bonk-server/pkg/bonk-server.x86-64"
 godot4 --display-driver headless --path backend/bonk-server --export-debug Web "$PWD/frontend/bonk-client/bonk-client.html"
 
-gzip -f frontend/bonk-client/bonk-client.html
+gzip -f frontend/bonk-client/bonk-client.wasm
 gzip -f frontend/bonk-client/bonk-client.pck
+
+yes yes | python backend/manage.py collectstatic
