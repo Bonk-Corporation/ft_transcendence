@@ -310,16 +310,18 @@ def is_redirected(request, *args, **kwargs):
 
 @authenticated
 def play_non_host(request, *args, **kwargs):
+    users = tournaments[rooms[request.user]].users
+
     if len(users) not in [2, 4, 8]:
         return JsonResponse(
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
-    if len(users) != tournaments[request.user].room_size:
+    if len(users) != tournaments[rooms[request.user]].room_size:
         return JsonResponse(
             {
                 "error": "You must be {} players to start a game".format(
-                    tournaments[request.user].room_size
+                    tournaments[rooms[request.user]].room_size
                 )
             },
             status=409,
@@ -443,6 +445,7 @@ def game_ended(winner):
 urls = [
     path("status", status),
     path("play", play),
+    path("play_non_host", play_non_host),
     path("get_all_tournaments", get_all_tournaments_info),
     path("set_to_pong", set_to_pong),
     path("set_to_bonk", set_to_bonk),
