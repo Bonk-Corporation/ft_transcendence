@@ -135,7 +135,7 @@ pub async fn start() -> Result<(), JsValue> {
     let final_score = document.get_element_by_id("final-score").expect("no element final score");
     let current_score = document.get_element_by_id("current-score").expect("no element current score").dyn_into::<HtmlElement>()?;
     let replay: HtmlButtonElement = document.get_element_by_id("replay-button").expect("no element replay-button").dyn_into::<HtmlButtonElement>()?;
-    let client_data = game::OnConnectClient::new(&document, me.name);
+    let client_data = game::OnConnectClient::new(&document, me.name.clone());
     let game_id = Arc::new(Mutex::new(String::new()));
  
     // WebSocket department
@@ -199,6 +199,9 @@ pub async fn start() -> Result<(), JsValue> {
 						    	render::EndGame::Draw => cloned_winner.set_inner_html("Draw"),
 						    	render::EndGame::Undecided => cloned_winner.set_inner_html("Undecided"),
 						    }
+                            if me.playing {
+                                let _ = window.location().set_pathname("/tournament/room");
+                            }
                         }
                         cloned_pu.style().set_property("display", "flex").unwrap();
                     	cloned_fs.set_inner_html(score_str.as_str());
@@ -391,16 +394,17 @@ fn load_texture(context: &WebGl2RenderingContext, url: &str) -> Result<(Rc<RefCe
 #[derive(Serialize, Deserialize)]
 struct Me {
     pub name: String,
-    email: String,
-    level: u32,
-    levelPercentage: f32,
-    avatar: String,
-    friendsRequests: Vec<FriendRequests>,
-    friends: Vec<Friend>,
-    gameHistory: Vec<GameHistory>,
-    skins: Vec<String>,
-    selectedSkin: String,
+    pub email: String,
+    pub level: u32,
+    pub levelPercentage: f32,
+    pub avatar: String,
+    pub friendsRequests: Vec<FriendRequests>,
+    pub friends: Vec<Friend>,
+    pub gameHistory: Vec<GameHistory>,
+    pub skins: Vec<String>,
+    pub selectedSkin: String,
     pub selectedSkinUrl: String,
+    pub playing: bool,
 }
 
 #[derive(Serialize, Deserialize)]

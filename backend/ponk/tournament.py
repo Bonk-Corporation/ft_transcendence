@@ -310,6 +310,16 @@ def play(request, *args, **kwargs):
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
+    if len(users) not in tournaments[request.user].room_size:
+        return JsonResponse(
+            {
+                "error": "You must be {} players to start a game".format(
+                    tournaments[request.user].room_size
+                )
+            },
+            status=409,
+        )
+
     tournaments[request.user].playing = True
     room_size = tournaments[request.user].room_size
 
