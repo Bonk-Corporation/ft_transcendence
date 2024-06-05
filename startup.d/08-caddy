@@ -45,5 +45,12 @@ caddy start --adapter caddyfile --config <( cat <<-EOF
 		}
 	}
 
+	handle_path /pong-ws {
+		reverse_proxy pong-server:4210 localhost:4210
+	}
+
+	handle_path /bonk-ws {
+		reverse_proxy bonk-server:9999 localhost:9999
+	}
 EOF
 )
