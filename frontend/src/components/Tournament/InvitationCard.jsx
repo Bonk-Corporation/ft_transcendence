@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
-import { Card } from '../utils/Card';
-import { language } from '../../scripts/languages';
-import { LangContext } from '../../Contexts';
-import { useLocation } from 'preact-iso';
+import React, { useContext } from "react";
+import { Card } from "../utils/Card";
+import { language } from "../../scripts/languages";
+import { LangContext } from "../../Contexts";
+import { useLocation } from "preact-iso";
 
-export function InvitationCard({room, setError }) {
+export function InvitationCard({ room, setError }) {
   const location = useLocation();
-	const lang = useContext(LangContext);
+  const lang = useContext(LangContext);
 
   function joinTournament() {
     fetch(`/api/tournament/join_room/${room.host_name}`, {
@@ -40,10 +40,7 @@ export function InvitationCard({room, setError }) {
             {room.room_name}
           </h1>
           <h1 className="text-sm">
-            {room.players_number}{" "}
-            {room.players_number > 1
-              ? language.players[lang]
-              : language.player[lang].toLowerCase()}
+            {room.players_number}/{room.size} {language.players[lang]}
           </h1>
         </div>
       </div>

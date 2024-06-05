@@ -236,6 +236,7 @@ def get_all_tournaments_info(request, *args, **kwargs):
                 "host_avatar": tournaments[other_user].host_user.avatar,
                 "players_number": len(tournaments[other_user].users),
                 "host_name": tournaments[other_user].host_user.username,
+                "size": tournaments[other_user].room_size,
             }
             tournaments_info.append(tournament_info)
 
@@ -250,6 +251,7 @@ def get_all_tournaments_info(request, *args, **kwargs):
                 "host_avatar": tournaments[other_user].host_user.avatar,
                 "players_number": len(tournaments[other_user].users),
                 "host_name": tournaments[other_user].host_user.username,
+                "size": tournaments[other_user].room_size,
             }
             tournaments_info.append(tournament_info)
 
