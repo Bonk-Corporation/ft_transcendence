@@ -270,7 +270,7 @@ def get_phase_len(phase):
 
 def start_game(tournament):
     n = len(tournament.phases)
-    phase = tournament.phases[len - 1]
+    phase = tournament.phases[n - 1]
     if tournament.selected_game == "pong":
         url = "http://0.0.0.0:4210/rooms"
         data = []
@@ -304,16 +304,18 @@ def is_redirected(request, *args, **kwargs):
 
 @authenticated
 def play_non_host(request, *args, **kwargs):
+    users = tournaments[rooms[request.user]].users
+
     if len(users) not in [2, 4, 8]:
         return JsonResponse(
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
-    if len(users) != tournaments[request.user].room_size:
+    if len(users) != tournaments[rooms[request.user]].room_size:
         return JsonResponse(
             {
                 "error": "You must be {} players to start a game".format(
-                    tournaments[request.user].room_size
+                    tournaments[rooms[request.user]].room_size
                 )
             },
             status=409,
@@ -433,5 +435,6 @@ urls = [
     path("leave_room", leave_room),
     path("new", new),
     path("kick_user/<str:target>", kick_user),
+    path("play_non_host", play_non_host),
     path("set_play", set_play),
 ]
