@@ -116,18 +116,23 @@ export function Room(props) {
     });
   };
 
-  const playButton = async () => {
-    if (isHost) fetch("/api/tournament/set_play");
-    setShowSchema(true);
-    await new Promise((r) => setTimeout(r, 5000));
-    location.route("/pong");
-    if (isHost) {
-      fetch("/api/tournament/play").then((res) =>
-        res.json().then((data) => {
-          if (data.error) return location.route("/tournament/room");
-        }),
-      );
-    }
+  const playButton = () => {
+    if (!isHost) return;
+    fetch("/api/tournament/set_play").then((res) =>
+      res.json().then(async (data) => {
+        if (data.error) return;
+        setShowSchema(true);
+        await new Promise((r) => setTimeout(r, 5000));
+        location.route("/pong");
+        if (isHost) {
+          fetch("/api/tournament/play").then((res) =>
+            res.json().then((data) => {
+              if (data.error) return location.route("/tournament/room");
+            }),
+          );
+        }
+      }),
+    );
   };
 
   return (
@@ -160,18 +165,15 @@ export function Room(props) {
         <div className="my-4 flex items-center justify-center">
           <button
             onClick={() => toggleRoomPrivacy()}
-            className={`mr-2 px-12 py-3 border-2 border-white 
+            className={`mr-2 px-12 py-3 border-2
             ${
-              priv
-                ? "bg-black text-white hover:bg-white hover:text-black"
-                : "bg-white text-black hover:bg-gray-300 hover:border-gray-300"
+              isHost && priv && !playing
+                ? "bg-black text-white hover:bg-white hover:text-black border-white"
+                : isHost && !playing
+                  ? "bg-white text-black hover:bg-gray-300 hover:border-gray-300 border-2 border-white"
+                  : "bg-gray-500 border-gray-500 text-black cursor-not-allowed hover:bg-gray-500 hover:border-gray-500"
             }
-            ${
-              isHost
-                ? "cursor-pointer"
-                : "bg-gray-500 border-gray-500 cursor-not-allowed hover:bg-gray-500 hover:border-gray-500"
-            }
-            rounded-lg  transition-all ease-in-out`}
+            rounded transition-all ease-in-out`}
             disabled={!isHost}
           >
             <i
@@ -179,12 +181,12 @@ export function Room(props) {
             ></i>
             {priv ? language.private[lang] : language.public[lang]}
           </button>
-          <CTA
+          <button
             onClick={playButton}
-            className={`ml-2 px-12 py-3 border-2 border-white hover:border-gray-300
+            className={`ml-2 px-12 py-3 border-2 text-black rounded
               ${
-                isHost
-                  ? "cursor-pointer"
+                isHost && !playing
+                  ? "cursor-pointer border-white bg-white hover:bg-gray-300 hover:border-gray-300"
                   : "bg-gray-500 border-gray-500 cursor-not-allowed hover:bg-gray-500 hover:border-gray-500"
               }
             `}
@@ -192,7 +194,7 @@ export function Room(props) {
           >
             <i className="fa-solid fa-play mr-2"></i>
             {language.play[lang]}
-          </CTA>
+          </button>
         </div>
       </div>
 
