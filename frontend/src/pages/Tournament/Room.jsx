@@ -19,6 +19,7 @@ export function Room(props) {
   const [room, setRoom] = useState(null);
   const [isHost, setIsHost] = useState(false);
   const location = useLocation();
+  const [playing, setPlaying] = useState(false);
 
   let dontLeave = false;
 
@@ -31,6 +32,7 @@ export function Room(props) {
 
         setRoom(data);
         setPriv(data.private);
+        setPlaying(data.playing);
         setActive(data.selected_game);
         setIsHost(data.host == profile.name);
       }),
@@ -42,6 +44,7 @@ export function Room(props) {
 
           setRoom(data);
           setPriv(data.private);
+          setPlaying(data.playing);
           setActive(data.selected_game);
           setIsHost(data.host == profile.name);
         }),
@@ -56,6 +59,12 @@ export function Room(props) {
       }
     };
   }, [profile]);
+
+  useEffect(() => {
+    if (playing) {
+      playButton();
+    }
+  }, [playing]);
 
   useEffect(() => {
     if (!document.getElementById("lottie")) {
