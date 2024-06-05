@@ -61,6 +61,16 @@ class Chat(WebsocketConsumer):
             message["author"] = self.user.username
             message["avatar"] = self.user.avatar
             message["level"] = self.user.level
+
+            if (
+                message["content"].strip().startswith("/invite ")
+                and message["room"] == "Lobby"
+            ):
+                dest = message["content"].strip()[len("/invite ") :]
+                users = sorted([dest, self.user.username])
+                message["room"] = f"{users[0]}_{users[1]}"
+                message["content"] = "I invite you to join my game!"
+
             async_to_sync(self.channel_layer.group_send)(
                 message["room"], {"type": "chat.message", "message": message}
             )
