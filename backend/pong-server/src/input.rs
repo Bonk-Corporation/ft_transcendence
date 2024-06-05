@@ -186,32 +186,31 @@ impl GameState {
     }
 
     pub fn update_ball(&mut self) {
-        self.ball_ent.position.x += self.ball_ent.velocity.x;
-        self.ball_ent.position.y += self.ball_ent.velocity.y;
+        self.ball_ent.position += self.ball_ent.velocity;
 
-        let paddle_hit = if self.ball_ent.intersects(&self.player1_ent) && self.ball_ent.velocity.x <= 0.
-            && self.player1_ent.position.x + (self.player1_ent.width / 2.) < self.ball_ent.position.x {
-            self.ball_ent.velocity.x = -(self.ball_ent.velocity.x + (BALL_ACCELERTION * self.ball_ent.velocity.x.signum()));
+        let paddle_hit = if self.ball_ent.intersects(&self.player1_ent) {
+            if self.ball_ent.velocity.x <= 0. && self.player1_ent.position.x + (self.player1_ent.width / 2.) < self.ball_ent.position.x {
+                self.ball_ent.velocity.x = -self.ball_ent.velocity.x;
+            }
             Some(&self.player1_ent)
-        } else if self.ball_ent.intersects(&self.player2_ent) && self.ball_ent.velocity.x >= 0.
-            && self.ball_ent.position.x < self.player2_ent.position.x + (self.player1_ent.width / 2.) {
-            self.ball_ent.velocity.x = -(self.ball_ent.velocity.x + (BALL_ACCELERTION * self.ball_ent.velocity.x.signum()));
+        } else if self.ball_ent.intersects(&self.player2_ent) {
+            if self.ball_ent.velocity.x >= 0. && self.ball_ent.position.x < self.player2_ent.position.x + (self.player1_ent.width / 2.) {
+                self.ball_ent.velocity.x = -self.ball_ent.velocity.x;
+            }
             Some(&self.player2_ent)
         } else {
             None
         };
 
         if let Some(player) = paddle_hit {
-            if self.ball_ent.velocity.x.signum() > MAX_BALL_SPEED {
-                self.ball_ent.velocity.x = if self.ball_ent.velocity.x > 0. {
-                    MAX_BALL_SPEED
-                } else {
-                    -MAX_BALL_SPEED
-                };
+            let ball_speed = self.ball_ent.velocity.length();
+
+            if ball_speed < MAX_BALL_SPEED {
+                self.ball_ent.velocity.normalize() * (ball_speed + BALL_ACCELERTION);
             }
             
-            let offset = (player.center().y - self.ball_ent.center().y) / player.height;
-            self.ball_ent.velocity.y += PLAYER_SPIN * -offset;
+            let offset = (self.ball_ent.center().y - player.center().y) / player.height;
+            self.ball_ent.velocity.y += PLAYER_SPIN * offset;
         }
         if hit_bounds(&self.ball_ent) {
             self.ball_ent.velocity.y = -self.ball_ent.velocity.y;
