@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use input::*;
 use tokio::sync::RwLock;
 
+#[derive(Debug)]
 struct Clients {
     poll: Vec<Client>,
     games: Vec<Game>,
@@ -22,7 +23,6 @@ impl Clients {
         for cl in self.poll.as_mut_slice() {
             match cl.id.as_str() {
                 num if num == client.id.clone()  => {
-                    cl.id_game = client.id_game;
                     return Ok(cl.id_game.to_owned())
                 },
                 _ => (),
@@ -702,34 +702,38 @@ struct Duos {
     pub games: Vec<(String, String)>,
 }
 
-async fn handle_rooms(State(state): State<Arc<RwLock<Clients>>>, extract: Json<Duos>) {
-    println!("Info received");
-    for (player1, player2) in &extract.games {
-        let game_id = uuid::Uuid::new_v4().to_string();
-        let client1 = Client {
-            id: player1.to_string(),
-            name: "Player".to_string(),
-            id_game: Some(game_id.to_string()),
-        };
-        let client2 = Client {
-            id: player2.to_string(),
-            name: "Player".to_string(),
-            id_game: Some(game_id.to_string()),
-        };
-        let mut game = Game::new(client1.clone(), game_id.clone());
-        game.add_player(client2.clone());
-        state.write().await.games.push(game.clone());
-        let _ = state.write().await.add_client(client1).await;
-        let _ = state.write().await.add_client(client2).await;
-        tokio::spawn(async move {
-            let winner = game.start().await;
-            match winner {
-                EndGame::Player1 => println!("Player1 won"),
-                EndGame::Player2 => println!("Player2 won"),
-                EndGame::Draw => println!("Draw"),
-                EndGame::Undecided => println!("Undecided"),
-            }
-        });
+async fn handle_rooms(State(state): State<Arc<RwLock<Clients>>>, payload: Option<String>) {
+    if let Some(extract) = payload {
+        let extract: Duos = serde_json::from_str(&extract).unwrap();
+        for (player1, player2) in &extract.games {
+            let game_id = uuid::Uuid::new_v4().to_string();
+            let client1 = Client {
+                id: player1.to_string(),
+                name: "Player".to_string(),
+                id_game: Some(game_id.to_string()),
+            };
+            let client2 = Client {
+                id: player2.to_string(),
+                name: "Player".to_string(),
+                id_game: Some(game_id.to_string()),
+            };
+            let mut game = Game::new(client1.clone(), game_id.clone());
+            game.add_player(client2.clone());
+            state.write().await.games.push(game.clone());
+            let _ = state.write().await.add_client(client1).await;
+            let _ = state.write().await.add_client(client2).await;
+            tokio::spawn(async move {
+                let winner = game.start().await;
+                match winner {
+                    EndGame::Player1 => println!("Player1 won"),
+                    EndGame::Player2 => println!("Player2 won"),
+                    EndGame::Draw => println!("Draw"),
+                    EndGame::Undecided => println!("Undecided"),
+                }
+            });
+        }
+    } else {
+        println!("Error while receiving Json");
     }
 }
 

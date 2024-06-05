@@ -63,9 +63,15 @@ def new(request, *args, **kwargs):
         playing=False,
     )
     rooms[request.user] = request.user
-    tournaments[request.user].phases.append(tournaments[request.user].users)
+    tournaments[request.user].phases.append([None] * 8)
     tournaments[request.user].phases.append([None] * 4)
     tournaments[request.user].phases.append([None] * 2)
+    if size == 8:
+        tournaments[request.user].phases[0] = tournaments[request.user].users
+    if size == 4:
+        tournaments[request.user].phases[1] = tournaments[request.user].users
+    if size == 2:
+        tournaments[request.user].phases[2] = tournaments[request.user].users
     return JsonResponse({"success": True})
 
 
@@ -260,6 +266,28 @@ def get_all_tournaments_info(request, *args, **kwargs):
     return JsonResponse({"data": tournaments_info})
 
 
+def get_phase_len(phase):
+    i = 0
+    for i in range(len(phase)):
+        if phase[i] not in None:
+            i = i + 1
+    return i
+
+
+def start_game(tournament, phase):
+    if tournament.selected_game == "pong":
+        url = "http://0.0.0.0:4210/rooms"
+        data = []
+        for i in range(0, len(phase), 2):
+            data.append([phase[i].username, phase[i + 1].username])
+        headers = {
+            "Content-Type": "application/json",
+        }
+        response = requests.post(url, data=data, headers=headers)
+        print(f"Status Code: {response.status_code}")
+        return JsonResponse({"success": True})
+
+
 @authenticated
 def play(request, *args, **kwargs):
     if not tournaments.get(request.user):
@@ -273,13 +301,15 @@ def play(request, *args, **kwargs):
         )
 
     tournaments[request.user].playing = True
+    room_size = tournaments[request.user].room_size
 
-    n = 0
+    if len(users) == 8:
+        n = 0
 
-    if get_phase_len(tournaments[request.user].phases[1]) == 4:
+    if len(users) == 4:
         n = 1
 
-    if get_phase_len(tournaments[request.user].phases[2]) == 2:
+    if len(users) == 2:
         n = 2
 
     return start_game(tournaments[request.user], tournaments[request.user].phases[n])
@@ -316,20 +346,39 @@ def is_playing(request, *args, **kwargs):
     return JsonResponse({"data": data})
 
 
-# @csrf_exempt
-# @private_api_auth
-# def game_ended(request, *args, **kwargs):
-#    username = args[1].get("winner")
-#   try:
-#       winner = User.objects.get(username=username)
-#   except ObjectDoesNotExist:
-#      return JsonResponse(
-#          {"error": "User {} does not exist".format(username)}, status=404
-#      )
-#  if tournaments[rooms[winner]]
+def game_ended(winner):
+    tournament = tournaments[rooms[winner]]
+
+    for i in range(2, len(tournament.phase), 0):
+        for j in range(len(tournament.phase[i])):
+            if tournament.phase[i][j] == winner:
+                phase = i
+                index = j
+
+    if i == 2:
+        tournament.phase[3].append(winner)
+        tournament.playing = False
+        return JsonResponse({"success": True})
+
+    if j in [1, 2]:
+        tournament.phases[phase + 1][1] = winner
+    if j in [3, 4]:
+        tournament.phases[phase + 1][2] = winner
+    if j in [5, 6]:
+        tournament.phases[phase + 1][3] = winner
+    if j in [7, 8]:
+        tournament.phases[phase + 1][4] = winner
+
+    actual_phase = tournament.phases[phase + 1]
+
+    if get_phase_len(actual_phase) == 2 and (phase + 1) == 2:
+        return start_game(tournament, actual_phase)
+    if get_phase_len(actual_phase) == 4 and (phase + 1) == 1:
+        return start_game(tournament, actual_phase)
+
 
 urls = [
-    path("status", status),  # get informations about current turnament
+    path("status", status),
     path("play", play),
     path("get_all_tournaments", get_all_tournaments_info),
     path("set_to_pong", set_to_pong),
@@ -337,7 +386,6 @@ urls = [
     path("set_to_public", set_to_public),
     path("set_to_private", set_to_private),
     path("join_room/<str:host>", join_room),
-    # path("game_ended/<str:winner>", game_ended),
     path("is_playing", is_playing),
     path("leave_room", leave_room),
     path("new", new),
