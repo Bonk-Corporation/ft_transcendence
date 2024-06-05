@@ -48,7 +48,10 @@ export function Room(props) {
 
     return () => {
       clearInterval(id);
-      fetch("/api/tournament/leave_room");
+      const pathname = location.pathname;
+      if (pathname !== "/pong" && pathname !== "/bonk") {
+        fetch("/api/tournament/leave_room");
+      }
     };
   }, [profile]);
 
