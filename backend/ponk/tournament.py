@@ -65,15 +65,7 @@ def new(request, *args, **kwargs):
         play_launched=False,
     )
     rooms[request.user] = request.user
-    tournaments[request.user].phases.append([None] * 8)
-    tournaments[request.user].phases.append([None] * 4)
-    tournaments[request.user].phases.append([None] * 2)
-    if size == 8:
-        tournaments[request.user].phases[0] = tournaments[request.user].users
-    if size == 4:
-        tournaments[request.user].phases[1] = tournaments[request.user].users
-    if size == 2:
-        tournaments[request.user].phases[2] = tournaments[request.user].users
+    tournaments[request.user].phases.append(tournaments[request.user].users)
     return JsonResponse({"success": True})
 
 
@@ -276,7 +268,9 @@ def get_phase_len(phase):
     return i
 
 
-def start_game(tournament, phase):
+def start_game(tournament):
+    n = len(tournament.phases)
+    phase = tournament.phases[len - 1]
     if tournament.selected_game == "pong":
         url = "http://0.0.0.0:4210/rooms"
         data = []
@@ -310,18 +304,16 @@ def is_redirected(request, *args, **kwargs):
 
 @authenticated
 def play_non_host(request, *args, **kwargs):
-    users = tournaments[rooms[request.user]].users
-
     if len(users) not in [2, 4, 8]:
         return JsonResponse(
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
-    if len(users) != tournaments[rooms[request.user]].room_size:
+    if len(users) != tournaments[request.user].room_size:
         return JsonResponse(
             {
                 "error": "You must be {} players to start a game".format(
-                    tournaments[rooms[request.user]].room_size
+                    tournaments[request.user].room_size
                 )
             },
             status=409,
@@ -355,16 +347,7 @@ def play(request, *args, **kwargs):
     tournaments[request.user].playing = True
     room_size = tournaments[request.user].room_size
 
-    if len(users) == 8:
-        n = 0
-
-    if len(users) == 4:
-        n = 1
-
-    if len(users) == 2:
-        n = 2
-
-    return start_game(tournaments[request.user], tournaments[request.user].phases[n])
+    return start_game(tournaments[request.user])
 
 
 @authenticated
@@ -411,41 +394,35 @@ def is_playing(request, *args, **kwargs):
 
 def game_ended(winner):
     tournament = tournaments[rooms[winner]]
+    phase = tournament.phases[len(tournament.phases) - 1]
 
-    for i in range(2, 0, -1):
-        for j in range(len(tournament.phases[i]) - 1, 0, -1):
-            if tournament.phases[i][j] == winner:
-                phase = i
-                index = j
+    for j in range(len(phase) - 1):
+        if phase[j] == winner:
+            index = j
 
-    if phase == 2:
-        tournament.phases.append(winner)
+    if len(phase) == 2:
+        tournament.phases.append([winner])
         tournament.playing = False
         return JsonResponse({"success": True})
 
+    if tournament.phases.get(len(tournament.phases)) == None:
+        tournament.phases.append([None] * (len(phase) / 2))
+
     if index in [1, 2]:
-        tournament.phases[phase + 1][1] = winner
+        tournament.phases[len(tournament.phases)][1] = winner
     if index in [3, 4]:
-        tournament.phases[phase + 1][2] = winner
+        tournament.phases[len(tournament.phases)][2] = winner
     if index in [5, 6]:
-        tournament.phases[phase + 1][3] = winner
+        tournament.phases[len(tournament.phases)][3] = winner
     if index in [7, 8]:
-        tournament.phases[phase + 1][4] = winner
+        tournament.phases[len(tournament.phases)][4] = winner
 
-    actual_phase = tournament.phases[phase + 1]
     return JsonResponse({"success": True})
-
-
-#    if get_phase_len(actual_phase) == 2 and (phase + 1) == 2:
-#        return start_game(tournament, actual_phase)
-#    if get_phase_len(actual_phase) == 4 and (phase + 1) == 1:
-#        return start_game(tournament, actual_phase)
 
 
 urls = [
     path("status", status),
     path("play", play),
-    path("play_non_host", play_non_host),
     path("get_all_tournaments", get_all_tournaments_info),
     path("set_to_pong", set_to_pong),
     path("set_to_bonk", set_to_bonk),
