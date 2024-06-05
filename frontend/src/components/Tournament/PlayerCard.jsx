@@ -6,7 +6,7 @@ import { LangContext } from "../../Contexts";
 
 export function PlayerCard({ player, host, iAmAdmin }) {
   const lang = useContext(LangContext);
-  const userIsAdmin = player === host;
+  const userIsAdmin = player.username === host;
   const [kicked, setKicked] = useState(false);
 
   const kickPlayer = (player) => {
@@ -21,18 +21,18 @@ export function PlayerCard({ player, host, iAmAdmin }) {
 
   return (
     !kicked && (
-    <Card className="flex items-center px-4 py-2 mb-4 w-80">
-      <div className="w-full flex items-center">
-        <div
-          className={`bg-[url(${player.avatar})] bg-cover bg-center rounded-full border-2 border-white h-16 aspect-square mr-4`}
-        ></div>
-        <div className="overflow-hidden">
-          <h1 className="font font-semibold text-lg w-full overflow-hidden text-ellipsis">
-            {player.name}
-          </h1>
-          <h1 className="w-full">
-            {language.level[lang]} {player.level}
-          </h1>
+      <Card className="flex items-center px-4 py-2 mb-4 w-80">
+        <div className="w-full flex items-center">
+          <div
+            className={`bg-[url(${player.avatar})] bg-cover bg-center rounded-full border-2 border-white h-16 aspect-square mr-4`}
+          ></div>
+          <div className="overflow-hidden">
+            <h1 className="font font-semibold text-lg w-full overflow-hidden text-ellipsis">
+              {player.username}
+            </h1>
+            <h1 className="w-full">
+              {language.level[lang]} {player.level}
+            </h1>
           </div>
         </div>
         {userIsAdmin ? (

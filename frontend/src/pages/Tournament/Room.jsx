@@ -23,15 +23,25 @@ export function Room(props) {
   useEffect(() => {
     if (!profile) return;
 
+    fetch("/api/tournament/status").then((res) =>
+      res.json().then((data) => {
+        if (data.error) return location.route("/tournament");
+
+        setRoom(data);
+        setPriv(data.private);
+        setActive(data.selected_game);
+        setIsHost(data.host == profile.name);
+      }),
+    );
     const id = setInterval(() => {
       fetch("/api/tournament/status").then((res) =>
         res.json().then((data) => {
           if (data.error) return location.route("/tournament");
 
-          console.log(data);
           setRoom(data);
           setPriv(data.private);
-          setIsHost(data.host == props.profile.name);
+          setActive(data.selected_game);
+          setIsHost(data.host == profile.name);
         }),
       );
     }, 1000);
@@ -40,7 +50,7 @@ export function Room(props) {
       clearInterval(id);
       fetch("/api/tournament/leave_room");
     };
-  }, [props.profile]);
+  }, [profile]);
 
   useEffect(() => {
     if (!document.getElementById("lottie")) {
@@ -77,7 +87,9 @@ export function Room(props) {
   }, []);
 
   const currPhase = 0;
+
   const toggleRoomPrivacy = () => {
+    console.log("called");
     const privacy = priv ? "public" : "private";
     fetch(`/api/tournament/set_to_${privacy}`).then(() => {
       setPriv(!priv);
@@ -88,7 +100,7 @@ export function Room(props) {
     if (active == game) return;
 
     fetch(`/api/tournament/set_to_${game}`).then(() => {
-      setActive(game);
+      if (isHost) setActive(game);
     });
   };
 
@@ -110,8 +122,8 @@ export function Room(props) {
           <div className="h-full w-full flex overflow-hidden">
             <div
               id="pong"
-              onClick={() => setActive("Pong")}
-              className={`${active == "Pong" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 mr-2 rounded bg-red-500 transition-all ease-in-out flex flex-col items-center group`}
+              onClick={() => switchActiveGame("pong")}
+              className={`${active == "pong" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 mr-2 rounded bg-red-500 transition-all ease-in-out flex flex-col items-center group`}
             >
               <p className="absolute mt-4 transition-all ease-in-out group-hover:text-9xl font-semibold">
                 Pong
@@ -119,8 +131,8 @@ export function Room(props) {
             </div>
             <div
               id="bonk"
-              onClick={switchActiveGame.bind(null, "bonk")}
-              className={`${active == "Bonk" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 ml-2 rounded bg-blue-500 transition-all ease-in-out flex flex-col items-center group`}
+              onClick={() => switchActiveGame("bonk")}
+              className={`${active == "bonk" ? "border-4 border-white" : ""} h-full w-1/2 hover:w-3/4 ml-2 rounded bg-blue-500 transition-all ease-in-out flex flex-col items-center group`}
             >
               <p className="absolute mt-4 transition-all ease-in-out group-hover:text-9xl font-semibold">
                 Bonk
@@ -130,16 +142,18 @@ export function Room(props) {
         )}
         <div className="my-4 flex items-center justify-center">
           <button
-            onClick={() => {
-              setPriv(!priv);
-              toggleRoomPrivacy();
-            }}
+            onClick={() => toggleRoomPrivacy()}
             className={`mr-2 px-12 py-3 border-2 border-white 
             ${
               priv
                 ? "bg-black text-white hover:bg-white hover:text-black"
                 : "bg-white text-black hover:bg-gray-300 hover:border-gray-300"
-            } 
+            }
+            ${
+              isHost
+                ? "cursor-pointer"
+                : "bg-gray-500 border-gray-500 cursor-not-allowed hover:bg-gray-500 hover:border-gray-500"
+            }
             rounded-lg  transition-all ease-in-out`}
             disabled={!isHost}
           >
@@ -150,7 +164,14 @@ export function Room(props) {
           </button>
           <CTA
             onClick={playButton}
-            className="ml-2 px-12 py-3 border-2 border-white hover:border-gray-300"
+            className={`ml-2 px-12 py-3 border-2 border-white hover:border-gray-300
+              ${
+                isHost
+                  ? "cursor-pointer"
+                  : "bg-gray-500 border-gray-500 cursor-not-allowed hover:bg-gray-500 hover:border-gray-500"
+              }
+            `}
+            disabled={!isHost}
           >
             <i className="fa-solid fa-play mr-2"></i>
             {language.play[lang]}
@@ -164,7 +185,7 @@ export function Room(props) {
               <PlayerCard
                 player={user}
                 host={room.host}
-                iAmAdmin={profile.username == room.host}
+                iAmAdmin={profile.name == room.host}
               />
             ))
           : null}
