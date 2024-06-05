@@ -1,6 +1,6 @@
 mod input;
 
-use std::{sync::Arc, time::SystemTime};
+use std::{sync::Arc, time::SystemTime, env};
 use futures::{sink::SinkExt, stream::StreamExt};
 use axum::{
     extract::{WebSocketUpgrade, ws::{Message, WebSocket}, State, Json},
@@ -411,6 +411,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                             score:      (u8, u8),
                                         }
                                         let (p1,p2) = game.state.lock().await.score;
+                                        let key = env::var("PRIVATE_API_TOKEN").unwrap();
                                         let end_stats = GameStats {
                                             player:     player1_id,
                                             game:       "pong",
@@ -418,6 +419,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                         };
                                         let client = reqwest::Client::new();
                                         client.post("http://localhost:8001/api/private/game_stats")
+                                            .header("Authorization:", key.clone())
                                             .json(&end_stats)
                                             .send()
                                             .await;
@@ -427,6 +429,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                             score: (p2, p1),
                                         };
                                         client.post("http://localhost:8001/api/private/game_stats")
+                                            .header("Authorization:", key)
                                             .json(&end_stats)
                                             .send()
                                             .await;
@@ -525,6 +528,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                         score:      (u8, u8),
                                     }
                                     let (p1,p2) = game.state.lock().await.score;
+                                    let key = env::var("PRIVATE_API_TOKEN").unwrap();
                                     let end_stats = GameStats {
                                         player:     player1_id,
                                         game:       "pong",
@@ -532,6 +536,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                     };
                                     let client = reqwest::Client::new();
                                     client.post("http://localhost:8001/api/private/game_stats")
+                                        .header("Authorization:", key.clone())
                                         .json(&end_stats)
                                         .send()
                                         .await;
@@ -541,6 +546,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                         score: (p2, p1),
                                     };
                                     client.post("http://localhost:8001/api/private/game_stats")
+                                        .header("Authorization:", key)
                                         .json(&end_stats)
                                         .send()
                                         .await;
