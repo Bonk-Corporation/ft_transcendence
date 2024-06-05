@@ -3,6 +3,7 @@ from ponk.models import GameHistory, User
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from ponk.api_decorators import private_api_auth
+from ponk.tournament import game_ended
 import json
 import sys
 import os
@@ -35,6 +36,9 @@ def game_stats(request, *args, **kwargs):
             user.level += user.level_percentage // 100
             user.level_percentage = user.level_percentage % 100
         user.save()
+
+        if win:
+            game_ended(user)
 
         GameHistory(
             user=user, game=data["game"], score=data["score"], win=win, xp=xp
