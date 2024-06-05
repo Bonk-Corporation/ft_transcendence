@@ -220,6 +220,7 @@ def status(request, *args, **kwargs):
             "selected_game": tournament.selected_game,
             "size": tournament.room_size,
             "private": tournament.private,
+            "playing": tournament.playing,
         }
     )
 
