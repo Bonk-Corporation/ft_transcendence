@@ -20,6 +20,8 @@ export function Room(props) {
   const [isHost, setIsHost] = useState(false);
   const location = useLocation();
 
+  let dontLeave = false;
+
   useEffect(() => {
     if (!profile) return;
 
@@ -48,7 +50,7 @@ export function Room(props) {
 
     return () => {
       clearInterval(id);
-      const pathname = location.pathname;
+      const pathname = location.url;
       if (pathname !== "/pong" && pathname !== "/bonk") {
         fetch("/api/tournament/leave_room");
       }
@@ -107,7 +109,10 @@ export function Room(props) {
     });
   };
 
-  const playButton = () => {
+  const playButton = async () => {
+    setShowSchema(true);
+    await new Promise((r) => setTimeout(r, 5000));
+    dontLeave = true;
     location.route("/pong");
     fetch("/api/tournament/play").then((res) =>
       res.json().then((data) => {
