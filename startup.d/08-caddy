@@ -11,9 +11,11 @@ export "assets_root=$PWD/assets"
 
 export "pong_upstream=localhost"
 export "bonk_upstream=localhost"
+export "private_api_upstream=localhost"
 if [ -f /.dockerenv ]; then
 	export "pong_upstream=pong-server"
 	export "bonk_upstream=bonk-server"
+	export "private_api_upstream=transcendence"
 fi
 
 rm -rf .static

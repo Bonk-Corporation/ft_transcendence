@@ -35,6 +35,7 @@ if not DEBUG:
     HOST = "localhost:8443"
     ALLOWED_HOSTS = [
         "localhost",
+        "transcendence", # docker
         os.environ.get("HOST_IP_ADDRESS", "localhost"),  # to test production
         HOST,
     ]

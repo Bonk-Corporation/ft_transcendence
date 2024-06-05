@@ -142,11 +142,10 @@ pub async fn start() -> Result<(), JsValue> {
     
     let location = document.location().unwrap();
     let host = location.host().unwrap();
-    let index = host.rfind(":").unwrap_or(host.len());
     let path =  if location.protocol().unwrap() == "https:" {
-                    format!("wss://{}/pong-ws", &host[0..index])
+                    format!("wss://{}/pong-ws", host)
                 } else { 
-                    format!("ws://{}/pong-ws", &host[0..index])
+                    format!("ws://{}/pong-ws", host)
                 };
     let web_socket = WebSocket::new(&path)?;
     web_socket.set_binary_type(web_sys::BinaryType::Arraybuffer);
