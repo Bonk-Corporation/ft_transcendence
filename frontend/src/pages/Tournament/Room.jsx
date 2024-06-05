@@ -120,7 +120,7 @@ export function Room(props) {
   const playNotHost = async () => {
     setShowSchema(true);
     await new Promise((r) => setTimeout(r, 5000));
-    location.route("/pong");
+    if (playing) location.route("/pong");
   };
 
   const playButton = () => {
@@ -128,11 +128,10 @@ export function Room(props) {
       res.json().then(async (data) => {
         if (data.error) return;
         setShowSchema(true);
-        await new Promise((r) => setTimeout(r, 5000));
-        location.route("/pong");
+        await new Promise((r) => setTimeout(r, 3000));
         fetch("/api/tournament/play").then((res) =>
           res.json().then((data) => {
-            if (data.error) return location.route("/tournament/room");
+            if (!data.error) return location.route("/pong");
           }),
         );
       }),

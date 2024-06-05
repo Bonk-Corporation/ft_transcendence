@@ -157,6 +157,7 @@ pub async fn start() -> Result<(), JsValue> {
 
     let cloned_game_id = Arc::clone(&game_id);
     let cloned_pu = pop_up_score.clone();
+    let cloned_pup = pop_up_play.clone();
     let cloned_winner = winner.clone();
     let cloned_fs = final_score.clone();
     let cloned_cs = current_score.clone();
@@ -166,6 +167,7 @@ pub async fn start() -> Result<(), JsValue> {
             match &txt.as_string().unwrap()[0..6] {
                 "GAMEID" => {
                     *cloned_game_id.lock().unwrap() = txt.as_string().unwrap()[6..].to_string();
+                    cloned_pup.style().set_property("display", "none").unwrap();
 					console_log!("Game Id received");
                 },
                 "PLYONE" => {

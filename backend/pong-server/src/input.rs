@@ -36,7 +36,7 @@ pub const BOT_DELAY_REBOUND_FACTOR  : f32   = 500.;
 pub const BOT_FLEXIBILITY           : f32   = PLAYER_HEIGHT * 0.1;
 pub const BOT_PAUSE                 : u8    = 2;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Client {
    pub id: String,
    pub name: String,
@@ -239,7 +239,7 @@ impl GameState {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Game {
     pub player1 : Option<Client>,
     pub player2 : Option<Client>,
