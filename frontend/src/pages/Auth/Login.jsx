@@ -1,21 +1,21 @@
-import React from 'react';
-import { Card } from '../../components/utils/Card'
-import { Input } from '../../components/utils/Input';
-import { CTA } from '../../components/utils/CTA';
-import { useContext, useEffect, useRef, useState } from 'preact/hooks';
-import { useLocation } from 'preact-iso';
-import { language } from '../../scripts/languages';
-import { LangContext } from '../../Contexts';
+import React from "react";
+import { Card } from "../../components/utils/Card";
+import { Input } from "../../components/utils/Input";
+import { CTA } from "../../components/utils/CTA";
+import { useContext, useEffect, useRef, useState } from "preact/hooks";
+import { useLocation } from "preact-iso";
+import { language } from "../../scripts/languages";
+import { LangContext } from "../../Contexts";
 
 const CLIENT_ID = document.querySelector("setting[name=CLIENT_ID]").textContent;
 const HOST = document.querySelector("setting[name=HOST]").textContent;
 document.querySelector("settings").remove();
 
 export function Login(props) {
-	const lang = useContext(LangContext);
+  const lang = useContext(LangContext);
 
-	const redirectUri = encodeURIComponent(`${location.protocol}//${HOST}`)
-	const url = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}/auth/42&response_type=code`;
+  const redirectUri = encodeURIComponent(`${location.protocol}//${HOST}`);
+  const url = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}/auth/42&response_type=code`;
 
   const username = useRef(null);
   const password = useRef(null);
@@ -23,7 +23,7 @@ export function Login(props) {
   const [error, setError] = useState("");
 
   function handleLogin() {
-    setTriedLog(true);
+    props.setTriedLog(true);
     fetch("/auth/login", {
       method: "POST",
       headers: {
@@ -58,9 +58,7 @@ export function Login(props) {
   return (
     <Card className="py-28 w-full max-w-[800px] px-16 flex flex-col items-center justify-center">
       <div className="max-w-[600px] flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-semibold">
-          {language.log_in[lang]}
-        </h1>
+        <h1 className="text-2xl font-semibold">{language.log_in[lang]}</h1>
         <form
           onKeyPress={enter}
           action=""
@@ -84,11 +82,7 @@ export function Login(props) {
         <CTA onClick={handleLogin} className="my-2">
           {language.log_in[lang]}
         </CTA>
-        <a
-          onClick={() => setTriedLog(true)}
-          className="underline"
-          href={url}
-        >
+        <a onClick={() => setTriedLog(true)} className="underline" href={url}>
           {language.log_in_42[lang]}
         </a>
       </div>
