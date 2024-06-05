@@ -283,8 +283,22 @@ def start_game(tournament, phase):
         headers = {
             "Content-Type": "application/json",
         }
-        response = requests.post(url, data=data, headers=headers)
+
+        new_data = {
+            "games": data,
+        }
+
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        print(data)
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+        response = requests.post(url, json=new_data, headers=headers)
+
         print(f"Status Code: {response.status_code}")
+        try:
+            print(f"Response: {response.json()}")
+        except ValueError:
+            print(f"Response: {response.text}")
         return JsonResponse({"success": True})
 
 
