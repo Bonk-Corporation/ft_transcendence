@@ -94,9 +94,11 @@ func _integrate_forces(state):
 			heavy_stop()
 
 func tired():
+	power = 0
 	tired_state = true
 	grapple_stop()
 	await get_tree().create_timer(Settings.tired_time).timeout
+	print("coucou mes loulous")
 	tired_state = false
 
 func _process(delta):
@@ -203,7 +205,7 @@ func heavy_stop():
 
 func _on_body_entered(body):
 	if multiplayer.is_server() && body is RigidBody2D && grapple_state:
-		tired_state = true
+		tired()
 		grapple_stop()
 
 func skin_request_completed(result, response_code, headers, body):
