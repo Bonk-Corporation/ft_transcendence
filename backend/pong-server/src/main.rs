@@ -747,7 +747,7 @@ async fn main() {
         .route("/rooms", post(handle_rooms))
         .with_state(clients_poll);
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:4210")
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:4210")
         .await
         .expect("failed to bind ip address to the listener");
 
