@@ -50,8 +50,8 @@ export function Room(props) {
 
     return () => {
       clearInterval(id);
-      const pathname = location.url;
-      if (pathname !== "/pong" && pathname !== "/bonk") {
+      const pathname = window.location.href.split("/").pop();
+      if (pathname !== "pong" && pathname !== "bonk") {
         fetch("/api/tournament/leave_room");
       }
     };
