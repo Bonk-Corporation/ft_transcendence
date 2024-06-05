@@ -140,9 +140,14 @@ pub async fn start() -> Result<(), JsValue> {
  
     // WebSocket department
     
-    let location = document.location().expect("No location found").host()?;
-    let index = location.rfind(":").expect("error parsing location");
-    let path = "ws://".to_owned() + &location[0..index]+ ":4210/";
+    let location = document.location().unwrap();
+    let host = location.host().unwrap();
+    let index = host.rfind(":").unwrap_or(host.len());
+    let path =  if location.protocol().unwrap() == "https:" {
+                    format!("wss://{}/pong-ws", &host[0..index])
+                } else { 
+                    format!("ws://{}/pong-ws", &host[0..index])
+                };
     let web_socket = WebSocket::new(&path)?;
     web_socket.set_binary_type(web_sys::BinaryType::Arraybuffer);
     
