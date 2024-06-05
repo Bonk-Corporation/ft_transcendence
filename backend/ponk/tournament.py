@@ -268,8 +268,6 @@ def play(request, *args, **kwargs):
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
-    tournaments[request.user].playing = True
-
     if tournaments[request.user].selected_game == "pong":
         url = "0.0.0.0:4210/rooms"
         data = []
@@ -288,6 +286,21 @@ def play(request, *args, **kwargs):
 
 
 # TODO handle when a game end and handle when a tournament end
+
+
+@authenticated
+def set_play(request, *args, **kwargs):
+    if not tournaments.get(request.user):
+        return JsonResponse({"error": "You're not the tournament host"}, status=409)
+
+    users = tournaments[request.user].users
+
+    if len(users) not in [2, 4, 8]:
+        return JsonResponse(
+            {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
+        )
+
+    tournaments[request.user].playing = True
 
 
 @authenticated
@@ -331,4 +344,5 @@ urls = [
     path("leave_room", leave_room),
     path("new", new),
     path("kick_user/<str:target>", kick_user),
+    path("set_play", set_play),
 ]

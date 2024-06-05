@@ -21,8 +21,6 @@ export function Room(props) {
   const location = useLocation();
   const [playing, setPlaying] = useState(false);
 
-  let dontLeave = false;
-
   useEffect(() => {
     if (!profile) return;
 
@@ -119,15 +117,17 @@ export function Room(props) {
   };
 
   const playButton = async () => {
+    if (isHost) fetch("/api/tournament/set_play");
     setShowSchema(true);
     await new Promise((r) => setTimeout(r, 5000));
-    dontLeave = true;
     location.route("/pong");
-    fetch("/api/tournament/play").then((res) =>
-      res.json().then((data) => {
-        if (data.error) return location.route("/tournament/room");
-      }),
-    );
+    if (isHost) {
+      fetch("/api/tournament/play").then((res) =>
+        res.json().then((data) => {
+          if (data.error) return location.route("/tournament/room");
+        }),
+      );
+    }
   };
 
   return (
