@@ -64,6 +64,8 @@ def new(request, *args, **kwargs):
     )
     rooms[request.user] = request.user
     tournaments[request.user].phases.append(tournaments[request.user].users)
+    tournaments[request.user].phases.append([None] * 4)
+    tournaments[request.user].phases.append([None] * 2)
     return JsonResponse({"success": True})
 
 
@@ -270,24 +272,17 @@ def play(request, *args, **kwargs):
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
-    if tournaments[request.user].selected_game == "pong":
-        url = "0.0.0.0:4210/rooms"
-        data = []
-        for i in range(0, len(users), 2):
-            data.append([users[i].username, users[i + 1].username])
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": os.environ["PRIVATE_API_TOKEN"],
-        }
-        response = requests.post(url, data=data, headers=headers)
-        print(f"Status Code: {response.status_code}")
-        print(f"Response: {response.json()}")
-        return JsonResponse({"success": True})
+    tournaments[request.user].playing = True
 
-    # TODO handle if the selected_game is bonk
+    n = 0
 
+    if get_phase_len(tournaments[request.user].phases[1]) == 4:
+        n = 1
 
-# TODO handle when a game end and handle when a tournament end
+    if get_phase_len(tournaments[request.user].phases[2]) == 2:
+        n = 2
+
+    return start_game(tournaments[request.user], tournaments[request.user].phases[n])
 
 
 @authenticated
