@@ -21,12 +21,6 @@ import os
 import secrets
 import random
 
-DEFAULT_SKINS = [
-    "/assets/skins/red.png",
-    "/assets/skins/green.png",
-    "/assets/skins/blue.png",
-]
-
 
 def get_game_history(user):
     history = []
