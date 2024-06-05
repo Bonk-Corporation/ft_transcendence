@@ -33,6 +33,7 @@ export function Room(props) {
         setPlaying(data.playing);
         setActive(data.selected_game);
         setIsHost(data.host == profile.name);
+        setShowSchema(data.phases.length > 1);
       }),
     );
     const id = setInterval(() => {
@@ -45,6 +46,8 @@ export function Room(props) {
           setPlaying(data.playing);
           setActive(data.selected_game);
           setIsHost(data.host == profile.name);
+          setShowSchema(data.phases.length > 1);
+          console.log(data.phases);
         }),
       );
     }, 1000);
@@ -118,9 +121,14 @@ export function Room(props) {
   };
 
   const playNotHost = async () => {
-    setShowSchema(true);
-    await new Promise((r) => setTimeout(r, 5000));
-    if (playing) location.route("/pong");
+    fetch("/api/tournament/play_non_host").then((res) =>
+      res.json().then(async (data) => {
+        if (data.error) return;
+        setShowSchema(true);
+        await new Promise((r) => setTimeout(r, 5000));
+        if (playing) location.route("/pong");
+      }),
+    );
   };
 
   const playButton = () => {
@@ -128,7 +136,7 @@ export function Room(props) {
       res.json().then(async (data) => {
         if (data.error) return;
         setShowSchema(true);
-        await new Promise((r) => setTimeout(r, 3000));
+        await new Promise((r) => setTimeout(r, 5000));
         fetch("/api/tournament/play").then((res) =>
           res.json().then((data) => {
             if (!data.error) return location.route("/pong");
