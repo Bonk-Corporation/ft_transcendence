@@ -60,7 +60,8 @@ export function Room(props) {
 
   useEffect(() => {
     if (playing) {
-      playButton();
+      if (isHost) playButton();
+      else playNotHost();
     }
   }, [playing]);
 
@@ -116,21 +117,24 @@ export function Room(props) {
     });
   };
 
+  const playNotHost = async () => {
+    setShowSchema(true);
+    await new Promise((r) => setTimeout(r, 5000));
+    location.route("/pong");
+  };
+
   const playButton = () => {
-    if (!isHost) return;
     fetch("/api/tournament/set_play").then((res) =>
       res.json().then(async (data) => {
         if (data.error) return;
         setShowSchema(true);
         await new Promise((r) => setTimeout(r, 5000));
         location.route("/pong");
-        if (isHost) {
-          fetch("/api/tournament/play").then((res) =>
-            res.json().then((data) => {
-              if (data.error) return location.route("/tournament/room");
-            }),
-          );
-        }
+        fetch("/api/tournament/play").then((res) =>
+          res.json().then((data) => {
+            if (data.error) return location.route("/tournament/room");
+          }),
+        );
       }),
     );
   };
