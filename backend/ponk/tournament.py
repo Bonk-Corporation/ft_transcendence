@@ -2,6 +2,8 @@ from django.urls import path
 from django.http.response import JsonResponse
 from ponk.api_decorators import authenticated
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import csrf_exempt
+from ponk.api_decorators import private_api_auth
 from ponk.models import User
 from dataclasses import dataclass
 from typing import List
@@ -19,6 +21,7 @@ class Tournament:
     selected_game: str
     room_size: int
     private: bool
+    playing: bool
 
 
 tournaments = {}
@@ -57,6 +60,7 @@ def new(request, *args, **kwargs):
         selected_game="pong",
         room_size=size,
         private=False,
+        playing=False,
     )
     rooms[request.user] = request.user
     tournaments[request.user].phases.append(tournaments[request.user].users)
@@ -263,6 +267,8 @@ def play(request, *args, **kwargs):
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
+    tournaments[request.user].playing = True
+
     if tournaments[request.user].selected_game == "pong":
         url = "0.0.0.0:4210/rooms"
         data = []
@@ -282,6 +288,34 @@ def play(request, *args, **kwargs):
 
 # TODO handle when a game end and handle when a tournament end
 
+
+@authenticated
+def is_playing(request, *args, **kwargs):
+    enemy = ""
+    if rooms.get(request.user) and tournaments[rooms[request.user]].playing:
+        for phase in tournaments[rooms[request.user]].phases:
+            for j in range(len(phase)):
+                if phase[j] == request.user:
+                    if j in [2, 4, 8]:
+                        enemy = phase[j - 1].username
+                    else:
+                        enemy = phase[j + 1].username
+    data = {"enemy": enemy}
+    return JsonResponse({"data": data})
+
+
+# @csrf_exempt
+# @private_api_auth
+# def game_ended(request, *args, **kwargs):
+#    username = args[1].get("winner")
+#   try:
+#       winner = User.objects.get(username=username)
+#   except ObjectDoesNotExist:
+#      return JsonResponse(
+#          {"error": "User {} does not exist".format(username)}, status=404
+#      )
+#  if tournaments[rooms[winner]]
+
 urls = [
     path("status", status),  # get informations about current turnament
     path("play", play),
@@ -291,6 +325,8 @@ urls = [
     path("set_to_public", set_to_public),
     path("set_to_private", set_to_private),
     path("join_room/<str:host>", join_room),
+    # path("game_ended/<str:winner>", game_ended),
+    path("is_playing", is_playing),
     path("leave_room", leave_room),
     path("new", new),
     path("kick_user/<str:target>", kick_user),
