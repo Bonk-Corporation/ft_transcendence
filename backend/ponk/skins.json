@@ -198,12 +198,12 @@
 		]
 	},
 	{
-		"name": "22",
+		"name": "Pote Antoine",
 		"price": 4.2,
 		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
+			"/assets/skins/pote-antoine.png",
+			"/assets/skins/autre-pote-antoine.png",
+			"/assets/skins/encore-pote-antoine.png"
 		]
 	},
 	{
