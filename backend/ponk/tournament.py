@@ -359,32 +359,34 @@ def is_playing(request, *args, **kwargs):
 def game_ended(winner):
     tournament = tournaments[rooms[winner]]
 
-    for i in range(2, len(tournament.phase), 0):
-        for j in range(len(tournament.phase[i])):
-            if tournament.phase[i][j] == winner:
+    for i in range(2, 0, -1):
+        for j in range(len(tournament.phases[i]) - 1, 0, -1):
+            if tournament.phases[i][j] == winner:
                 phase = i
                 index = j
 
-    if i == 2:
-        tournament.phase[3].append(winner)
+    if phase == 2:
+        tournament.phases.append(winner)
         tournament.playing = False
         return JsonResponse({"success": True})
 
-    if j in [1, 2]:
+    if index in [1, 2]:
         tournament.phases[phase + 1][1] = winner
-    if j in [3, 4]:
+    if index in [3, 4]:
         tournament.phases[phase + 1][2] = winner
-    if j in [5, 6]:
+    if index in [5, 6]:
         tournament.phases[phase + 1][3] = winner
-    if j in [7, 8]:
+    if index in [7, 8]:
         tournament.phases[phase + 1][4] = winner
 
     actual_phase = tournament.phases[phase + 1]
+    return JsonResponse({"success": True})
 
-    if get_phase_len(actual_phase) == 2 and (phase + 1) == 2:
-        return start_game(tournament, actual_phase)
-    if get_phase_len(actual_phase) == 4 and (phase + 1) == 1:
-        return start_game(tournament, actual_phase)
+
+#    if get_phase_len(actual_phase) == 2 and (phase + 1) == 2:
+#        return start_game(tournament, actual_phase)
+#    if get_phase_len(actual_phase) == 4 and (phase + 1) == 1:
+#        return start_game(tournament, actual_phase)
 
 
 urls = [
