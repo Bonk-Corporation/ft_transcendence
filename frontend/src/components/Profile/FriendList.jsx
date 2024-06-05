@@ -1,14 +1,14 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
-import { FriendCard } from './FriendCard';
-import { PopUp } from '../utils/PopUp';
-import { Input } from '../utils/Input';
-import { CTA } from '../utils/CTA';
-import { Card } from '../utils/Card';
-import { language } from '../../scripts/languages'
-import { LangContext } from '../../Contexts';
+import React, { useRef, useState, useEffect, useContext } from "react";
+import { FriendCard } from "./FriendCard";
+import { PopUp } from "../utils/PopUp";
+import { Input } from "../utils/Input";
+import { CTA } from "../utils/CTA";
+import { Card } from "../utils/Card";
+import { language } from "../../scripts/languages";
+import { LangContext } from "../../Contexts";
 
-export function FriendList({fetchProfile, friends, friendsRequests}) {
-	const lang = useContext(LangContext);
+export function FriendList({ fetchProfile, friends, friendsRequests }) {
+  const lang = useContext(LangContext);
 
   const [popUp, setPopUp] = useState(false);
   const [error, setError] = useState("");
@@ -61,7 +61,6 @@ export function FriendList({fetchProfile, friends, friendsRequests}) {
         className="flex flex-col items-center"
       >
         <h1 className="font-semibold text-xl">{language.add_friend[lang]}</h1>
-        {/* @ts-ignore */}
         <Input
           ref={inputRef}
           className="rounded-full bg-[#4f4f4f] mt-2"
@@ -73,28 +72,38 @@ export function FriendList({fetchProfile, friends, friendsRequests}) {
         </CTA>
       </PopUp>
 
-        <div className="flex items-center justify-between">
-          <h1 className="font-semibold text-lg md:text-xl">{language.friends[lang]}</h1>
-          <i onClick={() => {setPopUp(true)}} className="fa-solid fa-circle-plus mr-2 hover:text-gray-300 cursor-pointer"></i>
-        </div>
-        <div className={`overflow-auto ${friends.length && friendsRequests.length ? "down-gradient" : ""}  max-h-96 pr-2 backdrop-blur-lg ${loaded ? "opacity-100" : "opacity-0"} transition-all duration-500`}>
-          {
-            friendsRequests.map((friend) => (
-            <FriendCard fetchProfile={fetchProfile} profile={friend} request={true}></FriendCard>
-            ))
-          }
-          {
-            friends.map((friend) => (
-            <FriendCard fetchProfile={fetchProfile} profile={friend}></FriendCard>
-            ))
-          }
-          {
-            !friends.length && !friendsRequests.length ?
-            <Card className='p-4 flex items-center flex-col'>
-              <h1 className="font-semibold text-md md:text-lg">{language.no_friends[lang]}</h1>
-            </Card> : null
-          }
-        </div>
+      <div className="flex items-center justify-between">
+        <h1 className="font-semibold text-lg md:text-xl">
+          {language.friends[lang]}
+        </h1>
+        <i
+          onClick={() => {
+            setPopUp(true);
+          }}
+          className="fa-solid fa-circle-plus mr-2 hover:text-gray-300 cursor-pointer"
+        ></i>
+      </div>
+      <div
+        className={`overflow-auto ${friends.length && friendsRequests.length ? "down-gradient" : ""}  max-h-96 pr-2 backdrop-blur-lg ${loaded ? "opacity-100" : "opacity-0"} transition-all duration-500`}
+      >
+        {friendsRequests.map((friend) => (
+          <FriendCard
+            fetchProfile={fetchProfile}
+            profile={friend}
+            request={true}
+          ></FriendCard>
+        ))}
+        {friends.map((friend) => (
+          <FriendCard fetchProfile={fetchProfile} profile={friend}></FriendCard>
+        ))}
+        {!friends.length && !friendsRequests.length ? (
+          <Card className="p-4 flex items-center flex-col">
+            <h1 className="font-semibold text-md md:text-lg">
+              {language.no_friends[lang]}
+            </h1>
+          </Card>
+        ) : null}
+      </div>
     </div>
   );
 }
