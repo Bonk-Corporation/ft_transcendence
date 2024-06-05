@@ -63,6 +63,9 @@ mkShell {
 
 		case "$should_start" in
 			pong-server)
+				source startup.d/02-source_env
+				source startup.d/03-env
+
 				make pong-server
 				;;
 			transcendence)
