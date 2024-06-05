@@ -533,14 +533,14 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                         game.state.lock().await.sent = true;
                                         #[derive(Serialize)]
                                         struct GameStats<'a> {
-                                            user:     String,
+                                            player:     String,
                                             game:       &'a str,
                                             score:      (u8, u8),
                                         }
                                         let (p1,p2) = game.state.lock().await.score;
                                         let key = env::var("PRIVATE_API_TOKEN").unwrap();
                                         let end_stats = GameStats {
-                                            user:     player1_id,
+                                            player:     player1_id,
                                             game:       "pong",
                                             score:      (p1, p2),
                                         };
@@ -554,7 +554,7 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                             .send()
                                             .await;
                                         let end_stats = GameStats {
-                                            user: player2_id,
+                                            player: player2_id,
                                             game: "pong",
                                             score: (p2, p1),
                                         };

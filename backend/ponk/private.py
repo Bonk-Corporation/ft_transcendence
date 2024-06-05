@@ -4,6 +4,7 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from ponk.api_decorators import private_api_auth
 from ponk.tournament import game_ended
+from ponk.tournament import rooms
 import json
 import sys
 import os
@@ -30,14 +31,14 @@ def game_stats(request, *args, **kwargs):
         except ZeroDivisionError:
             xp = (max(score_user, score_opponent) / 1) * multiplier + 5
 
-        user = User.objects.get(username=data["user"])
+        user = User.objects.get(username=data["player"])
         user.level_percentage += xp
         if user.level_percentage >= 100:
             user.level += user.level_percentage // 100
             user.level_percentage = user.level_percentage % 100
         user.save()
 
-        if win:
+        if win and user in rooms:
             game_ended(user)
 
         GameHistory(
