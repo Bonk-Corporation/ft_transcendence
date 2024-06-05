@@ -31,6 +31,7 @@ extern "C" {
 }
 
 static mut WEBSOCKET: Option<WebSocket> = None;
+static mut SIDE: Option<&str> = None;
 
 #[wasm_bindgen]
 pub fn stop() {
@@ -154,7 +155,6 @@ pub async fn start() -> Result<(), JsValue> {
         cloned_pup.style().set_property("display", "flex").unwrap();
     });
 
-
     let cloned_game_id = Arc::clone(&game_id);
     let cloned_pu = pop_up_score.clone();
     let cloned_winner = winner.clone();
@@ -169,8 +169,10 @@ pub async fn start() -> Result<(), JsValue> {
 					console_log!("Game Id received");
                 },
                 "PLYONE" => {
-                    let side = if &txt.as_string().unwrap()[6..] == &cloned_cd.id {"Left"} else {"Right"};
-                    which_side.set_inner_text(format!("{} Side", side).as_str());
+                    unsafe {
+                        SIDE = if &txt.as_string().unwrap()[6..] == &cloned_cd.id {Some("Left")} else {Some("Right")};
+                        if let Some(s) = SIDE {which_side.set_inner_text(format!("{} Side", s).as_str());}
+                    }
                     which_side.style().set_property("display", "flex");
 					console_log!("Player 1 received: {} vs {} = {}",&txt.as_string().unwrap()[6..], &cloned_cd.id,&txt.as_string().unwrap()[6..] == &cloned_cd.id);
                 },
@@ -180,12 +182,22 @@ pub async fn start() -> Result<(), JsValue> {
                     let score_str = p1.to_string() + " - " + &p2.to_string();
                     which_side.style().set_property("display", "none");
 					if game_state.finished {
-						match game_state.winner {
-							render::EndGame::Player1 => cloned_winner.set_inner_html("Player 1 won"),
-							render::EndGame::Player2 => cloned_winner.set_inner_html("Player 2 won"),
-							render::EndGame::Draw => cloned_winner.set_inner_html("Draw"),
-							render::EndGame::Undecided => cloned_winner.set_inner_html("Undecided"),
-						}
+                        unsafe {
+						    match game_state.winner {
+						    	render::EndGame::Player1 => if let Some("Left") = SIDE {
+                                        cloned_winner.set_inner_html("You have won");
+                                    } else {
+                                        cloned_winner.set_inner_html("You have lost");
+                                    },
+						    	render::EndGame::Player2 => if let Some("Right") = SIDE {
+                                        cloned_winner.set_inner_html("You have won");
+                                    } else {
+                                        cloned_winner.set_inner_html("You have lost");
+                                    },
+						    	render::EndGame::Draw => cloned_winner.set_inner_html("Draw"),
+						    	render::EndGame::Undecided => cloned_winner.set_inner_html("Undecided"),
+						    }
+                        }
                         cloned_pu.style().set_property("display", "flex").unwrap();
                     	cloned_fs.set_inner_html(score_str.as_str());
                         cloned_cs.style().set_property("display", "none").unwrap();
