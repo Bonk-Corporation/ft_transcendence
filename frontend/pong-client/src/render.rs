@@ -40,6 +40,7 @@ pub struct GameState {
   pub score         : (i16, i16),
   pub winner        : EndGame,
   pub finished      : bool,
+  pub sent          : bool,
 }
 
 pub struct Circle {

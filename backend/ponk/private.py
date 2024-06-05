@@ -13,7 +13,6 @@ import os
 def game_stats(request, *args, **kwargs):
     try:
         data = json.loads(request.body)
-
         score_user = data["score"][0]
         score_opponent = data["score"][1]
 

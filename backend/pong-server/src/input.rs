@@ -106,6 +106,7 @@ pub struct GameState {
     pub score       : (u8, u8),
     pub winner      : EndGame,
     pub finished    : bool,
+    pub sent        : bool,
 }
 
 #[derive(Clone, Copy, Serialize, Deserialize)]
@@ -141,6 +142,7 @@ impl GameState {
             score       : (0, 0),
             winner      : EndGame::Undecided,
             finished    : false,
+            sent        : false,
         }
     }
 
@@ -152,6 +154,7 @@ impl GameState {
             score       : (0,0),
             winner      : EndGame::Undecided,
             finished    : false,
+            sent        : false,
         }
     }
 

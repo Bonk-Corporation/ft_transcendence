@@ -336,7 +336,6 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
     while let Some(Ok(msg)) = receiver.next().await {
         match msg {
             Message::Text(text) => {
-                println!("Got message from client: {}", text);
                 match &text[0..5] {
                     "NEW  " => {
                         let on_connect: OnConnectClient = serde_json::from_str(&text[5..]).unwrap();
@@ -419,7 +418,10 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                         };
                                         let client = reqwest::Client::new();
                                         client.post("http://localhost:8001/api/private/game_stats")
-                                            .header("Authorization:", key.clone())
+                                            .header(
+                                                reqwest::header::HeaderName::from_bytes(b"Authorization").unwrap(),
+                                                reqwest::header::HeaderValue::from_str(&key).unwrap()
+                                            )
                                             .json(&end_stats)
                                             .send()
                                             .await;
@@ -429,7 +431,10 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                             score: (p2, p1),
                                         };
                                         client.post("http://localhost:8001/api/private/game_stats")
-                                            .header("Authorization:", key)
+                                            .header(
+                                                reqwest::header::HeaderName::from_bytes(b"Authorization").unwrap(),
+                                                reqwest::header::HeaderValue::from_str(&key).unwrap()
+                                            )
                                             .json(&end_stats)
                                             .send()
                                             .await;
@@ -521,37 +526,46 @@ async fn handle_socket(state: Arc<RwLock<Clients>>, socket: WebSocket) {
                                             break;
                                         }
                                     }
-                                    #[derive(Serialize)]
-                                    struct GameStats<'a> {
-                                        player:     String,
-                                        game:       &'a str,
-                                        score:      (u8, u8),
+                                    if !game.state.lock().await.sent {
+                                        game.state.lock().await.sent = true;
+                                        #[derive(Serialize)]
+                                        struct GameStats<'a> {
+                                            user:     String,
+                                            game:       &'a str,
+                                            score:      (u8, u8),
+                                        }
+                                        let (p1,p2) = game.state.lock().await.score;
+                                        let key = env::var("PRIVATE_API_TOKEN").unwrap();
+                                        let end_stats = GameStats {
+                                            user:     player1_id,
+                                            game:       "pong",
+                                            score:      (p1, p2),
+                                        };
+                                        let client = reqwest::Client::new();
+                                        client.post("http://localhost:8001/api/private/game_stats")
+                                            .header(
+                                                reqwest::header::HeaderName::from_bytes(b"Authorization").unwrap(),
+                                                reqwest::header::HeaderValue::from_str(&key).unwrap()
+                                            )
+                                            .json(&end_stats)
+                                            .send()
+                                            .await;
+                                        let end_stats = GameStats {
+                                            user: player2_id,
+                                            game: "pong",
+                                            score: (p2, p1),
+                                        };
+                                        client.post("http://localhost:8001/api/private/game_stats")
+                                            .header(
+                                                reqwest::header::HeaderName::from_bytes(b"Authorization").unwrap(),
+                                                reqwest::header::HeaderValue::from_str(&key).unwrap()
+                                            )
+                                            .json(&end_stats)
+                                            .send()
+                                            .await;
+                                        println!("quitting thread");
+                                        return;
                                     }
-                                    let (p1,p2) = game.state.lock().await.score;
-                                    let key = env::var("PRIVATE_API_TOKEN").unwrap();
-                                    let end_stats = GameStats {
-                                        player:     player1_id,
-                                        game:       "pong",
-                                        score:      (p1, p2),
-                                    };
-                                    let client = reqwest::Client::new();
-                                    client.post("http://localhost:8001/api/private/game_stats")
-                                        .header("Authorization:", key.clone())
-                                        .json(&end_stats)
-                                        .send()
-                                        .await;
-                                    let end_stats = GameStats {
-                                        player: player2_id,
-                                        game: "pong",
-                                        score: (p2, p1),
-                                    };
-                                    client.post("http://localhost:8001/api/private/game_stats")
-                                        .header("Authorization:", key)
-                                        .json(&end_stats)
-                                        .send()
-                                        .await;
-                                    println!("quitting thread");
-                                    return;
                                 }
                             }
                         }));
