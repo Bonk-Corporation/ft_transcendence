@@ -5,7 +5,7 @@ services:
       dockerfile: transcendence
     volumes:
       - .:/app
-      - assets:/app/assets
+      - assets:/app/assets/avatar
     ports:
       - "8443:8443"
       - "8000:8000"
