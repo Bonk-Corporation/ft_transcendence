@@ -88,7 +88,7 @@ export function Chat() {
           break;
         case "message":
           (messages[message.room] ??= []).push(["distant", message]);
-          setMessages(messages);
+          setMessages({...messages});
           break;
       }
     };
