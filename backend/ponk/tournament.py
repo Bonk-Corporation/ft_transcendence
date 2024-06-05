@@ -288,10 +288,6 @@ def start_game(tournament, phase):
             "games": data,
         }
 
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-        print(data)
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-
         response = requests.post(url, json=new_data, headers=headers)
 
         print(f"Status Code: {response.status_code}")

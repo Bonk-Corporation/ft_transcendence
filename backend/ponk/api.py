@@ -11,7 +11,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from ponk.money import skins
 from django.utils import timezone
-from ponk.tournament import tournaments
 from ponk.tournament import rooms
 import ponk.private
 import random
@@ -49,6 +48,7 @@ def me(request, *args, **kwargs):
             "skins": request.user.skins,
             "selectedSkin": request.user.selected_skin,
             "selectedSkinUrl": get_selected_skin_url(request.user.username),
+            "playing": request.user in rooms,
         }
     )
 
