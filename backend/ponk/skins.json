@@ -1,7 +1,7 @@
 [
 	{
 		"name": "Division Alpha",
-		"price": 42,
+		"price": 4.2,
 		"images": [
 			"/assets/skins/cgodard.png",
 			"/assets/skins/jcario.png",
@@ -10,20 +10,11 @@
 	},
 	{
 		"name": "Division Omega",
-		"price": 42,
+		"price": 4.2,
 		"images": [
 			"/assets/skins/acasamit.png",
 			"/assets/skins/vcornill.png",
 			"/assets/skins/gprigent.png"
-		]
-	},
-	{
-		"name": "Mborde",
-		"price": 4.2,
-		"images": [
-			"/assets/skins/mborde.png",
-			"/assets/skins/maxborde.png",
-			"/assets/skins/mbordeau.png"
 		]
 	},
 	{
@@ -42,6 +33,24 @@
 			"/assets/skins/dinos.png",
 			"/assets/skins/autre-dinos.png",
 			"/assets/skins/encore-dinos.png"
+		]
+	},
+	{
+		"name": "Division Alpha en chats",
+		"price": 4.2,
+		"images": [
+			"/assets/skins/chat-yanne.png",
+			"/assets/skins/dino-chat.png",
+			"/assets/skins/chat-nils.png"
+		]
+	},
+	{
+		"name": "Division Omega en chats",
+		"price": 4.2,
+		"images": [
+			"/assets/skins/chat-antoine.png",
+			"/assets/skins/chat-jesus.png",
+			"/assets/skins/chat-chen.png"
 		]
 	},
 	{
@@ -90,6 +99,24 @@
 		]
 	},
 	{
+		"name": "Ninjas",
+		"price": 4.2,
+		"images": [
+			"/assets/skins/ryan-ninja.png",
+			"/assets/skins/nils-ninja.png",
+			"/assets/skins/ninja-effrayant.png"
+		]
+	},
+	{
+		"name": "Petits Loustics",
+		"price": 4.2,
+		"images": [
+			"assets/skins/loustic-principal.png",
+			"assets/skins/louistic-2-mais-quand-meme-avec-le-loustic-principal.png",
+			"assets/skins/loustic-3.png"
+		]
+	},
+	{
 		"name": "Orcky",
 		"price": 4.2,
 		"images": [
@@ -99,48 +126,30 @@
 		]
 	},
 	{
-		"name": "11",
+		"name": "Mborde",
 		"price": 4.2,
 		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
+			"/assets/skins/mborde.png",
+			"/assets/skins/maxborde.png",
+			"/assets/skins/mbordeau.png"
 		]
 	},
 	{
-		"name": "12",
+		"name": "Tom Crous",
 		"price": 4.2,
 		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
+			"assets/skins/gwen-crous.png",
+			"assets/skins/juju-crous.png",
+			"assets/skins/tom-crous.png"
 		]
 	},
 	{
-		"name": "13",
+		"name": "Monstres",
 		"price": 4.2,
 		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
-		]
-	},
-	{
-		"name": "14",
-		"price": 4.2,
-		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
-		]
-	},
-	{
-		"name": "15",
-		"price": 4.2,
-		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
+			"assets/skins/monstre-colere.png",
+			"assets/skins/monstre-heureux.png",
+			"assets/skins/monstre-triste.png"
 		]
 	},
 	{
@@ -180,21 +189,12 @@
 		]
 	},
 	{
-		"name": "20",
+		"name": "Cheveux",
 		"price": 4.2,
 		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
-		]
-	},
-	{
-		"name": "21",
-		"price": 4.2,
-		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
+			"/assets/skins/cheveux-1.png",
+			"/assets/skins/cheveux-2.png",
+			"/assets/skins/cheveux-3.png"
 		]
 	},
 	{
@@ -208,7 +208,7 @@
 	},
 	{
 		"name": "Our Users Data",
-		"price": 42.0,
+		"price": 4.2,
 		"images": [
 			"/assets/skins/cash.png",
 			"/assets/skins/pointing-finger-at-you.png",
