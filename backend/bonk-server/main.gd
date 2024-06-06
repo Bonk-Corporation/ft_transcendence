@@ -165,7 +165,7 @@ func start_client():
 		Settings.server_protocol = "ws://" 
 		Settings.server_port = 8000
 		Settings.api_path = "http://" + JavaScriptBridge.eval("window.location.host")
-	peer.create_client(Settings.server_protocol + Settings.server_ip + ":" + str(Settings.server_port) + "/bonk-ws")
+	peer.create_client(Settings.server_protocol + JavaScriptBridge.eval("window.location.host") + "/bonk-ws")
 	multiplayer.multiplayer_peer = peer
 	multiplayer.connected_to_server.connect(connected_to_server)
 	multiplayer.connection_failed.connect(connection_failed)
