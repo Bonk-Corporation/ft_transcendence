@@ -222,7 +222,7 @@ def status(request, *args, **kwargs):
             "selected_game": tournament.selected_game,
             "size": tournament.room_size,
             "private": tournament.private,
-            "playing": tournament.playing,
+            "playing": tournament.play_launched,
         }
     )
 
@@ -291,15 +291,8 @@ def start_game(tournament):
             print(f"Response: {response.json()}")
         except ValueError:
             print(f"Response: {response.text}")
+        tournament.play_launched = False
         return JsonResponse({"success": True})
-
-
-@authenticated
-def is_redirected(request, *args, **kwargs):
-    if not tournaments.get(request.user):
-        return JsonResponse({"error": "You're not the tournament host"}, status=409)
-    tournaments[request.user].play_launched = False
-    return JsonResponse({"success": True})
 
 
 @authenticated
