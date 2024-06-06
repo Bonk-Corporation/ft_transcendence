@@ -2,9 +2,12 @@
 
 prod=$1
 
+set -x
+
 if [ "$prod" = false ]; then
 	VERSION=$(godot4 --version | sed 's/stable.*/stable/')
 
+    mkdir -p "$HOME/.local/share/godot/export_templates/$VERSION"
     if [ ! -f "$HOME/.local/share/godot/export_templates/$VERSION/web_debug.zip" ]; then
         wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1TSWOhwXIGD6rxX-5V1ynXsjXUrWQy6xj" -O "$HOME/.local/share/godot/export_templates/$VERSION/web_debug.zip"
     fi
@@ -25,13 +28,15 @@ if [ "$prod" = false ]; then
 	if [ "$FT_DEBUG" = "y" ]; then
 		godot4 --display-driver headless --path backend/bonk-server --export-debug server "$PWD/backend/bonk-server/pkg/bonk-server.x86-64"
 	else
-		godot4 --display-driver headless --path backend/bonk-server --export-release Web "$PWD/frontend/bonk-client/bonk-client.html"
+		godot4 --display-driver headless --path backend/bonk-server --export-release server "$PWD/backend/bonk-server/pkg/bonk-server.x86-64"
 	fi
 	godot4 --display-driver headless --path backend/bonk-server --export-debug Web "$PWD/frontend/bonk-client/bonk-client.html"
 
 	gzip -f "$PWD/frontend/bonk-client/bonk-client.wasm"
 	gzip -f "$PWD/frontend/bonk-client/bonk-client.pck"
 fi
+
+set +x
 
 rm -rf .static
 # copy all static files to .static, to be served by caddy
