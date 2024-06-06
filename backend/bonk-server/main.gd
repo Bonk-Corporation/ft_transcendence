@@ -126,11 +126,24 @@ func event_request_completed(result, response_code, headers, body):
 				continue
 			room.add_user(user)
 			client_join_room.rpc_id(user.id, json["game_id"])
+
+@rpc("any_peer")
+func client_join_room_confirmation(room_name):
+	Global.get_user(multiplayer.get_remote_sender_id()).joined_room = true
+	var someone_not_join = false
+	var room = Global.get_room(room_name)
+	for user in room.users:
+		if !user.joined_room:
+			someone_not_join = true
+			break
+	if !someone_not_join:
+		for user in room.users:
 			var player = player_scene.instantiate()
 			player.name = str(user.id)
 			player.get_node("body").username = user.username
 			player.get_node("body").skin = user.skin
-			get_node("rooms/" + json["game_id"] + "/players").call_deferred("add_child", player)
+			get_node("rooms/" + room_name + "/players").call_deferred("add_child", player)
+		
 
 ###################### CLIENT ######################
 
@@ -195,6 +208,7 @@ func client_join_room(room_name):
 	var map = map_scene.instantiate()
 	map.name = room_name
 	get_node("rooms").add_child(map)
+	client_join_room_confirmation.rpc_id(1, room_name)
 
 @rpc
 func client_leave_room():
