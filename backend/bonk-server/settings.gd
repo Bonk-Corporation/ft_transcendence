@@ -1,11 +1,13 @@
 extends Node
 
-const server_ip: String = "localhost"
-const server_port: int = 9999
+var server_ip: String
+var server_port: int
+const server_port_listen: int = 9999
 
 var server_protocol: String
 var api_ip: String
 const api_port: int = 8000
+var api_path: String
 
 const force_factor: int = 400 # move force
 const impulse_factor: int = 200 #jump force

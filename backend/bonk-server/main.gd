@@ -9,10 +9,6 @@ func _ready():
 		Settings.api_ip = "localhost" 
 	else:
 		Settings.api_ip = "transcendence" 
-	if JavaScriptBridge.eval("window.location.protocol == 'https:'"):
-		Settings.server_protocol = "wss://" 
-	else:
-		Settings.server_protocol = "ws://" 
 	if OS.has_feature("server"):
 		start_server()
 	else:
@@ -22,7 +18,7 @@ func _ready():
 ###################### SERVER ######################
 
 func start_server():
-	peer.create_server(Settings.server_port)
+	peer.create_server(Settings.server_port_listen)
 	multiplayer.multiplayer_peer = peer
 	peer.peer_connected.connect(player_connected)
 	peer.peer_disconnected.connect(player_disconnected)
@@ -142,11 +138,16 @@ func event_request_completed(result, response_code, headers, body):
 var join_request_callback = JavaScriptBridge.create_callback(join_request)
 var externalator = JavaScriptBridge.get_interface("externalator")
 var authentified = false
+signal join_request_wait_signal()
 
-func join_request(args):
+func join_request_wait():
 	while !authentified:
 		pass
-	get_node("join").request("http://" + Settings.api_ip + ":" + str(Settings.api_port) + "/api/bonk/join")
+	get_node("join").request(Settings.api_path + "/api/bonk/join")
+
+func join_request(args):
+	join_request_wait_signal.connect(join_request_wait)
+	join_request_wait_signal.emit()
 
 @rpc
 func authentified_state():
@@ -155,10 +156,19 @@ func authentified_state():
 @rpc
 func send_api_ip(api_ip):
 	Settings.api_ip = api_ip
-	get_node("token").request("http://" + Settings.api_ip + ":" + str(Settings.api_port) + "/api/set_token")
+	get_node("token").request(Settings.api_path + "/api/set_token")
 
 func start_client():
 	externalator.addGodotFunction('join_request', join_request_callback)
+	Settings.server_ip = JavaScriptBridge.eval("window.location.hostname")
+	if JavaScriptBridge.eval("window.location.protocol == 'https:'"):
+		Settings.server_protocol = "wss://"
+		Settings.server_port = 8443
+		Settings.api_path = "https://" + JavaScriptBridge.eval("window.location.host")
+	else:
+		Settings.server_protocol = "ws://" 
+		Settings.server_port = 8000
+		Settings.api_path = "http://" + JavaScriptBridge.eval("window.location.host")
 	peer.create_client(Settings.server_protocol + Settings.server_ip + ":" + str(Settings.server_port) + "/bonk-ws")
 	multiplayer.multiplayer_peer = peer
 	multiplayer.connection_failed.connect(connection_failed)
