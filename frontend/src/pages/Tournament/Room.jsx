@@ -20,6 +20,7 @@ export function Room(props) {
   const [isHost, setIsHost] = useState(false);
   const location = useLocation();
   const [playing, setPlaying] = useState(false);
+  const [finished, setFinished] = useState(false);
 
   useEffect(() => {
     if (!profile) return;
@@ -34,6 +35,7 @@ export function Room(props) {
         setActive(data.selected_game);
         setIsHost(data.host == profile.name);
         if (data.phases.length > 1 || data.playing) setShowSchema(true);
+        if (isFinished()) setFinished(true);
       }),
     );
     const id = setInterval(() => {
@@ -47,6 +49,7 @@ export function Room(props) {
           setActive(data.selected_game);
           setIsHost(data.host == profile.name);
           if (data.phases.length > 1 || data.playing) setShowSchema(true);
+          if (isFinished()) setFinished(true);
         }),
       );
     }, 1000);
@@ -66,6 +69,20 @@ export function Room(props) {
       else playNotHost();
     }
   }, [playing]);
+
+  function isInRoom() {
+    return room.phases[room.phases.length - 1].some(
+      (el) => el.username == profile.name,
+    );
+  }
+
+  function isFinished() {
+    return (
+      (room?.size == 8 && room.phases.length == 4) ||
+      (room?.size == 4 && room.phases.length == 3) ||
+      (room?.size == 2 && room.phases.length == 2)
+    );
+  }
 
   useEffect(() => {
     if (!document.getElementById("lottie")) {
@@ -124,7 +141,7 @@ export function Room(props) {
       res.json().then(async (data) => {
         if (data.error) return;
         await new Promise((r) => setTimeout(r, 5000));
-        if (playing) location.route("/pong");
+        if (playing && isInRoom()) location.route("/pong");
       }),
     );
   };
@@ -136,7 +153,7 @@ export function Room(props) {
         await new Promise((r) => setTimeout(r, 5000));
         fetch("/api/tournament/play").then((res) =>
           res.json().then((data) => {
-            if (!data.error) return location.route("/pong");
+            if (!data.error && isInRoom()) return location.route("/pong");
           }),
         );
       }),
@@ -175,14 +192,14 @@ export function Room(props) {
             onClick={() => toggleRoomPrivacy()}
             className={`mr-2 px-12 py-3 border-2
             ${
-              isHost && priv && !playing
+              isHost && priv && !playing && !finished
                 ? "bg-black text-white hover:bg-white hover:text-black border-white"
                 : isHost && !playing
                   ? "bg-white text-black hover:bg-gray-300 hover:border-gray-300 border-2 border-white"
                   : "bg-gray-500 border-gray-500 text-black cursor-not-allowed hover:bg-gray-500 hover:border-gray-500"
             }
             rounded transition-all ease-in-out`}
-            disabled={!isHost}
+            disabled={!isHost || playing || finished}
           >
             <i
               className={`fa-solid ${priv ? "fa-lock" : "fa-unlock"} mr-2`}
@@ -193,12 +210,12 @@ export function Room(props) {
             onClick={playButton}
             className={`ml-2 px-12 py-3 border-2 text-black rounded
               ${
-                isHost && !playing
+                isHost && !playing && !finished
                   ? "cursor-pointer border-white bg-white hover:bg-gray-300 hover:border-gray-300"
                   : "bg-gray-500 border-gray-500 cursor-not-allowed hover:bg-gray-500 hover:border-gray-500"
               }
             `}
-            disabled={!isHost}
+            disabled={!isHost || playing || finished}
           >
             <i className="fa-solid fa-play mr-2"></i>
             {language.play[lang]}
