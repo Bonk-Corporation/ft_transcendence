@@ -31,27 +31,26 @@ But we decided to get more ambitious...
 
 ## Modules
 
-- Backend **M**
-- Front-end **m**
+- Framework Backend **M**
+- Framework Front-end **m**
 - Database **m**
 - User management **M**
 - OAuth 2.0 - API 42 **M**
 - Networked multiplayer **M**
 - More than 2 players **M**
-- Bonk **M**
+- Another Game : Bonk **M**
+- Customization **m**
 - Chat **M**
-- RGPD **m**
+- Bot Pong **M**
+- Stats Dashboard **m**
+- GDPR **m**
+- Microservices **M**
+- Responsive **m**
 - Interbrowser **m**
+- Multiple language support **m**
 - Server side pong **M**
 
 **M**: major module - **m**: minor module
-
-### Maybe
-
-- Personnalisation (SKIN) ? m
-- 2FA ? M
-- Responsive m
-- CLI m
 
 ## Norm
 
