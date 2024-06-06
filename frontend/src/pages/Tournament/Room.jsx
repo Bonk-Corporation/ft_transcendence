@@ -43,7 +43,7 @@ export function Room(props) {
 
           setRoom(data);
           setPriv(data.private);
-          setPlaying(data.playing);
+          if (data.playing != playing) setPlaying(data.playing);
           setActive(data.selected_game);
           setIsHost(data.host == profile.name);
           if (data.phases.length > 1 || data.playing) setShowSchema(true);
