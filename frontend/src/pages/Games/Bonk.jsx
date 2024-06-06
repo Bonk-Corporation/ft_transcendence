@@ -4,12 +4,14 @@ import { CTA } from "../../components/utils/CTA";
 import { Chat } from "../../components/Chat/Chat";
 import { language } from "../../scripts/languages";
 import { LangContext } from "../../Contexts";
+import { ProfileContext } from "../../Contexts";
 
-export function Bonk() {
+export function Bonk(props) {
   const [popUp, setPopUp] = useState(true);
   const [playClicked, setPlayClicked] = useState(false);
 
   const lang = useContext(LangContext);
+  const profile = useContext(ProfileContext);
 
   window.godotFunctions = {};
   window.externalator = {
@@ -17,6 +19,8 @@ export function Bonk() {
       window.godotFunctions[n] = f;
     },
   };
+
+  if (!profile?.name) props.fetchProfile();
 
   useEffect(() => {
     const loadScripts = async () => {
@@ -31,6 +35,10 @@ export function Bonk() {
 
     loadScripts();
   }, []);
+
+  useEffect(() => {
+    if (profile.playing && !playClicked) setPlayClicked(true);
+  }, [profile]);
 
   const loadScript = (src) => {
     return new Promise((resolve, reject) => {
@@ -50,8 +58,11 @@ export function Bonk() {
 
   return (
     <>
-      {popUp ? (
-        <Card className="absolute z-50 p-4 px-16 flex flex-col items-center">
+      {popUp && !profile?.playing ? (
+        <Card
+          id="popup-bonk"
+          className="absolute z-50 p-4 px-16 flex flex-col items-center"
+        >
           <h1 className="font-semibold text-4xl mb-4">BONK</h1>
           <CTA onClick={handlePlayClick}>{language.play[lang]}</CTA>
         </Card>

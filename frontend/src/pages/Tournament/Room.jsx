@@ -141,8 +141,7 @@ export function Room(props) {
       window.location.pathname = "/bonk";
       fetch("/api/tournament/play_non_host").then((res) =>
         res.json().then(async (data) => {
-          if (data.error)
-              window.location.pathname = '/tournament/room';
+          if (data.error) window.location.pathname = "/tournament/room";
         }),
       );
     } else {
@@ -159,10 +158,9 @@ export function Room(props) {
   const playButton = () => {
     if (room.selected_game == "bonk" && playing) {
       window.location.pathname = "/bonk";
-      fetch("/api/tournament/set_play").then((res) =>
+      fetch("/api/tournament/play").then((res) =>
         res.json().then(async (data) => {
-          if (data.error)
-              window.location.pathname = '/tournament/room';
+          if (data.error) window.location.pathname = "/tournament/room";
         }),
       );
     } else {
