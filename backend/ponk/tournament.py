@@ -466,9 +466,10 @@ def del_room(winner):
         tournaments[rooms[winner]].selected_game == "bonk"
         and tournaments.get(winner) != None
     ):
+        current_room = rooms[winner]
         for user in tournaments[winner].users:
             rooms.pop(user)
-        tournaments.pop(rooms[winner])
+        tournaments.pop(current_room)
         return JsonResponse({"success": True})
 
 
