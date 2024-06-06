@@ -137,33 +137,49 @@ export function Room(props) {
   };
 
   const playNotHost = async () => {
-    fetch("/api/tournament/play_non_host").then((res) =>
-      res.json().then(async (data) => {
-        if (data.error) return;
-        await new Promise((r) => setTimeout(r, 5000));
-        if (playing && isInRoom()) location.route("/pong");
-      }),
-    );
+    if (room.selected_game == "bonk") {
+      fetch("/api/tournament/play_non_host").then((res) =>
+        res.json().then(async (data) => {
+          if (data.error && playing) return location.route("/bonk");
+        }),
+      );
+    } else {
+      fetch("/api/tournament/play_non_host").then((res) =>
+        res.json().then(async (data) => {
+          if (data.error) return;
+          await new Promise((r) => setTimeout(r, 5000));
+          if (playing && isInRoom()) location.route("/pong");
+        }),
+      );
+    }
   };
 
   const playButton = () => {
-    fetch("/api/tournament/set_play").then((res) =>
-      res.json().then(async (data) => {
-        if (data.error) return;
-        await new Promise((r) => setTimeout(r, 5000));
-        fetch("/api/tournament/play").then((res) =>
-          res.json().then((data) => {
-            if (!data.error && isInRoom()) return location.route("/pong");
-          }),
-        );
-      }),
-    );
+    if (room.selected_game == "bonk") {
+      fetch("/api/tournament/set_play").then((res) =>
+        res.json().then(async (data) => {
+          if (data.error) return location.route("/pong");
+        }),
+      );
+    } else {
+      fetch("/api/tournament/set_play").then((res) =>
+        res.json().then(async (data) => {
+          if (data.error) return;
+          await new Promise((r) => setTimeout(r, 5000));
+          fetch("/api/tournament/play").then((res) =>
+            res.json().then((data) => {
+              if (!data.error && isInRoom()) return location.route("/pong");
+            }),
+          );
+        }),
+      );
+    }
   };
 
   return (
     <div className="w-full flex justify-center h-[40rem]">
       <div className="h-full w-2/3 flex flex-col items-center">
-        {showSchema ? (
+        {showSchema && room.selected_game != "bonk" ? (
           <Schema room={room} />
         ) : (
           <div className="h-full w-full flex overflow-hidden">
