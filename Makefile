@@ -24,6 +24,7 @@ bonk-rebuild:
 	sh backend/bonk-server/pkg/bonk-server.sh
 
 bonk-server:
-	sh backend/bonk-server/pkg/bonk-server.sh
+	chmod +x backend/bonk-server/pkg/bonk-server.x86-64
+	./backend/bonk-server/pkg/bonk-server.x86-64
 
 .PHONY: run venv pong-server
