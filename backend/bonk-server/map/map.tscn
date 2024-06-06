@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://3psjlgsy78cg"]
+[gd_scene load_steps=8 format=3 uid="uid://3psjlgsy78cg"]
 
 [ext_resource type="Script" path="res://map/map.gd" id="1_cvoq4"]
 [ext_resource type="Script" path="res://map/collision.gd" id="2_6sgan"]
 [ext_resource type="Texture2D" uid="uid://byglgq480xi0k" path="res://asset/city.svg" id="3_xxrcf"]
 [ext_resource type="Script" path="res://map/rectangle.gd" id="4_ts5c7"]
+[ext_resource type="FontFile" uid="uid://bwoq7xiu7yhey" path="res://asset/Ubuntu-Regular.ttf" id="5_0xb43"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5i30o"]
 size = Vector2(438.756, 38)
@@ -113,8 +114,10 @@ script = ExtResource("4_ts5c7")
 [node name="scores" type="Label" parent="."]
 offset_left = 11.0
 offset_top = 10.0
-offset_right = 260.0
-offset_bottom = 152.0
+offset_right = 300.0
+offset_bottom = 166.0
+theme_override_fonts/font = ExtResource("5_0xb43")
+theme_override_font_sizes/font_size = 24
 
 [node name="synchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_qcc0f")
@@ -125,4 +128,6 @@ replication_config = SubResource("SceneReplicationConfig_qcc0f")
 offset_top = 100.0
 offset_right = 1280.0
 offset_bottom = 200.0
+theme_override_fonts/font = ExtResource("5_0xb43")
+theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1

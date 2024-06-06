@@ -49,7 +49,7 @@ func _ready():
 	collision_layer = 1 << get_parent().get_parent().get_parent().layer
 	collision_mask = 1 << get_parent().get_parent().get_parent().layer
 	var physic = PhysicsMaterial.new()
-	physic.bounce = 0.2
+	physic.set_bounce(Settings.bounce)
 	set_physics_material_override(physic)
 	get_node("username").set_text(username)
 	if multiplayer.is_server():
@@ -98,7 +98,6 @@ func tired():
 	tired_state = true
 	grapple_stop()
 	await get_tree().create_timer(Settings.tired_time).timeout
-	print("coucou mes loulous")
 	tired_state = false
 
 func _process(delta):

@@ -4,19 +4,34 @@ VERSION=$(godot4 --version | sed 's/stable.*/stable/')
 
 mkdir -p "$HOME/.local/share/godot/export_templates/$VERSION"
 
-if [ ! -f "$HOME/.local/share/godot/export_templates/$VERSION/linux_debug.x86_64" ]; then
-    wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1yIHSqEMwfKHfkKACKWsc3bGQhbG_Idm9" -O "$HOME/.local/share/godot/export_templates/$VERSION/linux_debug.x86_64"
-fi
+if [ "$DEBUG" = "y" ]; then
+    if [ ! -f "$HOME/.local/share/godot/export_templates/$VERSION/linux_debug.x86_64" ]; then
+        wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1yIHSqEMwfKHfkKACKWsc3bGQhbG_Idm9" -O "$HOME/.local/share/godot/export_templates/$VERSION/linux_debug.x86_64"
+    fi
 
-if [ ! -f "$HOME/.local/share/godot/export_templates/$VERSION/web_debug.zip" ]; then
-    wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1TSWOhwXIGD6rxX-5V1ynXsjXUrWQy6xj" -O "$HOME/.local/share/godot/export_templates/$VERSION/web_debug.zip"
+    if [ ! -f "$HOME/.local/share/godot/export_templates/$VERSION/web_debug.zip" ]; then
+        wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1TSWOhwXIGD6rxX-5V1ynXsjXUrWQy6xj" -O "$HOME/.local/share/godot/export_templates/$VERSION/web_debug.zip"
+    fi
+else
+    if [ ! -f "$HOME/.local/share/godot/export_templates/$VERSION/linux_release.x86_64" ]; then
+        wget --no-check-certificate "https://docs.google.com/uc?export=download&id=13bQKnJhl3wpOE_aloVCpZiWCUTzxAQbL" -O "$HOME/.local/share/godot/export_templates/$VERSION/linux_release.x86_64"
+    fi
+
+    if [ ! -f "$HOME/.local/share/godot/export_templates/$VERSION/web_release.zip" ]; then
+        wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1ugHfe5OCqXP6Ezk9GANld558Q8osxUWS" -O "$HOME/.local/share/godot/export_templates/$VERSION/web_release.zip"
+    fi
 fi
 
 mkdir -p backend/bonk-server/pkg
 mkdir -p frontend/bonk-client
 
-godot4 --display-driver headless --path backend/bonk-server --export-debug server "$PWD/backend/bonk-server/pkg/bonk-server.x86-64"
-godot4 --display-driver headless --path backend/bonk-server --export-debug Web "$PWD/frontend/bonk-client/bonk-client.html"
+if [ "$DEBUG" = "y" ]; then
+    godot4 --display-driver headless --path backend/bonk-server --DEBUG=true --export-debug server "$PWD/backend/bonk-server/pkg/bonk-server.x86-64"
+    godot4 --display-driver headless --path backend/bonk-server --DEBUG=true --export-debug Web "$PWD/frontend/bonk-client/bonk-client.html"
+else
+    godot4 --display-driver headless --path backend/bonk-server --DEBUG=false --export-release server "$PWD/backend/bonk-server/pkg/bonk-server.x86-64"
+    godot4 --display-driver headless --path backend/bonk-server --DEBUG=false --export-release Web "$PWD/frontend/bonk-client/bonk-client.html"
+fi
 
 gzip -f frontend/bonk-client/bonk-client.wasm
 gzip -f frontend/bonk-client/bonk-client.pck
