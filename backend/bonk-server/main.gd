@@ -82,7 +82,7 @@ func authenticate_request_completed(result, response_code, headers, body, id):
 		if Global.get_user(json["name"]):
 			client_message.rpc_id(id, "Error: You are already connected")
 			peer.disconnect_peer(id)
-		Global.add_user(User.new(json["name"], json["skin"], id))
+		Global.add_user(User.new(json["name"], Settings.api_path + json["skin"], id))
 	else:
 		client_message.rpc_id(id, "Error: Authentification failed, please try again later")
 		peer.disconnect_peer(id)
