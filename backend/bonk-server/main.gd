@@ -24,7 +24,6 @@ func start_server():
 	peer.peer_disconnected.connect(player_disconnected)
 
 func player_connected(id):
-	send_api_ip.rpc_id(id, Settings.api_ip)
 	print("Player connected: authentification...")
 
 func player_disconnected(id):
@@ -138,27 +137,24 @@ func event_request_completed(result, response_code, headers, body):
 var join_request_callback = JavaScriptBridge.create_callback(join_request)
 var externalator = JavaScriptBridge.get_interface("externalator")
 var authentified = false
+var join = false
 signal join_request_wait_signal()
 
 func join_request_wait():
-	while !authentified:
-		pass
-	get_node("join").request(Settings.api_path + "/api/bonk/join")
+	if authentified && join:
+		get_node("join").request(Settings.api_path + "/api/bonk/join")
 
 func join_request(args):
-	join_request_wait_signal.connect(join_request_wait)
+	join = true
 	join_request_wait_signal.emit()
 
 @rpc
 func authentified_state():
 	authentified = true
-
-@rpc
-func send_api_ip(api_ip):
-	Settings.api_ip = api_ip
-	get_node("token").request(Settings.api_path + "/api/set_token")
+	join_request_wait_signal.emit()
 
 func start_client():
+	join_request_wait_signal.connect(join_request_wait)
 	externalator.addGodotFunction('join_request', join_request_callback)
 	Settings.server_ip = JavaScriptBridge.eval("window.location.hostname")
 	if JavaScriptBridge.eval("window.location.protocol == 'https:'"):
@@ -171,8 +167,11 @@ func start_client():
 		Settings.api_path = "http://" + JavaScriptBridge.eval("window.location.host")
 	peer.create_client(Settings.server_protocol + Settings.server_ip + ":" + str(Settings.server_port) + "/bonk-ws")
 	multiplayer.multiplayer_peer = peer
+	multiplayer.connected_to_server.connect(connected_to_server)
 	multiplayer.connection_failed.connect(connection_failed)
 
+func connected_to_server():
+	get_node("token").request(Settings.api_path + "/api/set_token")
 
 func token_request_completed(result, response_code, headers, body):
 	if response_code == 200:
