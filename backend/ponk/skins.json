@@ -144,6 +144,42 @@
 		]
 	},
 	{
+		"name": "Alexandru le beau",
+		"price": 4.2,
+		"images": [
+			"assets/skins/alex-1.png",
+			"assets/skins/alex-2.png",
+			"assets/skins/alex-3.png"
+		]
+	},
+	{
+		"name": "Alexandra",
+		"price": 4.2,
+		"images": [
+			"assets/skins/alexa-1.png",
+			"assets/skins/alexa-2.png",
+			"assets/skins/alexa-3.png"
+		]
+	},
+	{
+		"name": "Dorothée",
+		"price": 4.2,
+		"images": [
+			"/assets/skins/dodo-1.png",
+			"/assets/skins/dodo-2.png",
+			"/assets/skins/dodo-3.png"
+		]
+	},
+	{
+		"name": "Charlène",
+		"price": 4.2,
+		"images": [
+			"/assets/skins/charchar-1.png",
+			"/assets/skins/charchar-2.png",
+			"/assets/skins/charchar-3.png"
+		]
+	},
+	{
 		"name": "Monstres",
 		"price": 4.2,
 		"images": [
@@ -159,42 +195,6 @@
 			"/assets/skins/chayanne-from-emma.png",
 			"/assets/skins/ze_ouizarde.png",
 			"/assets/skins/vader.png"
-		]
-	},
-	{
-		"name": "17",
-		"price": 4.2,
-		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
-		]
-	},
-	{
-		"name": "18",
-		"price": 4.2,
-		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
-		]
-	},
-	{
-		"name": "19",
-		"price": 4.2,
-		"images": [
-			"/assets/skins/red.png",
-			"/assets/skins/blue.png",
-			"/assets/skins/green.png"
-		]
-	},
-	{
-		"name": "Cheveux",
-		"price": 4.2,
-		"images": [
-			"/assets/skins/cheveux-1.png",
-			"/assets/skins/cheveux-2.png",
-			"/assets/skins/cheveux-3.png"
 		]
 	},
 	{
