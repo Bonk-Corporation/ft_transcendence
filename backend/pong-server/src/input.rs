@@ -365,11 +365,13 @@ impl Game {
 
     pub fn add_player(&mut self, client: Client) {
         match (self.player1.clone(), self.player2.clone()) {
-            (_, None) => {
+            (Some(player), None) => {
+                if player.id == client.id {return;}
                 println!("player {} added to {}", client.id, self.id);
                 self.player2 = Some(client);
             },
-            (None, _) => {
+            (None, Some(player)) => {
+                if player.id == client.id {return;}
                 println!("player {} added to {}", client.id, self.id);
                 self.player1 = Some(client);
             },
