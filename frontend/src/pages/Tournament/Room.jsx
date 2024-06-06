@@ -140,7 +140,8 @@ export function Room(props) {
     if (room.selected_game == "bonk") {
       fetch("/api/tournament/play_non_host").then((res) =>
         res.json().then(async (data) => {
-          if (data.error && playing) return location.route("/bonk");
+          if (data.error && playing)
+            return (window.location.pathname = "/bonk");
         }),
       );
     } else {
@@ -158,7 +159,7 @@ export function Room(props) {
     if (room.selected_game == "bonk") {
       fetch("/api/tournament/set_play").then((res) =>
         res.json().then(async (data) => {
-          if (data.error) return location.route("/pong");
+          if (data.error) return (window.location.pathname = "/bonk");
         }),
       );
     } else {
