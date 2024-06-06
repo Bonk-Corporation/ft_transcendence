@@ -1,0 +1,11 @@
+FROM nixos/nix
+
+RUN mkdir /lib
+RUN ln -sf /lib /lib64
+RUN ln -sf "$(echo /nix/store/*/bin/*ld*.so | head -1)" /lib/ld-linux-x86-64.so.2 
+
+COPY . /app
+
+WORKDIR /app
+
+CMD ["nix-shell", "--arg", "prod", "true", "--argstr", "should-start", "bonk-server"]
