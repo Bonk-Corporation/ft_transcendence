@@ -84,7 +84,7 @@ export function App() {
                   setTriedLog={setTriedLog}
                 />
                 <Pong path="/pong" />
-                <Bonk path="/bonk" />
+                <Bonk fetchProfile={fetchProfile} path="/bonk" />
                 <LegalNotice path="/legal-notice" />
                 <Waiting path="/tournament/waiting" />
                 <NotFound path="/*" />

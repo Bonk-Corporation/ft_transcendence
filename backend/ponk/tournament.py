@@ -4,10 +4,12 @@ from ponk.api_decorators import authenticated
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from ponk.api_decorators import private_api_auth
+from threading import Thread
 from ponk.models import User
 from dataclasses import dataclass
 from typing import List
 import requests
+import time
 import json
 import os
 
@@ -297,6 +299,21 @@ def start_game(tournament):
             print(f"Response: {response.text}")
         tournament.play_launched = False
         return JsonResponse({"success": True})
+    else:
+        user_list = []
+        for user in tournament.users:
+            user_list.append(user.username)
+        thread = Thread(target=wait_and_event, args=(tournament, user_list))
+        thread.start()
+        return JsonResponse({"success": True})
+
+
+def wait_and_event(tournament, user_list):
+    from ponk.private import events
+
+    time.sleep(7)
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAaarequete")
+    events.append({"game_id": tournament.users[0].username, "users": user_list})
 
 
 @authenticated
@@ -442,6 +459,17 @@ def is_playing(request, *args, **kwargs):
                         enemy = phase[j + 1].username
     data = {"enemy": enemy}
     return JsonResponse({"data": data})
+
+
+def del_room(winner):
+    if (
+        tournaments[rooms[winner]].selected_game == "bonk"
+        and tournaments.get(winner) != None
+    ):
+        for user in tournaments[winner].users:
+            rooms.pop(user)
+        tournaments.pop(rooms[winner])
+        return JsonResponse({"success": True})
 
 
 def game_ended(winner):

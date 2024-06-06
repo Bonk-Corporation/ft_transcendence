@@ -4,6 +4,7 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from ponk.api_decorators import private_api_auth
 from ponk.tournament import game_ended
+from ponk.tournament import del_room
 from ponk.tournament import rooms
 from ponk.utils import get_selected_skin_url
 import json
@@ -43,6 +44,8 @@ def game_stats(request, *args, **kwargs):
             user.level += user.level_percentage // 100
             user.level_percentage = user.level_percentage % 100
         user.save()
+
+        del_room(user)
 
         if win and user in rooms:
             game_ended(user)
