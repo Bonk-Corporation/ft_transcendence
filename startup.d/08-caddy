@@ -54,8 +54,13 @@ caddy start --adapter caddyfile --config <( cat <<-EOF
 		reverse_proxy $pong_upstream:4210
 	}
 
+
 	handle_path /bonk-ws {
 		reverse_proxy $bonk_upstream:9999
+	}
+
+	log default {
+		level FATAL
 	}
 EOF
 )
