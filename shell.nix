@@ -14,45 +14,44 @@ let
 			targets.wasm32-unknown-unknown.latest.rust-std
 		])
 		wasm-pack
-	];
-	transcendenceDeps = lib.optional (should-start == "transcendence") [
+
+		# kil me pls
+		postgresql
+		pkgs.glibcLocales
+
 		python3
 		python3Packages.pip
 		virtualenv
 		gnused
 
+		glibc
+	];
+	transcendenceDeps = lib.optional (should-start == "transcendence") [
 		caddy
 
 		nodejs
 		nodePackages.pnpm
 
-		postgresql
-		pkgs.glibcLocales
-
 		openssh
 	];
-	pongDeps = lib.optional (!prod) [
+	pongDeps = lib.optional (should-start == "pong-server") [
+		# hmmm
+	];
+	bonkDeps = lib.optional (should-start == "bonk-server") [
+		wget
+		godot_4
+	];
+	nonProdDeps = lib.optional (!prod) [
 		codespell
 		nodePackages.prettier
 		gdtoolkit
 		black
-
 		tmux
-
-		# rust
-		(with fenix; with latest; combine [
-			minimal.toolchain
-			targets.wasm32-unknown-unknown.latest.rust-std
-		])
-		wasm-pack
-
-		wget
-		godot_4
 	];
 in
 
 mkShell {
-	packages = commonDeps ++ transcendenceDeps ++ pongDeps;
+	packages = commonDeps ++ transcendenceDeps ++ pongDeps ++ bonkDeps ++ nonProdDeps;
 
 	nativeBuildInputs = [ pkgs.pkg-config ];
 	LD_LIBRARY_PATH = lib.makeLibraryPath [ openssl ];
@@ -62,7 +61,7 @@ mkShell {
 		should_start="${should-start}"
 
 		case "$should_start" in
-			pong-server)
+			pong-server|bonk-server)
 				for script in startup.d/02-source_env startup.d/03-env startup.d/09-debug; do
 					echo sourcing $script...
 					${if prod then
@@ -76,7 +75,12 @@ mkShell {
 					 }
 				done
 
-				make pong-server
+				if [ "$should_start" = bonk-server ]; then
+					source startup.d/06-venv true
+					source startup.d/12-bonk false
+				fi
+
+				make "$should_start"
 				;;
 			transcendence)
 				for script in startup.d/*; do

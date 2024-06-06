@@ -18,11 +18,6 @@ if [ -f /.dockerenv ]; then
 	export "private_api_upstream=transcendence"
 fi
 
-rm -rf .static
-# copy all static files to .static, to be served by caddy
-# since serving them by django is strongly discouraged
-yes yes | python backend/manage.py collectstatic
-
 caddy start --adapter caddyfile --config <( cat <<-EOF
 	{
 		auto_https disable_redirects

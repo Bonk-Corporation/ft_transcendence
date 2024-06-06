@@ -21,6 +21,15 @@ services:
       dockerfile: pong-server
     ports:
       - "4210:4210"
+  bonk-server:
+    volumes:
+      - .:/app
+    build:
+      context: docker
+      dockerfile: bonk-server
+    ports:
+      - "9999:9999" # do we really have to expose the ports?
+                    # they are proxied by caddy...
 
 volumes:
   assets:
