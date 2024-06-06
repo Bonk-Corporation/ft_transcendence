@@ -5,15 +5,10 @@ var peer: WebSocketMultiplayerPeer = WebSocketMultiplayerPeer.new()
 @export var player_scene: PackedScene
 
 func _ready():
-	var args = {}
-	for arg in OS.get_cmdline_args():
-		if arg.find("=") > -1:
-			var key_value = arg.split("=")
-			args[key_value[0].lstrip("--")] = key_value[1]
-	if args["DEBUG"] == "false":
-		Settings.api_ip = "transcendence" 
-	else:
+	if OS.get_environment("FT_DEBUG") == "y":
 		Settings.api_ip = "localhost" 
+	else:
+		Settings.api_ip = "transcendence" 
 	if JavaScriptBridge.eval("window.location.protocol == 'https:'"):
 		Settings.server_protocol = "wss://" 
 	else:
@@ -32,7 +27,8 @@ func start_server():
 	peer.peer_connected.connect(player_connected)
 	peer.peer_disconnected.connect(player_disconnected)
 
-func player_connected(_id):
+func player_connected(id):
+	send_api_ip.rpc_id(id, Settings.api_ip)
 	print("Player connected: authentification...")
 
 func player_disconnected(id):
@@ -156,15 +152,17 @@ func join_request(args):
 func authentified_state():
 	authentified = true
 
+@rpc
+func send_api_ip(api_ip):
+	Settings.api_ip = api_ip
+	get_node("token").request("http://" + Settings.api_ip + ":" + str(Settings.api_port) + "/api/set_token")
+
 func start_client():
 	externalator.addGodotFunction('join_request', join_request_callback)
 	peer.create_client(Settings.server_protocol + Settings.server_ip + ":" + str(Settings.server_port) + "/bonk-ws")
 	multiplayer.multiplayer_peer = peer
-	multiplayer.connected_to_server.connect(connected_to_server)
 	multiplayer.connection_failed.connect(connection_failed)
 
-func connected_to_server():
-	get_node("token").request("http://" + Settings.api_ip + ":" + str(Settings.api_port) + "/api/set_token")
 
 func token_request_completed(result, response_code, headers, body):
 	if response_code == 200:

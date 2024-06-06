@@ -47,6 +47,8 @@ let
 		gdtoolkit
 		black
 		tmux
+		wget
+		godot_4
 	];
 in
 
