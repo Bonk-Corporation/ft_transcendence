@@ -273,7 +273,10 @@ def start_game(tournament):
     n = len(tournament.phases)
     phase = tournament.phases[n - 1]
     if tournament.selected_game == "pong":
-        url = "http://0.0.0.0:4210/rooms"
+        if os.environ.get("FT_DEBUG") == "y":
+            url = "http://0.0.0.0:4210/rooms"
+        else:
+            url = "http://pong-server:4210/rooms"
         data = []
         for i in range(0, len(phase), 2):
             data.append([phase[i].username, phase[i + 1].username])
