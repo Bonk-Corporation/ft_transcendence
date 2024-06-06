@@ -340,6 +340,19 @@ def play(request, *args, **kwargs):
             status=409,
         )
 
+    if (
+        len(tournaments[request.user].phases[len(tournaments[request.user].phases) - 1])
+        == 1
+    ):
+        return JsonResponse(
+            {
+                "error": "This game is finished !".format(
+                    tournaments[request.user].room_size
+                )
+            },
+            status=409,
+        )
+
     tournaments[request.user].playing = True
     room_size = tournaments[request.user].room_size
 
@@ -362,6 +375,19 @@ def set_play(request, *args, **kwargs):
         return JsonResponse(
             {
                 "error": "You must be {} players to start a game".format(
+                    tournaments[request.user].room_size
+                )
+            },
+            status=409,
+        )
+
+    if (
+        len(tournaments[request.user].phases[len(tournaments[request.user].phases) - 1])
+        == 1
+    ):
+        return JsonResponse(
+            {
+                "error": "This game is finished !".format(
                     tournaments[request.user].room_size
                 )
             },
@@ -411,14 +437,14 @@ def game_ended(winner):
 
     print(index)
 
-    if index in [1, 2]:
+    if index in [0, 1]:
         tournament.phases[len(tournament.phases) - 1][0] = winner
-    if index in [3, 4]:
+    if index in [2, 3]:
         print(len(tournament.phases))
         tournament.phases[len(tournament.phases) - 1][1] = winner
-    if index in [5, 6]:
+    if index in [4, 5]:
         tournament.phases[len(tournament.phases) - 1][2] = winner
-    if index in [7, 8]:
+    if index in [6, 7]:
         tournament.phases[len(tournament.phases) - 1][3] = winner
 
     return JsonResponse({"success": True})
