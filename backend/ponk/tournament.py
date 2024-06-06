@@ -215,9 +215,10 @@ def status(request, *args, **kwargs):
                         "username": user.username,
                         "level": user.level,
                     }
-                    for user in tournament.users
+                    for user in phase
+                    if user is not None
                 ]
-                for i in tournament.phases
+                for phase in tournament.phases
             ],
             "selected_game": tournament.selected_game,
             "size": tournament.room_size,
@@ -389,28 +390,36 @@ def is_playing(request, *args, **kwargs):
 
 def game_ended(winner):
     tournament = tournaments[rooms[winner]]
-    phase = tournament.phases[len(tournament.phases) - 1]
 
-    for j in range(len(phase) - 1):
-        if phase[j] == winner:
-            index = j
+    for i in range(len(tournament.phases)):
+        for j in range(len(tournament.phases[i])):
+            if tournament.phases[i][j] == winner:
+                phase_index = i
+                index = j
+
+    phase = tournament.phases[phase_index]
 
     if len(phase) == 2:
         tournament.phases.append([winner])
         tournament.playing = False
         return JsonResponse({"success": True})
 
-    if tournament.phases.get(len(tournament.phases)) == None:
-        tournament.phases.append([None] * (len(phase) / 2))
+    if len(tournament.phases) == phase_index + 1:
+        tournament.phases.append([None] * (len(phase) // 2))
+
+    print(tournament.phases[len(tournament.phases) - 1])
+
+    print(index)
 
     if index in [1, 2]:
-        tournament.phases[len(tournament.phases)][1] = winner
+        tournament.phases[len(tournament.phases) - 1][0] = winner
     if index in [3, 4]:
-        tournament.phases[len(tournament.phases)][2] = winner
+        print(len(tournament.phases))
+        tournament.phases[len(tournament.phases) - 1][1] = winner
     if index in [5, 6]:
-        tournament.phases[len(tournament.phases)][3] = winner
+        tournament.phases[len(tournament.phases) - 1][2] = winner
     if index in [7, 8]:
-        tournament.phases[len(tournament.phases)][4] = winner
+        tournament.phases[len(tournament.phases) - 1][3] = winner
 
     return JsonResponse({"success": True})
 
