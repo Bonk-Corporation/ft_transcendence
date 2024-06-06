@@ -303,12 +303,21 @@ def start_game(tournament):
 def play_non_host(request, *args, **kwargs):
     users = tournaments[rooms[request.user]].users
 
-    if len(users) not in [2, 4, 8]:
+    if len(users) == 1:
+        return JsonResponse({"error": "You cannot launch a game alone"}, status=409)
+
+    if (
+        len(users) not in [2, 4, 8]
+        and tournaments[rooms[request.user]].selected_game == "pong"
+    ):
         return JsonResponse(
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
-    if len(users) != tournaments[rooms[request.user]].room_size:
+    if (
+        len(users) != tournaments[rooms[request.user]].room_size
+        and tournaments[rooms[request.user]].selected_game == "pong"
+    ):
         return JsonResponse(
             {
                 "error": "You must be {} players to start a game".format(
@@ -328,12 +337,21 @@ def play(request, *args, **kwargs):
 
     users = tournaments[request.user].users
 
-    if len(users) not in [2, 4, 8]:
+    if len(users) == 1:
+        return JsonResponse({"error": "You cannot launch a game alone"}, status=409)
+
+    if (
+        len(users) not in [2, 4, 8]
+        and tournaments[rooms[request.user]].selected_game == "pong"
+    ):
         return JsonResponse(
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
-    if len(users) != tournaments[request.user].room_size:
+    if (
+        len(users) != tournaments[request.user].room_size
+        and tournaments[rooms[request.user]].selected_game == "pong"
+    ):
         return JsonResponse(
             {
                 "error": "You must be {} players to start a game".format(
@@ -369,12 +387,21 @@ def set_play(request, *args, **kwargs):
 
     users = tournaments[request.user].users
 
-    if len(users) not in [2, 4, 8]:
+    if len(users) == 1:
+        return JsonResponse({"error": "You cannot launch a game alone"}, status=409)
+
+    if (
+        len(users) not in [2, 4, 8]
+        and tournaments[rooms[request.user]].selected_game == "pong"
+    ):
         return JsonResponse(
             {"error": "You must be 2, 4 or 8 players to start a game"}, status=409
         )
 
-    if len(users) != tournaments[request.user].room_size:
+    if (
+        len(users) != tournaments[request.user].room_size
+        and tournaments[rooms[request.user]].selected_game == "pong"
+    ):
         return JsonResponse(
             {
                 "error": "You must be {} players to start a game".format(
