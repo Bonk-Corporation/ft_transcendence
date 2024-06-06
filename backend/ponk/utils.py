@@ -1,4 +1,5 @@
 from ponk.models import User
+from ponk.money import skins
 import random
 
 DEFAULT_SKINS = [
