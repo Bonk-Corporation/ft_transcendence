@@ -2,9 +2,9 @@ from ponk.models import User
 import random
 
 DEFAULT_SKINS = [
-    "http://localhost:8000/assets/skins/red.png",
-    "http://localhost:8000/assets/skins/green.png",
-    "http://localhost:8000/assets/skins/blue.png",
+    "/assets/skins/red.png",
+    "/assets/skins/green.png",
+    "/assets/skins/blue.png",
 ]
 
 
