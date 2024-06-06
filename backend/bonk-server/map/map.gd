@@ -31,6 +31,7 @@ func _ready():
 		get_node("body").set_collision_mask(1 << layer)
 		var physic = PhysicsMaterial.new()
 		physic.set_absorbent(true)
+		physic.set_bounce(Settings.bounce)
 		get_node("body").set_physics_material_override(physic)
 		start_round("Ready ?", 3)
 

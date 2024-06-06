@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://ecq8tbk7vkc0"]
+[gd_scene load_steps=7 format=3 uid="uid://ecq8tbk7vkc0"]
 
 [ext_resource type="Script" path="res://player/body.gd" id="1_w7ysv"]
 [ext_resource type="Texture2D" uid="uid://ir5g2j7r5tkt" path="res://asset/circle.svg" id="2_2it3p"]
+[ext_resource type="FontFile" uid="uid://bwoq7xiu7yhey" path="res://asset/Ubuntu-Regular.ttf" id="3_334n7"]
 [ext_resource type="Script" path="res://player/grapple.gd" id="3_i2gif"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_o1o6r"]
@@ -75,6 +76,7 @@ offset_left = -62.0
 offset_top = 31.0
 offset_right = 63.0
 offset_bottom = 54.0
+theme_override_fonts/font = ExtResource("3_334n7")
 horizontal_alignment = 1
 
 [node name="grapple" type="Line2D" parent="."]

@@ -5,6 +5,19 @@ var peer: WebSocketMultiplayerPeer = WebSocketMultiplayerPeer.new()
 @export var player_scene: PackedScene
 
 func _ready():
+	var args = {}
+	for arg in OS.get_cmdline_args():
+		if arg.find("=") > -1:
+			var key_value = arg.split("=")
+			args[key_value[0].lstrip("--")] = key_value[1]
+	if args["DEBUG"] == "false":
+		Settings.api_ip = "transcendence" 
+	else:
+		Settings.api_ip = "localhost" 
+	if JavaScriptBridge.eval("window.location.protocol == 'https:'"):
+		Settings.server_protocol = "wss://" 
+	else:
+		Settings.server_protocol = "ws://" 
 	if OS.has_feature("server"):
 		start_server()
 	else:
@@ -126,7 +139,6 @@ func event_request_completed(result, response_code, headers, body):
 			player.name = str(user.id)
 			player.get_node("body").username = user.username
 			player.get_node("body").skin = user.skin
-			print(user.skin)
 			get_node("rooms/" + json["game_id"] + "/players").call_deferred("add_child", player)
 
 ###################### CLIENT ######################
@@ -146,7 +158,7 @@ func authentified_state():
 
 func start_client():
 	externalator.addGodotFunction('join_request', join_request_callback)
-	peer.create_client("ws://" + Settings.server_ip + ":" + str(Settings.server_port))
+	peer.create_client(Settings.server_protocol + Settings.server_ip + ":" + str(Settings.server_port) + "/bonk-ws")
 	multiplayer.multiplayer_peer = peer
 	multiplayer.connected_to_server.connect(connected_to_server)
 	multiplayer.connection_failed.connect(connection_failed)
