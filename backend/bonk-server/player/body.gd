@@ -62,7 +62,7 @@ func _ready():
 			add_child(raycast)
 			raycast.position = Vector2.ZERO
 	else:
-		get_node("../skin").request(skin)
+		get_node("../skin").request(Settings.api_path + skin)
 		lock_rotation = true
 
 func _integrate_forces(state):
