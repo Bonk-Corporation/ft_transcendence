@@ -43,7 +43,7 @@ export function ItemSelection(props) {
           </CTA>
         ) : (
           <stripe-buy-button
-            buy-button-id="buy_btn_1PIBt8KG666poqhFwKbTAzAp"
+            buy-button-id="buy_btn_1PHsS4KG666poqhFnrNPQ4Ms"
             publishable-key={import.meta.env.VITE_STRIPE_API_KEY}
             client-reference-id={profile.name + "_" + props.item.name}
           />
