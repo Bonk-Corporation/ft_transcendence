@@ -46,12 +46,12 @@ export const language = {
   },
   new_password: {
     en: "New password",
-    fr: "Nouveau not de passe",
+    fr: "Nouveau mot de passe",
     br: "Ger-tremen nevez",
   },
   confirm_password: {
     en: "Confirm password",
-    fr: "Confirmer le not de passe",
+    fr: "Confirmer le mot de passe",
     br: "Kadarnaat ar ger-tremen",
   },
   update: {
@@ -116,12 +116,12 @@ export const language = {
   },
   log_in: {
     en: "Log in",
-    fr: "Connection",
+    fr: "Connexion",
     br: "Kevreadenn",
   },
   log_in_42: {
     en: "Log in with 42",
-    fr: "Connection avec 42",
+    fr: "Connexion avec 42",
     br: "Kevreañ gant 42",
   },
   no_account: {
@@ -141,7 +141,7 @@ export const language = {
   },
   password: {
     en: "Password",
-    fr: "Not de passe",
+    fr: "Mot de passe",
     br: "Ger-tremen",
   },
   already_account: {
